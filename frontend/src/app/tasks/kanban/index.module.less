@@ -1,0 +1,288 @@
+/**
+ * 看板视图样式
+ */
+
+.kanbanView {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.kanbanRow {
+  min-height: 400px;
+}
+
+// ============================================
+// 看板列
+// ============================================
+.kanbanColumn {
+  background: #f5f5f5;
+  border-radius: 12px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.2s ease;
+  border: 2px solid transparent;
+
+  &:global(.drag-over) {
+    background: #e8f0fe;
+    border-color: #1a73e8;
+  }
+}
+
+// ============================================
+// 列头
+// ============================================
+.columnHeader {
+  padding: 14px 16px 10px;
+  border-top: 3px solid;
+  border-radius: 12px 12px 0 0;
+  background: #fafafa;
+}
+
+.columnTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.columnIcon {
+  font-size: 16px;
+}
+
+.columnName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #202124;
+  flex: 1;
+}
+
+.columnCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #5f6368;
+  background: #e8eaed;
+  border-radius: 11px;
+}
+
+// ============================================
+// 列体
+// ============================================
+.columnBody {
+  flex: 1;
+  padding: 8px 12px 12px;
+  overflow-y: auto;
+  max-height: calc(100vh - 320px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.columnLoading {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.columnEmpty {
+  padding: 40px 0;
+}
+
+// ============================================
+// 看板卡片
+// ============================================
+.kanbanCard {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e8eaed;
+  cursor: grab;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  user-select: none;
+
+  &:hover {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+    border-color: #d0d4d9;
+  }
+
+  &:active {
+    cursor: grabbing;
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.15);
+    transform: scale(1.02) rotate(1deg);
+  }
+}
+
+// 拖拽经过的目标卡片
+.kanbanCardDragOver {
+  opacity: 0.7;
+  border-color: #1a73e8 !important;
+  background: #e8f0fe !important;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+}
+
+// 插入位置指示线
+.dropIndicator {
+  height: 3px;
+  background: #1a73e8;
+  border-radius: 2px;
+  margin: 2px 0;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(26, 115, 232, 0.4);
+  animation: indicatorPulse 1s ease-in-out infinite;
+}
+
+@keyframes indicatorPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.cardTitle {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardActions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  flex-shrink: 0;
+
+  .kanbanCard:hover & {
+    opacity: 1;
+  }
+}
+
+.cardAction {
+  font-size: 13px;
+  color: #9aa0a6;
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+
+  &:hover {
+    color: #1a73e8;
+    background: #e8f0fe;
+  }
+}
+
+.cardDescription {
+  font-size: 12px;
+  color: #5f6368;
+  line-height: 1.4;
+}
+
+.cardTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #9aa0a6;
+  padding-top: 4px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.dueDate {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+}
+
+.assignee {
+  font-size: 11px;
+  color: #5f6368;
+}
+
+// ============================================
+// 动画
+// ============================================
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+// ============================================
+// 暗色模式
+// ============================================
+:global(body.theme-dark) {
+  .kanbanColumn {
+    background: #1e1f23 !important;
+  }
+
+  .columnHeader {
+    background: #25262b !important;
+  }
+
+  .columnName {
+    color: #c1c2c5 !important;
+  }
+
+  .columnCount {
+    background: #373a40 !important;
+    color: #909296 !important;
+  }
+
+  .kanbanCard {
+    background: #2c2e33 !important;
+    border-color: #373a40 !important;
+
+    &:hover {
+      border-color: #4dabf7 !important;
+    }
+  }
+
+  .kanbanCardDragOver {
+    border-color: #4dabf7 !important;
+    background: #1e3a5f !important;
+  }
+
+  .dropIndicator {
+    background: #4dabf7;
+    box-shadow: 0 0 6px rgba(77, 171, 247, 0.4);
+  }
+
+  .cardTitle :global(.ant-typography) {
+    color: #c1c2c5 !important;
+  }
+
+  .cardDescription {
+    color: #909296 !important;
+  }
+
+  .cardFooter {
+    border-top-color: #373a40 !important;
+  }
+}
+
+// ============================================
+// 响应式
+// ============================================
+@media (max-width: 768px) {
+  .columnBody {
+    max-height: none;
+  }
+}

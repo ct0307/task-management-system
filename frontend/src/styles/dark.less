@@ -1,0 +1,235 @@
+/**
+ * 暗色模式样式覆盖
+ * 当 body 具有 class "theme-dark" 时生效
+ */
+
+// 全局平滑过渡
+body,
+body *,
+body *::before,
+body *::after {
+  transition: background-color 0.3s ease,
+              border-color 0.3s ease,
+              color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+body.theme-dark {
+  // ============================================
+  // 页面背景
+  // ============================================
+  background: #141517;
+  color: #c1c2c5;
+
+  // 全局白色背景覆盖
+  .ant-layout,
+  .ant-layout-content {
+    background: #141517 !important;
+  }
+
+  .ant-layout-sider {
+    background: #1a1b1e !important;
+  }
+
+  .ant-list-item-meta-title {
+    color: #c1c2c5 !important;
+  }
+
+  .ant-list-item-meta-description {
+    color: #909296 !important;
+  }
+
+  // ============================================
+  // 卡片、容器
+  // ============================================
+  .ant-card,
+  .ant-card-bordered {
+    background: #25262b !important;
+    border-color: #373a40 !important;
+  }
+
+  .ant-card-head {
+    border-bottom-color: #373a40 !important;
+  }
+
+  // ============================================
+  // 表格
+  // ============================================
+  .ant-table {
+    background: #25262b !important;
+    border-color: #373a40 !important;
+  }
+
+  .ant-table-thead > tr > th {
+    background: #1e1f23 !important;
+    color: #909296 !important;
+    border-bottom-color: #373a40 !important;
+  }
+
+  .ant-table-tbody > tr > td {
+    border-bottom-color: #373a40 !important;
+  }
+
+  .ant-table-tbody > tr:hover > td,
+  .ant-table-tbody > tr.ant-table-row:hover > td {
+    background: #2c2e33 !important;
+  }
+
+  .ant-table-placeholder:hover > td {
+    background: #25262b !important;
+  }
+
+  // ============================================
+  // 菜单
+  // ============================================
+  .ant-menu-dark {
+    background: #1a1b1e !important;
+  }
+
+  .ant-menu-item-selected {
+    background: #2c2e33 !important;
+  }
+
+  // ============================================
+  // 表单元素
+  // ============================================
+  .ant-input,
+  .ant-input-affix-wrapper,
+  .ant-select-selector,
+  .ant-input-search .ant-input,
+  .ant-picker,
+  .ant-input-number {
+    background: #1a1b1e !important;
+    border-color: #373a40 !important;
+    color: #c1c2c5 !important;
+  }
+
+  .ant-input::placeholder {
+    color: #5c5f66 !important;
+  }
+
+  // ============================================
+  // 模态框
+  // ============================================
+  .ant-modal-content,
+  .ant-modal-header {
+    background: #25262b !important;
+    border-bottom-color: #373a40 !important;
+  }
+
+  .ant-modal-footer {
+    border-top-color: #373a40 !important;
+  }
+
+  .ant-modal-title {
+    color: #c1c2c5 !important;
+  }
+
+  // ============================================
+  // 下拉菜单
+  // ============================================
+  .ant-dropdown-menu,
+  .ant-select-dropdown,
+  .ant-picker-dropdown .ant-picker-panel-container {
+    background: #2c2e33 !important;
+  }
+
+  .ant-dropdown-menu-item {
+    color: #c1c2c5 !important;
+  }
+
+  .ant-dropdown-menu-item:hover {
+    background: #373a40 !important;
+  }
+
+  // ============================================
+  // 弹窗
+  // ============================================
+  .ant-message-notice-content {
+    background: #2c2e33 !important;
+    color: #c1c2c5 !important;
+  }
+
+  // ============================================
+  // 标签
+  // ============================================
+  .ant-tag {
+    background: #373a40 !important;
+    color: #c1c2c5 !important;
+  }
+
+  // ============================================
+  // 统计卡片
+  // ============================================
+  .ant-statistic-title {
+    color: #909296 !important;
+  }
+
+  .ant-statistic-content {
+    color: #c1c2c5 !important;
+  }
+
+  // ============================================
+  // 开关
+  // ============================================
+  .ant-switch {
+    background: #373a40;
+  }
+
+  // ============================================
+  // 空状态
+  // ============================================
+  .ant-empty-description {
+    color: #909296 !important;
+  }
+
+  // ============================================
+  // 警告/提示
+  // ============================================
+  .ant-alert {
+    background: #2c2e33 !important;
+    border-color: #373a40 !important;
+  }
+
+  .ant-alert-message {
+    color: #c1c2c5 !important;
+  }
+
+  // ============================================
+  // 关闭按钮
+  // ============================================
+  .ant-modal-close {
+    color: #909296 !important;
+  }
+
+  .ant-modal-close:hover {
+    color: #c1c2c5 !important;
+  }
+
+  // ============================================
+  // 表格排序、筛选图标
+  // ============================================
+  .ant-table-column-sorter {
+    color: #5c5f66 !important;
+  }
+
+  // ============================================
+  // 错误页面 SVG 颜色
+  // ============================================
+  // 错误页 SVG 描边和填充
+  svg path,
+  svg rect,
+  svg circle {
+    transition: stroke 0.3s ease, fill 0.3s ease;
+  }
+
+  // ============================================
+  // Admin 页面
+  // ============================================
+  .ant-tabs-tab {
+    color: #909296 !important;
+  }
+  .ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #4dabf7 !important;
+  }
+}

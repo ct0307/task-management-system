@@ -1,0 +1,530 @@
+/**
+ * 任务管理页面样式优化
+ */
+
+.tasks {
+  animation: fadeIn 0.4s ease-out;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #202124;
+    margin: 0;
+    animation: fadeInUp 0.3s ease-out;
+  }
+
+  .viewSwitch {
+    :global(.ant-segmented-item) {
+      transition: all 0.2s ease;
+    }
+  }
+
+  .shortcutHint {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: #9aa0a6;
+
+    .kbd {
+      margin-right: 4px;
+    }
+  }
+
+  .statsRow {
+    margin-bottom: 20px;
+  }
+
+  .taskList {
+    animation: fadeIn 0.4s ease-out;
+
+    // ============================================
+    // 快速添加区域
+    // ============================================
+    .quickAdd {
+      margin-bottom: 12px;
+
+      .quickAddInput {
+        border-radius: 10px;
+        border: 2px solid #e8eaed;
+        transition: all 0.2s ease;
+        background: #fafbfc;
+
+        :global(.ant-input) {
+          background: transparent;
+          font-size: 14px;
+        }
+
+        &:hover {
+          border-color: #1a73e8;
+          background: #fff;
+        }
+
+        &:focus-within,
+        &:focus {
+          border-color: #1a73e8;
+          box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1);
+          background: #fff;
+        }
+      }
+
+      .shortcutHints {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 8px;
+        font-size: 12px;
+        color: #9aa0a6;
+      }
+
+      .kbd {
+        display: inline-block;
+        padding: 1px 6px;
+        font-size: 11px;
+        font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
+        background: #f1f3f4;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        color: #5f6368;
+        margin-right: 2px;
+        line-height: 1.6;
+      }
+    }
+
+    // ============================================
+    // 乐观更新行动画
+    // ============================================
+    .tableRowOptimistic {
+      animation: optimisticPulse 0.4s ease-out;
+    }
+
+    .filters {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 12px 16px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+      border: 1px solid #f0f0f0;
+    }
+
+    .searchInput {
+      width: 260px;
+
+      input {
+        border-radius: 8px;
+        transition: all 0.2s ease;
+
+        &:focus {
+          border-color: #1a73e8;
+          box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.12);
+        }
+      }
+    }
+
+    .filterControls {
+      :global(.ant-select-selector) {
+        border-radius: 8px !important;
+        transition: all 0.2s ease;
+
+        &:hover {
+          border-color: #1a73e8;
+        }
+      }
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .newTaskBtn {
+      border-radius: 8px;
+      font-weight: 500;
+      box-shadow: 0 2px 6px rgba(26, 115, 232, 0.25);
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #1557b0;
+        border-color: #1557b0;
+        box-shadow: 0 4px 10px rgba(26, 115, 232, 0.35);
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+
+  // ============================================
+  // 任务标题单元格
+  // ============================================
+  .taskTitleCell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .taskTitle {
+    font-weight: 500;
+    color: #202124;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #1a73e8;
+    }
+  }
+
+  .priorityTag {
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: #fce8e6;
+    color: #ea4335;
+    border: none;
+    line-height: 1.4;
+  }
+
+  // ============================================
+  // 状态单元格
+  // ============================================
+  .statusCell {
+    display: inline-flex;
+  }
+
+  .statusBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  // ============================================
+  // 优先级标签
+  // ============================================
+  .priorityBadge {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px 10px;
+    border-radius: 4px;
+  }
+
+  // ============================================
+  // 操作按钮
+  // ============================================
+  .actionButtons {
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+  }
+
+  .tableRow {
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      .actionButtons {
+        opacity: 1;
+      }
+    }
+  }
+
+  .tableRowHover {
+    background-color: #f8f9fa !important;
+  }
+
+  .tableRowCompleted {
+    opacity: 0.6;
+
+    .taskTitle {
+      text-decoration: line-through;
+      color: #9aa0a6;
+    }
+  }
+
+  .tableRowOverdue {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 4px;
+      bottom: 4px;
+      width: 3px;
+      background: #ea4335;
+      border-radius: 0 3px 3px 0;
+      opacity: 0.7;
+    }
+  }
+
+  .quickActionBtn {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    padding: 0;
+
+    &:hover {
+      background: #e8f0fe;
+      color: #1a73e8;
+      transform: scale(1.1);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  // ============================================
+  // 模态框样式
+  // ============================================
+  .modalTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+
+    :global(.anticon) {
+      color: #1a73e8;
+    }
+  }
+
+  .taskModal {
+    :global(.ant-modal-content) {
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    :global(.ant-modal-header) {
+      padding: 18px 24px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    :global(.ant-modal-body) {
+      padding: 20px 24px;
+    }
+
+    :global(.ant-modal-footer) {
+      padding: 14px 24px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    :global(.ant-form-item-label > label) {
+      font-weight: 500;
+      color: #202124;
+      font-size: 13px;
+    }
+
+    :global(.ant-input),
+    :global(.ant-select-selector) {
+      border-radius: 8px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: #1a73e8;
+      }
+
+      &:focus,
+      &:focus-within {
+        border-color: #1a73e8;
+        box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.12);
+      }
+    }
+  }
+
+  // ============================================
+  // 表格样式
+  // ============================================
+  :global(.ant-table) {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f0f0f0;
+
+    :global(.ant-table-thead > tr > th) {
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #5f6368;
+      border-bottom: 1px solid #f0f0f0;
+      padding: 12px 16px;
+      font-size: 13px;
+    }
+
+    :global(.ant-table-tbody > tr > td) {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background-color 0.15s ease;
+    }
+
+    :global(.ant-table-tbody > tr:hover > td) {
+      background: #f8f9fa;
+    }
+
+    :global(.ant-table-pagination) {
+      margin: 16px;
+    }
+
+    :global(.ant-table-empty) {
+      padding: 0;
+    }
+  }
+
+  // ============================================
+  // 动画
+  // ============================================
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .statCard {
+    padding: 0;
+    border: none;
+    overflow: hidden;
+    background: #ffffff;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    border: 1px solid #f0f0f0;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    :global(.ant-card-body) {
+      padding: 0;
+    }
+  }
+
+  .statContent {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .statLeft {
+    flex-shrink: 0;
+  }
+
+  .statIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .statRight {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .statLabel {
+    font-size: 12px;
+    color: #5f6368;
+    margin-bottom: 2px;
+  }
+
+  .statValue {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+    font-feature-settings: 'tnum';
+    font-variant-numeric: tabular-nums;
+  }
+
+  .statTrend {
+    font-size: 11px;
+    color: #9aa0a6;
+    margin-top: 2px;
+  }
+
+  // ============================================
+  // 响应式
+  // ============================================
+  @media (max-width: 768px) {
+    .taskList {
+      .filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .searchInput {
+        width: 100%;
+      }
+
+      .actions {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+      }
+    }
+
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+  }
+}

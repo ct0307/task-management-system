@@ -1,0 +1,75 @@
+.admin {
+  animation: fadeIn 0.4s ease-out;
+
+  .title {
+    margin: 0 0 20px;
+    font-size: 22px;
+    font-weight: 600;
+    color: #202124;
+    animation: fadeInUp 0.3s ease-out;
+  }
+
+  .statsRow {
+    margin-bottom: 20px;
+  }
+
+  .statCard {
+    border-radius: 12px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    transition: all 0.25s ease;
+    animation: fadeInUp 0.4s ease-out backwards;
+
+    &:nth-child(1) { animation-delay: 0ms; }
+    &:nth-child(2) { animation-delay: 60ms; }
+    &:nth-child(3) { animation-delay: 120ms; }
+    &:nth-child(4) { animation-delay: 180ms; }
+
+    &:hover {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      transform: translateY(-3px);
+    }
+
+    :global(.ant-card-body) {
+      padding: 20px;
+    }
+  }
+
+  .contentCard {
+    border-radius: 12px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    animation: fadeInUp 0.5s ease-out backwards;
+    animation-delay: 200ms;
+
+    :global(.ant-table) {
+      border: none;
+      box-shadow: none;
+    }
+  }
+
+  .sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h5 {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 16px;
+    }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}

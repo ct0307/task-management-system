@@ -1,0 +1,504 @@
+import React, { useEffect, useState } from "react";
+import { Card, Row, Col, Typography, Button, List, Tag, Space, Empty, Modal } from "antd";
+import {
+  PlusOutlined,
+  UnorderedListOutlined,
+  FileTextOutlined,
+  ClockCircleOutlined,
+  ThunderboltOutlined,
+  CheckCircleOutlined,
+  WarningOutlined,
+  AlertOutlined,
+  RightOutlined,
+  FireOutlined,
+  SmileOutlined,
+  RocketOutlined,
+  AppstoreOutlined,
+  DashboardOutlined
+} from "@ant-design/icons";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import StatCard from "@/component/StatCard";
+import {
+  PieChart, Pie, Cell, ResponsiveContainer, Tooltip as ReTooltip,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid,
+  LineChart, Line, Area, AreaChart
+} from "recharts";
+import { get } from "@/util/request";
+import { API_TASK_STATS, API_TASK_LIST, API_TASK_TREND } from "@/constant/urls";
+import s from "./index.module.less";
+
+const { Title, Text } = Typography;
+
+// 状态颜色映射
+const STATUS_COLORS = {
+  pending: { color: "#f9ab00", bg: "#fef7e0", label: "待处理" },
+  in_progress: { color: "#1a73e8", bg: "#e8f0fe", label: "进行中" },
+  completed: { color: "#34a853", bg: "#e6f4ea", label: "已完成" }
+};
+
+const PRIORITY_COLORS = {
+  high: { color: "#ea4335", label: "高" },
+  medium: { color: "#f9ab00", label: "中" },
+  low: { color: "#34a853", label: "低" }
+};
+
+const PIE_COLORS = ["#f9ab00", "#1a73e8", "#34a853"];
+
+const Dashboard = () => {
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [stats, setStats] = useState(null);
+  const [welcomeVisible, setWelcomeVisible] = useState(false);
+
+  // 新用户欢迎引导
+  useEffect(() => {
+    const isWelcome = searchParams.get("welcome");
+    const hasSeenWelcome = localStorage.getItem("WELCOME_SHOWN");
+    if (isWelcome === "1" && hasSeenWelcome !== "1") {
+      setWelcomeVisible(true);
+      localStorage.setItem("WELCOME_SHOWN", "1");
+      // 清除 URL 上的 welcome 参数
+      searchParams.delete("welcome");
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, []);
+  const [recentTasks, setRecentTasks] = useState([]);
+  const [trend, setTrend] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [statsData, tasksData, trendData] = await Promise.all([
+          get(API_TASK_STATS),
+          get(`${API_TASK_LIST}?limit=5`),
+          get(`${API_TASK_TREND}?days=14`)
+        ]);
+        setStats(statsData.data);
+        setRecentTasks(tasksData.data || []);
+        setTrend(trendData.data || []);
+      } catch (err) {
+        // 静默降级：数据加载失败时显示空状态
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // 构建饼图数据
+  const pieData = stats ? [
+    { name: "待处理", value: stats.byStatus?.pending || 0, color: PIE_COLORS[0] },
+    { name: "进行中", value: stats.byStatus?.in_progress || 0, color: PIE_COLORS[1] },
+    { name: "已完成", value: stats.byStatus?.completed || 0, color: PIE_COLORS[2] }
+  ].filter(d => d.value > 0) : [];
+
+  // 构建优先级数据
+  const priorityData = stats ? [
+    { name: "高优先级", value: stats.byPriority?.high || 0, fill: "#ea4335" },
+    { name: "中优先级", value: stats.byPriority?.medium || 0, fill: "#f9ab00" },
+    { name: "低优先级", value: stats.byPriority?.low || 0, fill: "#34a853" }
+  ] : [];
+
+  // 完成率
+  const total = stats?.total || 0;
+  const completed = stats?.byStatus?.completed || 0;
+  const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+  // 统计卡片配置
+  const statCards = [
+    {
+      title: "任务总数",
+      value: stats?.total || 0,
+      icon: <FileTextOutlined />,
+      color: "#1a73e8",
+      bgColor: "#e8f0fe"
+    },
+    {
+      title: "待处理",
+      value: stats?.byStatus?.pending || 0,
+      icon: <ClockCircleOutlined />,
+      color: "#f9ab00",
+      bgColor: "#fef7e0"
+    },
+    {
+      title: "进行中",
+      value: stats?.byStatus?.in_progress || 0,
+      icon: <ThunderboltOutlined />,
+      color: "#1a73e8",
+      bgColor: "#e8f0fe"
+    },
+    {
+      title: "已完成",
+      value: stats?.byStatus?.completed || 0,
+      icon: <CheckCircleOutlined />,
+      color: "#34a853",
+      bgColor: "#e6f4ea"
+    },
+    {
+      title: "高优先级",
+      value: stats?.byPriority?.high || 0,
+      icon: <WarningOutlined />,
+      color: "#ea4335",
+      bgColor: "#fce8e6"
+    },
+    {
+      title: "已逾期",
+      value: stats?.overdue || 0,
+      icon: <AlertOutlined />,
+      color: stats?.overdue > 0 ? "#ea4335" : "#34a853",
+      bgColor: stats?.overdue > 0 ? "#fce8e6" : "#e6f4ea"
+    }
+  ];
+
+  // 新用户欢迎引导弹窗（不受 loading 影响）
+  const welcomeModal = (
+    <Modal open={welcomeVisible} onCancel={() => setWelcomeVisible(false)} footer={null} width={520} centered>
+      <div style={{ textAlign: "center", padding: "20px 12px" }}>
+        <div style={{
+          width: 64, height: 64, borderRadius: 20, margin: "0 auto 16px",
+          background: "linear-gradient(135deg, #1a73e8 0%, #34a853 100%)",
+          display: "flex", alignItems: "center", justifyContent: "center"
+        }}>
+          <SmileOutlined style={{ fontSize: 32, color: "#fff" }} />
+        </div>
+        <Title level={4} style={{ marginBottom: 8 }}>欢迎使用轻量化任务管理系统！</Title>
+        <Text type="secondary" style={{ display: "block", marginBottom: 28, fontSize: 14 }}>
+          让我们一起高效管理工作任务
+        </Text>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 28 }}>
+          {[
+            { icon: PlusOutlined, label: "创建任务", color: "#1a73e8", bg: "#e8f0fe" },
+            { icon: AppstoreOutlined, label: "看板视图", color: "#f9ab00", bg: "#fef7e0" },
+            { icon: DashboardOutlined, label: "统计概览", color: "#34a853", bg: "#e6f4ea" }
+          ].map((item) => (
+            <div key={item.label} style={{
+              flex: "1 1 130px", maxWidth: 160, padding: 16, borderRadius: 12,
+              background: item.bg, textAlign: "center"
+            }}>
+              <item.icon style={{ fontSize: 22, color: item.color, marginBottom: 6 }} />
+              <br /><Text strong style={{ fontSize: 13 }}>{item.label}</Text>
+            </div>
+          ))}
+        </div>
+        <Button type="primary" size="large" icon={<RocketOutlined />}
+          onClick={() => setWelcomeVisible(false)}
+          style={{ minWidth: 180, height: 44, borderRadius: 10 }}>
+          开始使用
+        </Button>
+      </div>
+    </Modal>
+  );
+
+  if (loading) {
+    return (
+      <div className={s.dashboard}>
+        {welcomeModal}
+        <div className={s.loadingContainer}>
+          <div className={s.loadingSkeleton}>
+            <div className={s.skeletonHeader} />
+            <div className={s.skeletonRow}>
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className={`${s.skeletonCard} skeleton`} />
+              ))}
+            </div>
+            <div className={s.skeletonChartRow}>
+              <div className={`${s.skeletonChart} skeleton`} />
+              <div className={`${s.skeletonChart} skeleton`} />
+              <div className={`${s.skeletonChart} skeleton`} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={s.dashboard}>
+      {welcomeModal}
+
+      {/* 顶部标题区 */}
+      <div className={s.header}>
+        <div>
+          <Title level={2} className={s.pageTitle}>仪表盘</Title>
+          <Text className={s.pageSubtitle}>任务管理概览与快捷操作</Text>
+        </div>
+        <Space>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => navigate("/tasks")}
+            className={s.primaryBtn}
+          >
+            新建任务
+          </Button>
+          <Button
+            icon={<UnorderedListOutlined />}
+            onClick={() => navigate("/tasks")}
+          >
+            查看全部
+          </Button>
+        </Space>
+      </div>
+
+      {/* 统计卡片 */}
+      <Row gutter={[16, 16]} className={s.statsRow}>
+        {statCards.map((card) => (
+          <Col xs={12} sm={8} lg={4} key={card.title}>
+            <StatCard icon={card.icon} label={card.title} value={card.value} color={card.color} bgColor={card.bgColor} />
+          </Col>
+        ))}
+      </Row>
+
+      {/* 图表区域 */}
+      <Row gutter={[16, 16]} className={s.chartsRow}>
+        {/* 饼图 - 任务状态分布 */}
+        <Col xs={24} lg={8}>
+          <Card
+            title={<span className={s.chartTitle}><FileTextOutlined /> 任务状态分布</span>}
+            className={s.chartCard}
+            styles={{ body: { padding: "16px 8px" } }}
+          >
+            {pieData.length > 0 ? (
+              <div className={s.pieChartWrap}>
+                <ResponsiveContainer width="100%" height={220}>
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={55}
+                      outerRadius={80}
+                      paddingAngle={3}
+                      dataKey="value"
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+                      ))}
+                    </Pie>
+                    <ReTooltip
+                      formatter={(value, name) => [`${value} 个`, name]}
+                      contentStyle={{ borderRadius: 8, border: "1px solid #e8eaed" }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className={s.pieLegend}>
+                  {pieData.map(item => (
+                    <div key={item.name} className={s.legendItem}>
+                      <span className={s.legendDot} style={{ backgroundColor: item.color }} />
+                      <span className={s.legendLabel}>{item.name}</span>
+                      <span className={s.legendValue}>{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className={s.centerStat}>
+                  <div className={s.centerStatValue}>{total}</div>
+                  <div className={s.centerStatLabel}>总计</div>
+                </div>
+              </div>
+            ) : (
+              <Empty description="暂无任务数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            )}
+          </Card>
+        </Col>
+
+        {/* 柱状图 - 优先级分布 */}
+        <Col xs={24} lg={8}>
+          <Card
+            title={<span className={s.chartTitle}><WarningOutlined /> 优先级分布</span>}
+            className={s.chartCard}
+            styles={{ body: { padding: "16px 8px" } }}
+          >
+            {total > 0 ? (
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={priorityData} barCategoryGap="30%">
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+                  <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                  <ReTooltip
+                    formatter={(value) => [`${value} 个`]}
+                    contentStyle={{ borderRadius: 8, border: "1px solid #e8eaed" }}
+                  />
+                  <Bar dataKey="value" radius={[6, 6, 0, 0]} maxBarSize={50}>
+                    {priorityData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <Empty description="暂无任务数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            )}
+          </Card>
+        </Col>
+
+        {/* 完成进度环 */}
+        <Col xs={24} lg={8}>
+          <Card
+            title={<span className={s.chartTitle}><CheckCircleOutlined /> 完成进度</span>}
+            className={s.chartCard}
+            styles={{ body: { padding: "16px 8px" } }}
+          >
+            <div className={s.progressWrap}>
+              <div className={s.progressRing}>
+                <ResponsiveContainer width={160} height={160}>
+                  <PieChart>
+                    <Pie
+                      data={[
+                        { name: "已完成", value: completed },
+                        { name: "未完成", value: total - completed }
+                      ]}
+                      cx="50%" cy="50%"
+                      innerRadius={55} outerRadius={70}
+                      startAngle={90} endAngle={-270}
+                      dataKey="value"
+                      stroke="none"
+                    >
+                      <Cell fill="#34a853" />
+                      <Cell fill="#f0f0f0" />
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className={s.progressCenter}>
+                  <span className={s.progressPercent}>{completionRate}%</span>
+                  <span className={s.progressLabel}>完成率</span>
+                </div>
+              </div>
+              <div className={s.progressStats}>
+                <div className={s.progressItem}>
+                  <span className={s.progressItemLabel}>已完成</span>
+                  <span className={s.progressItemValue} style={{ color: "#34a853" }}>{completed}</span>
+                </div>
+                <div className={s.progressItem}>
+                  <span className={s.progressItemLabel}>未完成</span>
+                  <span className={s.progressItemValue} style={{ color: "#f9ab00" }}>{total - completed}</span>
+                </div>
+                <div className={s.progressItem}>
+                  <span className={s.progressItemLabel}>逾期</span>
+                  <span className={s.progressItemValue} style={{ color: stats?.overdue > 0 ? "#ea4335" : "#34a853" }}>
+                    {stats?.overdue || 0}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* 趋势图 — 近14天完成任务趋势 */}
+      {trend.length > 0 && (
+        <Row gutter={[16, 16]} className={s.chartsRow}>
+          <Col span={24}>
+            <Card
+              title={<span className={s.chartTitle}><CheckCircleOutlined /> 近14天完成任务趋势</span>}
+              className={s.chartCard}
+              styles={{ body: { padding: "16px 8px" } }}
+            >
+              <ResponsiveContainer width="100%" height={260}>
+                <AreaChart data={trend} margin={{ top: 8, right: 16, left: -16, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorCompleted" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#34a853" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#34a853" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 11 }}
+                    tickFormatter={(v) => v.slice(5)}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                  <ReTooltip
+                    formatter={(value) => [`${value} 个任务`, '完成数']}
+                    labelFormatter={(label) => `日期: ${label}`}
+                    contentStyle={{ borderRadius: 8, border: "1px solid #e8eaed" }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="count"
+                    stroke="#34a853"
+                    strokeWidth={2}
+                    fill="url(#colorCompleted)"
+                    dot={{ r: 3, fill: "#34a853", strokeWidth: 0 }}
+                    activeDot={{ r: 5 }}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </Card>
+          </Col>
+        </Row>
+      )}
+
+      {/* 近期任务 */}
+      <Row className={s.recentTasksRow}>
+        <Col span={24}>
+          <Card
+            title={
+              <span className={s.chartTitle}>
+                <FireOutlined style={{ color: "#ea4335" }} /> 近期任务
+              </span>
+            }
+            className={s.chartCard}
+            extra={
+              <Button type="link" onClick={() => navigate("/tasks")}>
+                查看全部 <RightOutlined />
+              </Button>
+            }
+          >
+            {recentTasks.length > 0 ? (
+              <List
+                dataSource={recentTasks}
+                renderItem={(task) => {
+                  const statusConfig = STATUS_COLORS[task.status] || {};
+                  const priorityConfig = PRIORITY_COLORS[task.priority] || {};
+                  const isOverdue = task.due_date && new Date(task.due_date) < new Date() && task.status !== "completed";
+                  return (
+                    <List.Item className={s.taskItem}>
+                      <List.Item.Meta
+                        title={
+                          <Space>
+                            <span className={s.taskTitle}>{task.title}</span>
+                            {task.priority === "high" && <Tag color="error" style={{ margin: 0 }}>高优</Tag>}
+                            {isOverdue && <Tag color="warning" style={{ margin: 0 }}>已逾期</Tag>}
+                          </Space>
+                        }
+                        description={
+                          <Space size={12}>
+                            {statusConfig.label && (
+                              <span className={s.taskMetaTag} style={{ color: statusConfig.color }}>
+                                {statusConfig.label}
+                              </span>
+                            )}
+                            {task.category_name && (
+                              <span className={s.taskMetaText}>{task.category_name}</span>
+                            )}
+                            {task.due_date && (
+                              <span className={s.taskMetaText} style={isOverdue ? { color: "#ea4335" } : {}}>
+                                截止: {task.due_date.split("T")[0]}
+                              </span>
+                            )}
+                          </Space>
+                        }
+                      />
+                    </List.Item>
+                  );
+                }}
+              />
+            ) : (
+              <Empty description="暂无任务，快去创建第一个任务吧" image={Empty.PRESENTED_IMAGE_SIMPLE}>
+                <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate("/tasks")}>
+                  创建任务
+                </Button>
+              </Empty>
+            )}
+          </Card>
+        </Col>
+      </Row>
+    </div>
+  );
+};
+
+export default Dashboard;

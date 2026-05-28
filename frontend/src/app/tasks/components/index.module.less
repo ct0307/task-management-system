@@ -1,0 +1,240 @@
+/**
+ * 优化后组件的样式
+ */
+
+// ============================================
+// 空状态样式
+// ============================================
+.emptyState {
+  padding: 48px 24px;
+  text-align: center;
+
+  .emptyIconWrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 24px;
+  }
+
+  .emptyIconCircle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e8f0fe 0%, #d2e3fc 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .emptyIcon {
+    font-size: 32px;
+    color: #1a73e8;
+  }
+
+  .emptyIconGlow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(26, 115, 232, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: -1;
+  }
+
+  .emptyTitle {
+    margin-bottom: 8px;
+    color: #202124;
+  }
+
+  .emptyDescription {
+    display: block;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: #5f6368;
+  }
+
+  .emptyActions {
+    margin-bottom: 32px;
+  }
+
+  .emptyTips {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .tipItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tipIcon {
+    color: #9aa0a6;
+    font-size: 12px;
+  }
+
+  .tipText {
+    font-size: 12px;
+    color: #9aa0a6;
+  }
+}
+
+// ============================================
+// 成功反馈样式
+// ============================================
+.successFeedback {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  animation: slideDown 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.successContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  border-left: 4px solid #34a853;
+}
+
+.successIcon {
+  font-size: 18px;
+  color: #34a853;
+  animation: successPop 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.successText {
+  font-size: 14px;
+  font-weight: 500;
+  color: #202124;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+// ============================================
+// 展开行样式
+// ============================================
+.expandBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+  color: #5f6368;
+  transition: all 0.15s;
+  background: #f1f3f4;
+
+  &:hover {
+    background: #e8f0fe;
+    color: #1a73e8;
+  }
+}
+
+.expandedRow {
+  padding: 8px 16px 12px;
+  background: #fafbfc;
+  border-top: 1px solid #f0f0f0;
+
+  .expandedRowHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .inlineSubtaskList {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 8px;
+  }
+
+  .inlineSubtaskItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+
+    &:hover {
+      background: #f0f0f0;
+
+      .inlineDelete {
+        opacity: 1;
+      }
+    }
+  }
+
+  .inlineCheckbox {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    border: 2px solid #d9d9d9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .inlineSubtaskTitle {
+    flex: 1;
+    font-size: 13px;
+  }
+
+  .inlineDelete {
+    font-size: 12px;
+    color: #bfbfbf;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.15s;
+
+    &:hover {
+      color: #ea4335;
+    }
+  }
+}
+
+// ============================================
+// 子任务进度条
+// ============================================
+.subtaskProgress {
+  :global(.ant-progress) {
+    line-height: 1;
+  }
+  :global(.ant-progress-text) {
+    font-size: 11px;
+  }
+}

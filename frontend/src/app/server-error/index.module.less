@@ -1,0 +1,52 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.card {
+  text-align: center;
+  max-width: 480px;
+
+  :global {
+    .ant-result-title {
+      font-size: 72px !important;
+      font-weight: 700 !important;
+      line-height: 1 !important;
+      background: linear-gradient(135deg, #ea4335 0%, #f9ab00 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .ant-result-subtitle {
+      font-size: 16px !important;
+      color: #5f6368 !important;
+    }
+  }
+
+  .illustration {
+    margin-bottom: 8px;
+
+    svg {
+      width: 200px;
+      height: auto;
+      animation: float 6s ease-in-out infinite;
+    }
+  }
+
+  .actions {
+    margin-top: 24px;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,285 @@
+/**
+ * 全局样式重置和基础样式
+ */
+@import './theme.less';
+@import './animations.less';
+
+// ============================================
+// 基础重置
+// ============================================
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: @font-family;
+  font-size: @font-size-base;
+  line-height: 1.5;
+  color: @text-color;
+  background: @bg-color-page;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-display: swap;
+  text-rendering: optimizeSpeed;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+// ============================================
+// 字体
+// ============================================
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 600;
+  color: @heading-color;
+  line-height: 1.3;
+}
+
+h1 { font-size: 28px; }
+h2 { font-size: 24px; }
+h3 { font-size: 20px; }
+h4 { font-size: 18px; }
+h5 { font-size: 16px; }
+h6 { font-size: 14px; }
+
+p {
+  margin: 0 0 @spacing-md;
+}
+
+a {
+  color: @primary-color;
+  text-decoration: none;
+  transition: color @duration-fast @ease-out-quart;
+
+  &:hover {
+    color: @primary-color-hover;
+  }
+}
+
+// ============================================
+// 列表
+// ============================================
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// ============================================
+// 滚动条
+// ============================================
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: @border-color;
+  border-radius: 4px;
+
+  &:hover {
+    background: @text-color-tertiary;
+  }
+}
+
+// ============================================
+// 选择
+// ============================================
+::selection {
+  background: @primary-color-outline;
+  color: @primary-color;
+}
+
+// ============================================
+// 焦点样式
+// ============================================
+:focus-visible {
+  outline: 2px solid @primary-color;
+  outline-offset: 2px;
+}
+
+// ============================================
+// 工具类
+// ============================================
+
+// Flex
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-center { justify-content: center; align-items: center; }
+.flex-between { justify-content: space-between; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-sm { gap: @spacing-sm; }
+.gap-md { gap: @spacing-md; }
+.gap-lg { gap: @spacing-lg; }
+
+// Spacing
+.mt-sm { margin-top: @spacing-sm; }
+.mt-md { margin-top: @spacing-md; }
+.mt-lg { margin-top: @spacing-lg; }
+.mb-sm { margin-bottom: @spacing-sm; }
+.mb-md { margin-bottom: @spacing-md; }
+.mb-lg { margin-bottom: @spacing-lg; }
+.ml-sm { margin-left: @spacing-sm; }
+.ml-md { margin-left: @spacing-md; }
+.mr-sm { margin-right: @spacing-sm; }
+.mr-md { margin-right: @spacing-md; }
+
+// Text
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.text-primary { color: @primary-color; }
+.text-secondary { color: @text-color-secondary; }
+.text-success { color: @success-color; }
+.text-warning { color: @warning-color; }
+.text-danger { color: @error-color; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+
+// ============================================
+// 卡片样式
+// ============================================
+.card {
+  background: @bg-color;
+  border-radius: @border-radius-lg;
+  box-shadow: @shadow-base;
+  transition: box-shadow @duration-normal @ease-out-quart,
+              transform @duration-normal @ease-out-quart;
+
+  &:hover {
+    box-shadow: @shadow-md;
+  }
+}
+
+.card-hover-lift {
+  .card;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: @shadow-lg;
+  }
+}
+
+// ============================================
+// 状态标签
+// ============================================
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+}
+
+.status-pending {
+  background: @warning-color-bg;
+  color: @warning-color;
+}
+
+.status-in-progress {
+  background: @info-color-bg;
+  color: @info-color;
+}
+
+.status-completed {
+  background: @success-color-bg;
+  color: @success-color;
+}
+
+.status-overdue {
+  background: @error-color-bg;
+  color: @error-color;
+}
+
+// ============================================
+// 空状态
+// ============================================
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: @spacing-xxl @spacing-lg;
+  text-align: center;
+
+  &-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: @spacing-lg;
+    color: @text-color-tertiary;
+  }
+
+  &-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: @text-color;
+    margin-bottom: @spacing-sm;
+  }
+
+  &-description {
+    font-size: 14px;
+    color: @text-color-secondary;
+    max-width: 320px;
+    margin-bottom: @spacing-lg;
+  }
+}
+
+// ============================================
+// 快捷键提示
+// ============================================
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 22px;
+  padding: 0 6px;
+  font-family: @font-family;
+  font-size: 11px;
+  font-weight: 500;
+  color: @text-color-secondary;
+  background: @bg-color;
+  border: 1px solid @border-color;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+// ============================================
+// 深色模式支持（可选）
+// ============================================
+@media (prefers-color-scheme: dark) {
+  // 可以在这里添加深色模式变量覆盖
+  // :root {
+  //   --color-text: #e8eaed;
+  //   --color-bg: #202124;
+  // }
+}

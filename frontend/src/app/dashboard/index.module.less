@@ -1,0 +1,401 @@
+@import '../../styles/theme.less';
+@import '../../styles/animations.less';
+
+.dashboard {
+  animation: fadeIn 0.4s ease-out;
+
+  .loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+  }
+
+  .loadingSkeleton {
+    width: 100%;
+    max-width: 1200px;
+  }
+
+  .skeletonHeader {
+    height: 32px;
+    width: 200px;
+    margin-bottom: 24px;
+    border-radius: 8px;
+    .skeleton();
+  }
+
+  .skeletonRow {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .skeletonCard {
+    height: 80px;
+    border-radius: 12px;
+    .skeleton();
+  }
+
+  .skeletonChartRow {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .skeletonChart {
+    height: 280px;
+    border-radius: 12px;
+    .skeleton();
+  }
+
+  .skeleton() {
+    background: linear-gradient(
+      90deg,
+      #f0f0f0 25%,
+      #e8e8e8 50%,
+      #f0f0f0 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  // ============================================
+  // 页面头部
+  // ============================================
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+  }
+
+  .pageTitle {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: #202124;
+    animation: fadeInUp 0.3s ease-out;
+  }
+
+  .pageSubtitle {
+    font-size: 14px;
+    color: #9aa0a6;
+  }
+
+  .primaryBtn {
+    border-radius: 8px;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(26, 115, 232, 0.25);
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(26, 115, 232, 0.35);
+    }
+  }
+
+  // ============================================
+  // 统计卡片
+  // ============================================
+  .statsRow {
+    margin-bottom: 20px;
+  }
+
+  .statCard {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #f0f0f0;
+    transition: all 0.25s ease;
+    animation: fadeInUp 0.4s ease-out backwards;
+    cursor: default;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      border-color: transparent;
+    }
+  }
+
+  .statIconWrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+
+    .statCard:hover & {
+      transform: scale(1.08);
+    }
+  }
+
+  .statInfo {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .statLabel {
+    font-size: 12px;
+    color: #5f6368;
+  }
+
+  .statValue {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.2;
+    font-feature-settings: 'tnum';
+    font-variant-numeric: tabular-nums;
+  }
+
+  // ============================================
+  // 图表卡片
+  // ============================================
+  .chartsRow {
+    margin-bottom: 20px;
+  }
+
+  .chartCard {
+    border-radius: 12px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    transition: all 0.25s ease;
+    animation: fadeInUp 0.5s ease-out backwards;
+
+    &:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    :global(.ant-card-head) {
+      border-bottom: 1px solid #f0f0f0;
+      min-height: 48px;
+      padding: 0 16px;
+    }
+
+    :global(.ant-card-head-title) {
+      padding: 12px 0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+
+  .chartTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #202124;
+  }
+
+  // ============================================
+  // 饼图
+  // ============================================
+  .pieChartWrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .centerStat {
+    position: absolute;
+    top: 50%;
+    left: 28%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+
+    .centerStatValue {
+      font-size: 24px;
+      font-weight: 700;
+      color: #202124;
+      font-feature-settings: 'tnum';
+    }
+
+    .centerStatLabel {
+      font-size: 11px;
+      color: #9aa0a6;
+    }
+  }
+
+  .pieLegend {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .legendItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: #f8f9fa;
+    }
+  }
+
+  .legendDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .legendLabel {
+    flex: 1;
+    font-size: 13px;
+    color: #5f6368;
+  }
+
+  .legendValue {
+    font-size: 14px;
+    font-weight: 600;
+    color: #202124;
+    font-feature-settings: 'tnum';
+  }
+
+  // ============================================
+  // 进度环
+  // ============================================
+  .progressWrap {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 8px 0;
+  }
+
+  .progressRing {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    flex-shrink: 0;
+  }
+
+  .progressCenter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .progressPercent {
+    display: block;
+    font-size: 28px;
+    font-weight: 700;
+    color: #34a853;
+    font-feature-settings: 'tnum';
+  }
+
+  .progressLabel {
+    display: block;
+    font-size: 12px;
+    color: #9aa0a6;
+    margin-top: 2px;
+  }
+
+  .progressStats {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .progressItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #f8f9fa;
+  }
+
+  .progressItemLabel {
+    font-size: 13px;
+    color: #5f6368;
+  }
+
+  .progressItemValue {
+    font-size: 18px;
+    font-weight: 700;
+    font-feature-settings: 'tnum';
+  }
+
+  // ============================================
+  // 近期任务
+  // ============================================
+  .recentTasksRow {
+    animation: fadeInUp 0.6s ease-out backwards;
+  }
+
+  .taskItem {
+    padding: 12px 0 !important;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: #f8f9fa;
+    }
+
+    &:last-child {
+      border-bottom: none !important;
+    }
+
+    :global(.ant-list-item-meta) {
+      margin-bottom: 0;
+    }
+  }
+
+  .taskTitle {
+    font-weight: 500;
+    color: #202124;
+    font-size: 14px;
+  }
+
+  .taskMetaTag {
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .taskMetaText {
+    font-size: 12px;
+    color: #9aa0a6;
+  }
+
+  // ============================================
+  // 响应式
+  // ============================================
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .pieChartWrap {
+      flex-direction: column;
+    }
+
+    .centerStat {
+      left: 50%;
+    }
+
+    .progressWrap {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+}
