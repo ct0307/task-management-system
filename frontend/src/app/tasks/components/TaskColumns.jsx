@@ -10,7 +10,8 @@ import {
   ClockCircleOutlined,
   ExclamationCircleOutlined,
   DownOutlined,
-  RightOutlined
+  RightOutlined,
+  ApartmentOutlined
 } from '@ant-design/icons';
 import { STATUS_CONFIG, PRIORITY_CONFIG } from '@/constant/task';
 import s from './index.module.less';
@@ -93,6 +94,14 @@ export const buildColumns = ({
             {text}
           </Text>
         </Tooltip>
+        {/* 子任务标签（搜索时出现） */}
+        {record.parent_title && (
+          <Tooltip title={`属于：${record.parent_title}`}>
+            <Tag className={s.priorityTag} style={{ background: '#f0f5ff', border: '1px solid #adc6ff', color: '#1a73e8' }}>
+              <ApartmentOutlined /> {record.parent_title}
+            </Tag>
+          </Tooltip>
+        )}
         {record.priority === 'high' && (
           <Tag color="error" className={s.priorityTag}>
             <StarOutlined /> 高优先

@@ -8,8 +8,8 @@ node_modules/
 # ============================================
 .env
 .env.local
-.env.production
 .env.development
+# .env.production 是部署模板，不含真实密码，可以提交
 
 # ============================================
 # 构建产物

@@ -15,20 +15,28 @@ const SORTABLE_FIELDS = {
 };
 
 async function findAll({ status, category, priority, search, assignee, dateRange, page, pageSize, limit, sortField, sortOrder, includeDeleted, userId, userRole } = {}) {
+  const hasSearch = search && search.trim() !== '';
   let query = `
     SELECT t.*, c.name as category_name, u.real_name as assignee_name,
     creator.real_name as creator_name,
+    parent.title as parent_title,
     (SELECT COUNT(*) FROM tasks sub WHERE sub.parent_id = t.id AND sub.deleted_at IS NULL) as subtask_count,
     (SELECT COUNT(*) FROM tasks sub WHERE sub.parent_id = t.id AND sub.deleted_at IS NULL AND sub.status = 'completed') as subtask_done
     FROM tasks t
     LEFT JOIN categories c ON t.category_id = c.id
     LEFT JOIN users u ON t.assignee_id = u.id
     LEFT JOIN users creator ON t.created_by = creator.id
-    WHERE t.parent_id IS NULL
+    LEFT JOIN tasks parent ON t.parent_id = parent.id
+    WHERE 1=1
   `;
   const params = [];
 
-  // 用户数据隔离：普通用户只看自己创建或被分配的任务，管理员看全部
+  // 未搜索时只看顶层任务，搜索时全局搜索（含子任务）
+  if (!hasSearch) {
+    query += ' AND t.parent_id IS NULL';
+  }
+
+  // 用户数据隔离
   if (userId && userRole !== 'admin') {
     query += ' AND (t.created_by = ? OR t.assignee_id = ?)';
     params.push(userId, userId);
@@ -39,7 +47,7 @@ async function findAll({ status, category, priority, search, assignee, dateRange
   if (category) { query += ' AND t.category_id = ?'; params.push(category); }
   if (priority) { query += ' AND t.priority = ?'; params.push(priority); }
   if (assignee) { query += ' AND t.assignee_id = ?'; params.push(Number(assignee)); }
-  if (search) { query += ' AND (t.title LIKE ? OR t.description LIKE ?)'; params.push(`%${search}%`, `%${search}%`); }
+  if (hasSearch) { query += ' AND (t.title LIKE ? OR t.description LIKE ?)'; params.push(`%${search}%`, `%${search}%`); }
 
   // 日期范围筛选
   if (dateRange === 'today') { query += ' AND DATE(t.due_date) = CURDATE()'; }
@@ -69,7 +77,7 @@ async function findAll({ status, category, priority, search, assignee, dateRange
       countQuery += ' AND (t.created_by = ? OR t.assignee_id = ?)';
     }
     if (!includeDeleted) countQuery += ' AND t.deleted_at IS NULL';
-    countQuery += ' AND t.parent_id IS NULL'; // 只统计父任务
+    if (!hasSearch) countQuery += ' AND t.parent_id IS NULL'; // 非搜索时只统计顶层任务
     if (status) countQuery += ' AND t.status = ?';
     if (category) countQuery += ' AND t.category_id = ?';
     if (priority) countQuery += ' AND t.priority = ?';
