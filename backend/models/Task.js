@@ -334,6 +334,13 @@ async function getAllCategories() {
  * 创建分类
  */
 async function createCategory({ name, color }) {
+  // 重名检查
+  const [existing] = await pool.query('SELECT * FROM categories WHERE name = ?', [name]);
+  if (existing.length > 0) {
+    const err = new Error('分类名称已存在');
+    err.status = 409;
+    throw err;
+  }
   const [result] = await pool.query(
     'INSERT INTO categories (name, color) VALUES (?, ?)',
     [name, color || '#1890ff']

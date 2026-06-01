@@ -212,6 +212,30 @@ const useTaskStore = create((set, getState) => ({
     }
   },
 
+  // 更新分类
+  updateCategory: async (id, data) => {
+    try {
+      await put(`${API_TASK_CATEGORIES}/${id}`, data);
+      invalidateCache('categories');
+      await getState().fetchCategories(true);
+      return true;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  // 删除分类
+  deleteCategory: async (id) => {
+    try {
+      await del(`${API_TASK_CATEGORIES}/${id}`);
+      invalidateCache('categories');
+      await getState().fetchCategories(true);
+      return true;
+    } catch (err) {
+      throw err;
+    }
+  },
+
   // 获取可分配用户列表（带 5 分钟缓存）
   fetchUsers: async (forceRefresh = false) => {
     if (!forceRefresh && isCacheValid('users')) {

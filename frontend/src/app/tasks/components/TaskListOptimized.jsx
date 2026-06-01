@@ -34,6 +34,7 @@ import {
   DownOutlined,
   RightOutlined,
   ClockCircleOutlined,
+  TagsOutlined
 } from '@ant-design/icons';
 import { STATUS_CONFIG, PRIORITY_CONFIG } from '@/constants/task';
 import useTaskStore from '@/store/taskStore';
@@ -50,6 +51,12 @@ import s from './index.module.less';
 const { Option } = Select;
 const { TextArea } = Input;
 const { Text } = Typography;
+
+// 分类颜色预设
+const CATEGORY_COLORS = [
+  '#ea4335', '#f9ab00', '#34a853', '#1a73e8',
+  '#7c3aed', '#ec4899', '#14b8a6', '#f97316'
+];
 
 // ====== 递归子任务行组件（独立组件，支持无限嵌套展开） ======
 const NestedChildRow = memo(({ child, parentId, depth, onToggle, onDelete, onAdd, onOpenDrawer, updateTask, fetchTasks, messageApi }) => {
@@ -198,6 +205,11 @@ const TaskListOptimized = () => {
   const [importLoading, setImportLoading] = useState(false);
   const [shortcutHelpOpen, setShortcutHelpOpen] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
+  const [newCategoryColor, setNewCategoryColor] = useState(CATEGORY_COLORS[3]); // 默认蓝色
+  const [categoryManageVisible, setCategoryManageVisible] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(null); // { id, name, color }
+  const [editCatName, setEditCatName] = useState('');
+  const [editCatColor, setEditCatColor] = useState('');
   const [newUserName, setNewUserName] = useState('');
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
   // 顶层展开的子任务数据，key = 父任务 ID
@@ -225,6 +237,8 @@ const TaskListOptimized = () => {
     deleteTask,
     batchDelete,
     batchUpdate,
+    updateCategory,
+    deleteCategory,
     setFilters,
     setPagination,
     openModal,
@@ -431,11 +445,18 @@ const TaskListOptimized = () => {
 
   // 内联新增分类
   const handleAddCategory = async () => {
-    if (!newCategoryName.trim()) return;
+    const name = newCategoryName.trim();
+    if (!name) return;
+    // 重名检查
+    if (categories.some(c => c.name === name)) {
+      messageApi.warning(`分类「${name}」已存在`);
+      return;
+    }
     try {
-      await post('/api/tasks/categories', { name: newCategoryName.trim() });
+      await post('/api/tasks/categories', { name, color: newCategoryColor });
       messageApi.success('分类已添加');
       setNewCategoryName('');
+      setNewCategoryColor(CATEGORY_COLORS[3]);
       await fetchCategories(true);
     } catch (err) {
       messageApi.error(err.response?.data?.message || '添加失败');
@@ -445,12 +466,44 @@ const TaskListOptimized = () => {
   // 内联删除分类
   const handleDeleteCategory = async (catId) => {
     try {
-      await del(`/api/tasks/categories/${catId}`);
+      await deleteCategory(catId);
       messageApi.success('分类已删除');
-      await fetchCategories(true);
     } catch (err) {
       messageApi.error(err.response?.data?.message || '删除失败');
     }
+  };
+
+  // 打开管理分类弹窗
+  const handleOpenCategoryManage = () => {
+    setCategoryManageVisible(true);
+  };
+
+  // 开始编辑分类
+  const handleStartEditCategory = (cat) => {
+    setEditingCategory(cat);
+    setEditCatName(cat.name);
+    setEditCatColor(cat.color);
+  };
+
+  // 保存编辑分类
+  const handleSaveEditCategory = async () => {
+    if (!editCatName.trim()) return;
+    if (categories.some(c => c.name === editCatName.trim() && c.id !== editingCategory.id)) {
+      messageApi.warning(`分类「${editCatName.trim()}」已存在`);
+      return;
+    }
+    try {
+      await updateCategory(editingCategory.id, { name: editCatName.trim(), color: editCatColor });
+      messageApi.success('分类已更新');
+      setEditingCategory(null);
+    } catch (err) {
+      messageApi.error(err.response?.data?.message || '更新失败');
+    }
+  };
+
+  // 取消编辑
+  const handleCancelEditCategory = () => {
+    setEditingCategory(null);
   };
 
   // 内联新增负责人
@@ -705,6 +758,10 @@ const TaskListOptimized = () => {
           新建任务
         </Button>
 
+        <Button icon={<TagsOutlined />} onClick={handleOpenCategoryManage}>
+          管理分类
+        </Button>
+
         <Select
           placeholder="导出数据"
           style={{ width: 110 }}
@@ -860,16 +917,32 @@ const TaskListOptimized = () => {
                   <div>
                     {menu}
                     <Divider style={{ margin: '4px 0' }} />
-                    <div style={{ display: 'flex', padding: '0 8px 8px', gap: 4 }}>
-                      <Input
-                        size="small"
-                        placeholder="新分类名"
-                        value={newCategoryName}
-                        onChange={(e) => setNewCategoryName(e.target.value)}
-                        onPressEnter={handleAddCategory}
-                        style={{ flex: 1 }}
-                      />
-                      <Button size="small" type="primary" onClick={handleAddCategory}>添加</Button>
+                    <div style={{ padding: '0 8px 8px' }}>
+                      <div style={{ display: 'flex', gap: 4, marginBottom: 6 }}>
+                        {CATEGORY_COLORS.map(color => (
+                          <span
+                            key={color}
+                            onClick={() => setNewCategoryColor(color)}
+                            style={{
+                              width: 22, height: 22, borderRadius: 6, cursor: 'pointer',
+                              background: color,
+                              border: newCategoryColor === color ? '3px solid #303030' : '3px solid transparent',
+                              transition: 'border 0.15s'
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <div style={{ display: 'flex', gap: 4 }}>
+                        <Input
+                          size="small"
+                          placeholder="新分类名"
+                          value={newCategoryName}
+                          onChange={(e) => setNewCategoryName(e.target.value)}
+                          onPressEnter={handleAddCategory}
+                          style={{ flex: 1 }}
+                        />
+                        <Button size="small" type="primary" onClick={handleAddCategory}>添加</Button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -925,6 +998,72 @@ const TaskListOptimized = () => {
 
       {/* 任务详情侧滑面板 */}
       <TaskDetailDrawer />
+
+      {/* 管理分类弹窗 */}
+      <Modal
+        title={<span><TagsOutlined style={{ marginRight: 8 }} />管理分类</span>}
+        open={categoryManageVisible}
+        onCancel={() => { setCategoryManageVisible(false); setEditingCategory(null); }}
+        footer={null}
+        width={480}
+      >
+        {categories.length === 0 ? (
+          <Text type="secondary">暂无分类，在创建任务时添加分类吧</Text>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {categories.map(cat => (
+              <div key={cat.id} style={{
+                display: 'flex', alignItems: 'center', gap: 10,
+                padding: '10px 12px', borderRadius: 8,
+                background: '#fafbfc', border: '1px solid #eef1f5'
+              }}>
+                {editingCategory?.id === cat.id ? (
+                  <>
+                    <div style={{ display: 'flex', gap: 4 }}>
+                      {CATEGORY_COLORS.map(color => (
+                        <span
+                          key={color}
+                          onClick={() => setEditCatColor(color)}
+                          style={{
+                            width: 20, height: 20, borderRadius: 5, cursor: 'pointer',
+                            background: color,
+                            border: editCatColor === color ? '3px solid #303030' : '3px solid transparent',
+                            transition: 'border 0.15s'
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <Input size="small" value={editCatName}
+                      onChange={e => setEditCatName(e.target.value)}
+                      onPressEnter={handleSaveEditCategory}
+                      style={{ flex: 1, maxWidth: 140 }} />
+                    <Button size="small" type="primary" onClick={handleSaveEditCategory}>保存</Button>
+                    <Button size="small" onClick={handleCancelEditCategory}>取消</Button>
+                  </>
+                ) : (
+                  <>
+                    <span style={{
+                      width: 14, height: 14, borderRadius: '50%',
+                      background: cat.color, flexShrink: 0
+                    }} />
+                    <Text strong style={{ flex: 1 }}>{cat.name}</Text>
+                    <Button size="small" type="link" icon={<EditOutlined />}
+                      onClick={() => handleStartEditCategory(cat)} />
+                    <Popconfirm
+                      title={`确定删除分类「${cat.name}」？关联任务将取消分类。`}
+                      onConfirm={() => handleDeleteCategory(cat.id)}
+                      okText="删除" cancelText="取消"
+                      okButtonProps={{ danger: true }}
+                    >
+                      <Button size="small" type="link" danger icon={<DeleteOutlined />} />
+                    </Popconfirm>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </Modal>
 
       {/* 快捷键帮助弹窗 */}
       <Modal
