@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import TaskStats from './components/TaskStatsOptimized';
 import TaskList from './components/TaskListOptimized';
 import TasksKanban from './kanban/TasksKanban';
-import useTaskStore from './store/taskStore';
+import useTaskStore from '@/store/taskStore';
 import s from './index.module.less';
 
 const Tasks = () => {

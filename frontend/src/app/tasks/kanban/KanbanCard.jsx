@@ -6,7 +6,7 @@ import {
   EditOutlined,
   DeleteOutlined
 } from '@ant-design/icons';
-import { PRIORITY_CONFIG } from '@/constant/task';
+import { PRIORITY_CONFIG } from '@/constants/task';
 import s from './index.module.less';
 
 const { Text } = Typography;

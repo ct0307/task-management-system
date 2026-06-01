@@ -35,8 +35,8 @@ import {
   RightOutlined,
   ClockCircleOutlined,
 } from '@ant-design/icons';
-import { STATUS_CONFIG, PRIORITY_CONFIG } from '@/constant/task';
-import useTaskStore from '../store/taskStore';
+import { STATUS_CONFIG, PRIORITY_CONFIG } from '@/constants/task';
+import useTaskStore from '@/store/taskStore';
 import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
 import { post, put, del, get } from '@/util/request';
 import EmptyState from './EmptyState';

@@ -3,7 +3,7 @@
  * 与后端 constants/errorCodes.js 保持同步
  *
  * 使用方式：
- *   import { ErrorCodes, getErrorMessage } from "@/constant/errorCodes";
+ *   import { ErrorCodes, getErrorMessage } from "@/constants/errorCodes";
  *   if (code === ErrorCodes.UNAUTHORIZED) { ... }
  */
 

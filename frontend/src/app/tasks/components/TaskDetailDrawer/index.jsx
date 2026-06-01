@@ -39,10 +39,10 @@ import {
   VerticalAlignTopOutlined,
   HolderOutlined
 } from '@ant-design/icons';
-import { STATUS_CONFIG, PRIORITY_CONFIG } from '@/constant/task';
+import { STATUS_CONFIG, PRIORITY_CONFIG } from '@/constants/task';
 import { get, post, put, del } from '@/util/request';
-import useTaskStore from '../../store/taskStore';
-import useAuthStore from '@/app/store/authStore';
+import useTaskStore from '@/store/taskStore';
+import useAuthStore from '@/store/authStore';
 import dayjs from 'dayjs';
 
 const { TextArea } = Input;

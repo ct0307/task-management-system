@@ -7,7 +7,7 @@
  *   const { isLogin, currentUser, isAdmin } = useAuth();
  */
 
-import useAuthStore from "@/app/store/authStore";
+import useAuthStore from "@/store/authStore";
 
 export function useAuth() {
   const isLogin = useAuthStore((s) => s.isLogin);

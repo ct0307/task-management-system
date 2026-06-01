@@ -10,9 +10,9 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { post } from "@/util/request";
 import token from "@/util/token.js";
-import * as urls from "@/constant/urls";
+import * as urls from "@/constants/urls";
 import s from "./index.module.less";
-import useAuthStore from "@/app/store/authStore";
+import useAuthStore from "@/store/authStore";
 
 const { Title, Text } = Typography;
 

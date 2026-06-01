@@ -2,11 +2,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import cls from "classnames";
 import s from "./index.module.less";
-import logo from "@/img/logo.svg";
+import logo from "@/assets/logo.svg";
 import token from "@/util/token";
 import { get, post, put } from "@/util/request";
-import * as urls from "@/constant/urls";
-import { getMenusByRole } from "@/constant/menu";
+import * as urls from "@/constants/urls";
+import { getMenusByRole } from "@/constants/menu";
 import { Button, Modal, Space, Tooltip, Badge, Popover, List, Typography } from "antd";
 import {
   LogoutOutlined,

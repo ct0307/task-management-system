@@ -4,7 +4,7 @@
  */
 import { create } from 'zustand';
 import { get, post, put, del } from '@/util/request';
-import { API_TASK_LIST, API_TASK_STATS, API_TASK_CATEGORIES, API_TASK_USERS } from '@/constant/urls';
+import { API_TASK_LIST, API_TASK_STATS, API_TASK_CATEGORIES, API_TASK_USERS } from '@/constants/urls';
 
 // 简单 TTL 缓存
 const cache = {};

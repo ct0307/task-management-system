@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { Row, Col, message } from 'antd';
-import useTaskStore from '../store/taskStore';
+import useTaskStore from '@/store/taskStore';
 import KanbanColumn from './KanbanColumn';
 import s from './index.module.less';
 

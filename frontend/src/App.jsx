@@ -1,9 +1,9 @@
 import { Suspense, lazy, useEffect, useRef } from "react";
 import { HashRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Spin, Layout as AntLayout } from "antd";
-import useAuthStore from "@/app/store/authStore";
+import useAuthStore from "@/store/authStore";
 import { get } from "@/util/request";
-import { API_AUTH_ME } from "@/constant/urls";
+import { API_AUTH_ME } from "@/constants/urls";
 import token from "@/util/token";
 import Nav from "@/component/Nav";
 import ErrorBoundary from "@/component/ErrorBoundary";

@@ -49,8 +49,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
       "@app": path.resolve(__dirname, "src/app"),
       "@util": path.resolve(__dirname, "src/util"),
-      "@constant": path.resolve(__dirname, "src/constant"),
+      "@constants": path.resolve(__dirname, "src/constants"),
       "@component": path.resolve(__dirname, "src/component"),
+      "@store": path.resolve(__dirname, "src/store"),
     }
   },
   build: {

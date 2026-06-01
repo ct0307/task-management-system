@@ -11,7 +11,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { get, post } from "@/util/request";
 import token from "@/util/token";
-import useAuthStore from "@/app/store/authStore";
+import useAuthStore from "@/store/authStore";
 import s from "../login/index.module.less";
 
 const { Title, Text } = Typography;

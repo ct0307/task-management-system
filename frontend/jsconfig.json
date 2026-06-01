@@ -5,8 +5,9 @@
       "@/*": ["src/*"],
       "@app/*": ["src/app/*"],
       "@util/*": ["src/util/*"],
-      "@constant/*": ["src/constant/*"],
-      "@component/*": ["src/component/*"]
+      "@constants/*": ["src/constants/*"],
+      "@component/*": ["src/component/*"],
+      "@store/*": ["src/store/*"]
     }
   }
 }

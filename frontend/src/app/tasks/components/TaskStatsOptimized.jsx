@@ -13,7 +13,7 @@ import {
   AlertOutlined
 } from '@ant-design/icons';
 import StatCard from '@/component/StatCard';
-import useTaskStore from '../store/taskStore';
+import useTaskStore from '@/store/taskStore';
 import s from '../index.module.less';
 
 const TaskStatsOptimized = () => {

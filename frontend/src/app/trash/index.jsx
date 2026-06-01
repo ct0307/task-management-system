@@ -3,8 +3,8 @@ import { Table, Button, Space, Tag, message, Popconfirm, Typography, Empty } fro
 import { UndoOutlined, DeleteOutlined, ReloadOutlined, InboxOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { get, put, del } from '@/util/request';
-import { API_TASK_LIST } from '@/constant/urls';
-import { STATUS_CONFIG, PRIORITY_CONFIG } from '@/constant/task';
+import { API_TASK_LIST } from '@/constants/urls';
+import { STATUS_CONFIG, PRIORITY_CONFIG } from '@/constants/task';
 
 const { Title, Text } = Typography;
 

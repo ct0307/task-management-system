@@ -1,8 +1,8 @@
 import React from 'react';
 import { Input, Select, Space, Button, Tooltip } from 'antd';
 import { SearchOutlined, UserOutlined, CalendarOutlined } from '@ant-design/icons';
-import { STATUS_CONFIG, PRIORITY_CONFIG } from '@/constant/task';
-import useAuthStore from '@/app/store/authStore';
+import { STATUS_CONFIG, PRIORITY_CONFIG } from '@/constants/task';
+import useAuthStore from '@/store/authStore';
 import s from './index.module.less';
 
 const { Option } = Select;

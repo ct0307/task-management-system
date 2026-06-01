@@ -13,7 +13,7 @@ import {
   MailOutlined
 } from '@ant-design/icons';
 import { put, get } from '@/util/request';
-import useAuthStore from '@/app/store/authStore';
+import useAuthStore from '@/store/authStore';
 import token from '@/util/token';
 import dayjs from 'dayjs';
 import s from './index.module.less';

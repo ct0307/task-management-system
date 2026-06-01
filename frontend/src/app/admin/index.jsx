@@ -36,7 +36,7 @@ import {
   API_ADMIN_USERS,
   API_ADMIN_CATEGORIES,
   API_TASK_STATS
-} from '@/constant/urls';
+} from '@/constants/urls';
 import s from './index.module.less';
 
 const { Title, Text } = Typography;

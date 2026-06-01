@@ -24,7 +24,7 @@ import {
   LineChart, Line, Area, AreaChart
 } from "recharts";
 import { get } from "@/util/request";
-import { API_TASK_STATS, API_TASK_LIST, API_TASK_TREND } from "@/constant/urls";
+import { API_TASK_STATS, API_TASK_LIST, API_TASK_TREND } from "@/constants/urls";
 import s from "./index.module.less";
 
 const { Title, Text } = Typography;

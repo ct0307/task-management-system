@@ -13,7 +13,7 @@ import {
   RightOutlined,
   ApartmentOutlined
 } from '@ant-design/icons';
-import { STATUS_CONFIG, PRIORITY_CONFIG } from '@/constant/task';
+import { STATUS_CONFIG, PRIORITY_CONFIG } from '@/constants/task';
 import s from './index.module.less';
 
 const { Text } = Typography;
