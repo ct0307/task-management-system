@@ -854,13 +854,13 @@ const TaskListOptimized = () => {
           <Space size="middle" style={{ width: '100%' }}>
             <Form.Item name="category_id" label="分类" style={{ flex: 1 }}>
               <Select
-                placeholder="选择分类（可选）"
+                placeholder="选择分类"
                 allowClear
                 dropdownRender={(menu) => (
                   <div>
                     {menu}
                     <Divider style={{ margin: '4px 0' }} />
-                    <div style={{ display: 'flex', padding: '0 8px 4px', gap: 4 }}>
+                    <div style={{ display: 'flex', padding: '0 8px 8px', gap: 4 }}>
                       <Input
                         size="small"
                         placeholder="新分类名"
@@ -869,30 +869,15 @@ const TaskListOptimized = () => {
                         onPressEnter={handleAddCategory}
                         style={{ flex: 1 }}
                       />
-                      <Button size="small" type="link" icon={<PlusOutlined />} onClick={handleAddCategory}>
-                        添加
-                      </Button>
-                    </div>
-                    <div style={{ padding: '0 8px 8px' }}>
-                      {categories.map(cat => (
-                        <span key={cat.id} style={{
-                          display: 'inline-flex', alignItems: 'center', marginRight: 8, marginTop: 4,
-                          padding: '0 6px', fontSize: 11, borderRadius: 4,
-                          background: '#f0f0f0', cursor: 'default'
-                        }}>
-                          {cat.name}
-                          <DeleteOutlined
-                            style={{ marginLeft: 4, fontSize: 10, color: '#999', cursor: 'pointer' }}
-                            onClick={(e) => { e.stopPropagation(); handleDeleteCategory(cat.id); }}
-                          />
-                        </span>
-                      ))}
+                      <Button size="small" type="primary" onClick={handleAddCategory}>添加</Button>
                     </div>
                   </div>
                 )}
               >
                 {categories.map(cat => (
-                  <Option key={cat.id} value={cat.id}>{cat.name}</Option>
+                  <Option key={cat.id} value={cat.id}>
+                    <Space><span style={{ color: cat.color, fontWeight: 600 }}>●</span> {cat.name}</Space>
+                  </Option>
                 ))}
               </Select>
             </Form.Item>
