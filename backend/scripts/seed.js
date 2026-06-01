@@ -181,30 +181,30 @@ async function run() {
     `);
     console.log('✅ 表 "notifications" 已就绪');
 
-    // ====== 插入测试用户（存在则跳过）======
-    const testUsers = [
-      { username: "admin", password: "admin123", role: "admin", real_name: "管理员" },
-      { username: "user1", password: "123456", role: "user", real_name: "张三" }
-    ];
-
-    for (const u of testUsers) {
-      const hashedPassword = bcrypt.hashSync(u.password, 10);
+    // ====== 初始化管理员（通过环境变量 ADMIN_USERNAME/ADMIN_PASSWORD 配置）======
+    const adminUser = process.env.ADMIN_USERNAME || "admin";
+    const adminPass = process.env.ADMIN_PASSWORD;
+    if (adminPass) {
+      const hashedPassword = bcrypt.hashSync(adminPass, 10);
       await conn.query(
         `INSERT IGNORE INTO users (username, password, role, real_name) VALUES (?, ?, ?, ?)`,
-        [u.username, hashedPassword, u.role, u.real_name]
+        [adminUser, hashedPassword, "admin", "管理员"]
       );
-      console.log(`  👤 测试用户 "${u.username}" (${u.role}) 已就绪`);
+      console.log(`  👤 管理员 "${adminUser}" 已创建`);
+    } else {
+      console.log('  ⚠️ 未设置 ADMIN_PASSWORD 环境变量，跳过管理员创建');
+      console.log('    请通过注册页面创建账号后，手动在数据库中设置 role="admin"');
     }
 
-    // ====== 插入测试分类（存在则跳过）======
-    const testCategories = [
+    // ====== 插入默认分类 ======
+    const defaultCategories = [
       { name: "工作", color: "#1890ff" },
       { name: "学习", color: "#52c41a" },
       { name: "生活", color: "#faad14" },
       { name: "项目", color: "#722ed1" }
     ];
 
-    for (const c of testCategories) {
+    for (const c of defaultCategories) {
       await conn.query(
         `INSERT IGNORE INTO categories (name, color) VALUES (?, ?)`,
         [c.name, c.color]
@@ -212,33 +212,13 @@ async function run() {
       console.log(`  📁 分类 "${c.name}" 已就绪`);
     }
 
-    // ====== 插入测试任务（存在则跳过）======
-    const testTasks = [
-      { title: "完成项目文档", description: "整理并完善项目设计文档", status: "in_progress", priority: "high", category: "工作" },
-      { title: "复习操作系统知识点", description: "准备exp3实验报告", status: "pending", priority: "medium", category: "学习" },
-      { title: "每周健身计划", description: "坚持每天跑步30分钟", status: "completed", priority: "low", category: "生活" },
-      { title: "开发任务管理系统", description: "基于React+Express实现轻量化任务管理系统", status: "in_progress", priority: "high", category: "项目" },
-      { title: "阅读React文档", description: "学习React 18新特性", status: "pending", priority: "medium", category: "学习" }
-    ];
-
-    // 获取分类ID
-    const [categories] = await conn.query('SELECT id, name FROM categories');
-    const categoryMap = categories.reduce((acc, c) => ({ ...acc, [c.name]: c.id }), {});
-
-    for (const t of testTasks) {
-      await conn.query(
-        `INSERT IGNORE INTO tasks (title, description, status, priority, category_id, assignee_id, created_by, due_date)
-         VALUES (?, ?, ?, ?, ?, ?, ?, DATE_ADD(CURDATE(), INTERVAL ? DAY))`,
-        [t.title, t.description, t.status, t.priority, categoryMap[t.category], 1, 1, Math.floor(Math.random() * 14) + 1]
-      );
-      console.log(`  ✓ 任务 "${t.title}" 已就绪`);
+    console.log(`\n🎉 数据库初始化完成！`);
+    if (!adminPass) {
+      console.log(`\n📋 首次使用:`);
+      console.log(`   1. 访问系统注册账号`);
+      console.log(`   2. 在服务器执行以下命令设为管理员：`);
+      console.log(`      docker compose exec backend node -e "const db=require('./db');db.query('UPDATE users SET role=? WHERE username=?',['admin','你的用户名']).then(()=>{console.log('ok');process.exit()})"`);
     }
-
-    console.log(`\n🎉 轻量化任务管理系统数据库初始化完成！`);
-    console.log(`\n📋 测试账号:`);
-    console.log(`   管理员: admin / admin123`);
-    console.log(`   普通用户: user1 / 123456`);
-    console.log(`   普通用户: user2 / 123456`);
 
   } catch (err) {
     console.error("❌ 初始化失败:", err.message);

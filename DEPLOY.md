@@ -85,16 +85,20 @@ frontend:
 
 如果域名托管在 Cloudflare，创建 Tunnel 直接指向 `localhost:80`，自动获得 HTTPS。
 
-## 第五步：初始化数据库
+## 第五步：创建管理员账号
 
 ```bash
-# 进入后端容器运行初始化脚本
+# 方式一：通过注册页面注册，然后在服务器手动设为 admin
+docker compose exec backend node -e "
+const db = require('./db');
+db.query('UPDATE users SET role = ? WHERE username = ?', ['admin', '你的用户名'])
+  .then(() => { console.log('已设为管理员'); process.exit(); });
+"
+
+# 方式二：部署时通过环境变量自动创建
+# 在 .env 中设置 ADMIN_USERNAME 和 ADMIN_PASSWORD，重新 seed
 docker compose exec backend node scripts/seed.js
 ```
-
-测试账号：
-- admin / admin123（管理员）
-- user1 / 123456（普通用户）
 
 ## 常用运维命令
 

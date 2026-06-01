@@ -1,11 +1,8 @@
 import React, { useState, useCallback } from "react";
-import { Form, Input, Button, message, Typography, Card, Checkbox, Tag } from "antd";
+import { Form, Input, Button, message, Typography, Card, Checkbox } from "antd";
 import {
   UserOutlined,
   LockOutlined,
-  ThunderboltOutlined,
-  CrownOutlined,
-  UserSwitchOutlined
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { post } from "@/util/request";
@@ -16,14 +13,8 @@ import useAuthStore from "@/store/authStore";
 
 const { Title, Text } = Typography;
 
-const DEMO_ACCOUNTS = [
-  { username: "admin", password: "admin123", role: "admin", icon: <CrownOutlined />, label: "管理员演示" },
-  { username: "user1", password: "123456", role: "user", icon: <UserSwitchOutlined />, label: "普通用户演示" },
-];
-
 const Login = () => {
   const [loading, setLoading] = useState(false);
-  const [fillingDemo, setFillingDemo] = useState(null);
   const [remember, setRemember] = useState(false);
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -95,16 +86,6 @@ const Login = () => {
     [doLogin]
   );
 
-  // 演示账号一键填充并登录
-  const handleDemoLogin = async (account) => {
-    setFillingDemo(account.username);
-    form.setFieldsValue({ username: account.username, password: account.password });
-    // 短暂延迟让用户看到填充效果
-    await new Promise((r) => setTimeout(r, 300));
-    setFillingDemo(null);
-    await doLogin({ username: account.username, password: account.password });
-  };
-
   // 恢复记住的用户名
   React.useEffect(() => {
     const isRemembered = localStorage.getItem("REMEMBER_ME");
@@ -142,50 +123,6 @@ const Login = () => {
                 轻量化任务管理系统
               </Title>
               <Text className={s.subtitle}>高效管理你的任务与工作</Text>
-            </div>
-
-            {/* 演示账号一键登录 */}
-            <div className={s.demoSection}>
-              <div className={s.demoSectionTitle}>
-                <ThunderboltOutlined style={{ color: "#f9ab00", marginRight: 6 }} />
-                一键演示体验
-              </div>
-              <div className={s.demoList}>
-                {DEMO_ACCOUNTS.map((account) => (
-                  <button
-                    key={account.username}
-                    className={s.demoCard}
-                    onClick={() => handleDemoLogin(account)}
-                    disabled={!!fillingDemo}
-                  >
-                    <span className={s.demoIcon}>{account.icon}</span>
-                    <span className={s.demoContent}>
-                      <span className={s.demoLabel}>{account.label}</span>
-                      <span className={s.demoCred}>
-                        {account.username} / {account.password}
-                      </span>
-                    </span>
-                    {fillingDemo === account.username ? (
-                      <Tag color="processing" style={{ margin: 0 }}>登录中...</Tag>
-                    ) : (
-                      <span className={s.demoArrow}>→</span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* 原有测试账号信息保留 */}
-            <div className={s.brandInfo}>
-              <div className={s.brandItem}>
-                <span className={s.brandLabel}>测试账号</span>
-              </div>
-              <div className={s.brandCredential}>
-                <code>admin</code> / <code>admin123</code> (管理员)
-              </div>
-              <div className={s.brandCredential}>
-                <code>user1</code> / <code>123456</code> (普通用户)
-              </div>
             </div>
           </div>
 
