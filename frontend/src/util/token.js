@@ -2,19 +2,24 @@ const USER_KEY = "APP_USER";
 const TOKEN_KEY = "AUTH_TOKEN";
 
 const token = {
-  saveUser(user) {
+  // 默认用 sessionStorage（每个标签页独立），remember 时用 localStorage
+  _storage(remember) {
+    return remember ? localStorage : sessionStorage;
+  },
+
+  saveUser(user, remember = false) {
     if (!user) return;
     try {
-      localStorage.setItem(USER_KEY, JSON.stringify(user));
-      if (user.token) localStorage.setItem(TOKEN_KEY, user.token);
-    } catch (_) {
-      // 写入失败（无痕模式/配额满），静默忽略
-    }
+      const s = this._storage(remember);
+      s.setItem(USER_KEY, JSON.stringify(user));
+      if (user.token) s.setItem(TOKEN_KEY, user.token);
+    } catch (_) {}
   },
 
   loadUser() {
+    // 优先读 sessionStorage（当前标签页会话），再读 localStorage（记住我）
     try {
-      const u = localStorage.getItem(USER_KEY);
+      const u = sessionStorage.getItem(USER_KEY) || localStorage.getItem(USER_KEY);
       return u ? JSON.parse(u) : null;
     } catch (_) {
       return null;
@@ -22,12 +27,14 @@ const token = {
   },
 
   get() {
-    return localStorage.getItem(TOKEN_KEY);
+    return sessionStorage.getItem(TOKEN_KEY) || localStorage.getItem(TOKEN_KEY);
   },
 
   clear() {
-    localStorage.removeItem(USER_KEY);
-    localStorage.removeItem(TOKEN_KEY);
+    [sessionStorage, localStorage].forEach((s) => {
+      s.removeItem(USER_KEY);
+      s.removeItem(TOKEN_KEY);
+    });
   }
 };
 

@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { Form, Input, Button, message, Typography, Card, Checkbox } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { UserOutlined, LockOutlined, RocketOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { post } from "@/util/request";
 import token from "@/util/token.js";
@@ -12,6 +12,8 @@ const { Title, Text } = Typography;
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
+  const [guestLoading, setGuestLoading] = useState(false);
+  const [guestName, setGuestName] = useState("");
   const [remember, setRemember] = useState(false);
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -39,7 +41,7 @@ const Login = () => {
           }
 
           const mergedUser = { ...user, role: user.role || "user" };
-          token.saveUser({ token: jwtToken, ...mergedUser });
+          token.saveUser({ token: jwtToken, ...mergedUser }, remember);
           if (remember) localStorage.setItem("REMEMBER_ME", "1");
 
           setIsLogin(true);
@@ -52,14 +54,41 @@ const Login = () => {
         } else {
           message.error(res.message || "用户名或密码错误");
         }
-      } catch {
-        message.error("网络错误，请稍后重试");
+      } catch (err) {
+        const msg = err?.response?.data?.message || err?.message || "网络错误，请稍后重试";
+        message.error(msg);
       } finally {
         setLoading(false);
       }
     },
     [navigate, setIsLogin, setCurrentUser, remember]
   );
+
+  // 游客登录
+  const handleGuestLogin = useCallback(async () => {
+    const name = guestName.trim();
+    if (!name || name.length < 2) { message.warning("请输入至少2个字符的用户名"); return; }
+    setGuestLoading(true);
+    try {
+      const res = await post("/api/auth/guest", { username: name }, { skipGlobalError: true });
+      if (res.code === 200 && res.data) {
+        const { token: jwtToken, user } = res.data;
+        token.saveUser({ token: jwtToken, ...user });
+        sessionStorage.setItem("IS_GUEST", "1");
+        setIsLogin(true);
+        setCurrentUser(user);
+        window.dispatchEvent(new CustomEvent("auth-change", { detail: { isAuthenticated: true } }));
+        message.success(`游客模式 — 欢迎 ${user.username}`);
+        navigate("/dashboard?welcome=1", { replace: true });
+      } else {
+        message.error(res.message || "创建失败");
+      }
+    } catch (err) {
+      message.error(err?.response?.data?.message || "创建失败，请重试");
+    } finally {
+      setGuestLoading(false);
+    }
+  }, [guestName, setIsLogin, setCurrentUser, navigate]);
 
   // 恢复记住的用户名
   React.useEffect(() => {
@@ -125,6 +154,33 @@ const Login = () => {
             </Button>
           </Form.Item>
         </Form>
+
+        {/* 游客入口 */}
+        <div className={s.guestSection}>
+          <div className={s.guestDivider}><span>或 快速体验</span></div>
+          <div className={s.guestRow}>
+            <Input
+              prefix={<UserOutlined />}
+              placeholder="输入昵称即可体验"
+              value={guestName}
+              onChange={(e) => setGuestName(e.target.value)}
+              onPressEnter={handleGuestLogin}
+              allowClear
+              size="large"
+            />
+            <Button
+              type="default"
+              icon={<RocketOutlined />}
+              loading={guestLoading}
+              onClick={handleGuestLogin}
+              className={s.guestBtn}
+              size="large"
+            >
+              游客体验
+            </Button>
+          </div>
+          <Text className={s.guestTip}>体验数据不会保存，退出后自动清除</Text>
+        </div>
       </Card>
     </div>
   );

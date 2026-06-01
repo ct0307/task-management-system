@@ -232,4 +232,79 @@ router.post("/dev-create-user", async (req, res, next) => {
   await createDevUser(req, res, next);
 });
 
+/**
+ * POST /api/auth/guest
+ * 游客登录 — 创建临时账号，返回 token
+ * 游客账号角色为 'guest'，数据不保存，退出时自动清除
+ */
+router.post("/guest", async (req, res, next) => {
+  const { username } = req.body || {};
+  if (!username || username.trim().length < 2) {
+    return fail(res, ErrorCodes.VALIDATION_ERROR, "用户名至少2个字符");
+  }
+
+  const bcrypt = require("bcryptjs");
+  const crypto = require("crypto");
+  const { pool } = require("../db");
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const [existing] = await conn.query("SELECT id FROM users WHERE username = ?", [username.trim()]);
+    if (existing.length > 0) {
+      return fail(res, ErrorCodes.CONFLICT, "该用户名已被使用");
+    }
+
+    // 随机密码（游客无需知道）
+    const randomPass = crypto.randomBytes(16).toString("hex");
+    const hashed = await bcrypt.hash(randomPass, 10);
+    const [result] = await conn.query(
+      "INSERT INTO users (username, password, role, real_name) VALUES (?, ?, ?, ?)",
+      [username.trim(), hashed, "guest", username.trim()]
+    );
+
+    const user = {
+      id: result.insertId,
+      username: username.trim(),
+      role: "guest",
+      real_name: username.trim()
+    };
+    const token = signToken(user);
+
+    success(res, { token, user }, "游客账号已创建", 201);
+  } catch (err) {
+    next(err);
+  } finally {
+    if (conn) conn.release();
+  }
+});
+
+/**
+ * DELETE /api/auth/guest
+ * 删除游客账号及其所有关联数据（任务、评论、通知）
+ * 仅游客角色可用
+ */
+router.delete("/guest", requireAuth, async (req, res, next) => {
+  if (req.user.role !== "guest") {
+    return fail(res, ErrorCodes.FORBIDDEN, "仅游客账号支持此操作");
+  }
+
+  const userId = req.user.id;
+  const { pool } = require("../db");
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    // 按依赖顺序删除：评论 → 通知 → 审计日志 → 任务 → 用户
+    await conn.query("DELETE FROM task_comments WHERE user_id = ?", [userId]);
+    await conn.query("DELETE FROM notifications WHERE user_id = ?", [userId]);
+    await conn.query("DELETE FROM task_audit_log WHERE user_id = ?", [userId]);
+    await conn.query("DELETE FROM tasks WHERE created_by = ? OR assignee_id = ?", [userId, userId]);
+    await conn.query("DELETE FROM users WHERE id = ?", [userId]);
+    success(res, null, "游客数据已清理");
+  } catch (err) {
+    next(err);
+  } finally {
+    if (conn) conn.release();
+  }
+});
+
 module.exports = router;

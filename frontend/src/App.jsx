@@ -102,6 +102,17 @@ function App() {
     return () => window.removeEventListener("auth-change", handleAuthChange);
   }, [setLogin, setCurrentUser, logout]);
 
+  // 游客关闭页面时自动清理账号
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (sessionStorage.getItem("IS_GUEST") === "1" && token.get()) {
+        fetch("/api/auth/guest", { method: "DELETE", keepalive: true });
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, []);
+
   const isAdmin = currentUser?.role === "admin";
 
   return (

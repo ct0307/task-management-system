@@ -89,8 +89,7 @@ const Register = () => {
         real_name: values.real_name
       });
       // 注册成功自动登录
-      token.set(res.data.token);
-      token.saveUser(res.data.user);
+      token.saveUser({ token: res.data.token, ...res.data.user });
       setLogin(true);
       setCurrentUser(res.data.user);
       // 新用户标记，触发欢迎引导

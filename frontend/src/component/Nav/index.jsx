@@ -4,7 +4,7 @@ import cls from "classnames";
 import s from "./index.module.less";
 import logo from "@/assets/logo.svg";
 import token from "@/util/token";
-import { get, post, put } from "@/util/request";
+import { get, post, put, del } from "@/util/request";
 import * as urls from "@/constants/urls";
 import { getMenusByRole } from "@/constants/menu";
 import { Button, Modal, Space, Tooltip, Badge, Popover, List, Typography } from "antd";
@@ -100,12 +100,17 @@ const Nav = () => {
   const handleLogout = () => setOpen(true);
 
   const confirmLogout = async () => {
+    // 游客账号：退出时自动删除
+    if (sessionStorage.getItem("IS_GUEST") === "1") {
+      try { await del("/api/auth/guest"); } catch { /* ignore */ }
+    }
     try {
       await post(urls.API_LOGOUT);
     } catch {
       // API 调用失败不影响本地退出
     }
     token.clear();
+    sessionStorage.removeItem("IS_GUEST");
     window.dispatchEvent(
       new CustomEvent("auth-change", {
         detail: { isAuthenticated: false }
