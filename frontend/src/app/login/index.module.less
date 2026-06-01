@@ -4,7 +4,6 @@
 @bg-light: #eaf4ff;
 @text-main: #1f2a44;
 @text-sub: #5e6c84;
-@border-color: #d9e6fb;
 
 .login {
   position: relative;
@@ -22,27 +21,28 @@
   .bgGlowTop,
   .bgGlowBottom {
     position: absolute;
-    border-radius: 999px;
+    border-radius: 50%;
     pointer-events: none;
-    filter: blur(6px);
+    filter: blur(80px);
+    opacity: 0.5;
   }
 
   .bgGlowTop {
-    top: -120px;
-    right: -90px;
-    width: 380px;
-    height: 380px;
-    background: radial-gradient(circle, rgba(47, 116, 234, 0.22) 0%, rgba(47, 116, 234, 0) 68%);
-    animation: floatTop 14s ease-in-out infinite alternate;
+    top: -15%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(47, 116, 234, 0.28) 0%, transparent 70%);
+    animation: floatTop 12s ease-in-out infinite alternate;
   }
 
   .bgGlowBottom {
-    bottom: -140px;
-    left: -90px;
-    width: 360px;
-    height: 360px;
-    background: radial-gradient(circle, rgba(60, 191, 154, 0.2) 0%, rgba(60, 191, 154, 0) 68%);
-    animation: floatBottom 16s ease-in-out infinite alternate;
+    bottom: -15%;
+    left: -10%;
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(60, 191, 154, 0.25) 0%, transparent 70%);
+    animation: floatBottom 14s ease-in-out infinite alternate;
   }
 }
 
@@ -50,14 +50,13 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 1080px;
-  border: 1px solid rgba(47, 116, 234, 0.18);
-  border-radius: 24px;
-  box-shadow: 0 18px 36px rgba(31, 42, 68, 0.14);
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(3px);
-  animation: fadeIn 0.8s ease-out;
-  overflow: hidden;
+  max-width: 420px;
+  border-radius: 20px;
+  box-shadow: 0 4px 40px rgba(31, 42, 68, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  animation: fadeIn 0.6s ease-out;
+  padding: 40px 36px 32px;
 
   :global {
     .ant-card-body {
@@ -65,25 +64,27 @@
     }
 
     .ant-form-item {
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
 
     .ant-input-affix-wrapper {
       height: 48px;
       border-radius: 12px;
-      border-color: #d6e3f8;
+      border-color: #e2e8f0;
       padding: 0 14px;
+      transition: all 0.2s;
 
-      &:hover,
+      &:hover {
+        border-color: #c4d5f0;
+      }
+
       &:focus,
       &.ant-input-affix-wrapper-focused {
         border-color: @primary-blue;
-        box-shadow: 0 0 0 3px rgba(47, 116, 234, 0.12);
+        box-shadow: 0 0 0 3px rgba(47, 116, 234, 0.1);
       }
 
-      input {
-        font-size: 15px;
-      }
+      input { font-size: 15px; }
     }
 
     .ant-btn-primary {
@@ -91,79 +92,60 @@
       border-radius: 12px;
       font-size: 16px;
       font-weight: 600;
+      letter-spacing: 4px;
       border: none;
-      background: linear-gradient(135deg, @primary-blue 0%, @mint-green 100%);
-      box-shadow: 0 10px 18px rgba(47, 116, 234, 0.22);
+      background: linear-gradient(135deg, @primary-blue 0%, #1a5cd4 100%);
+      box-shadow: 0 4px 16px rgba(47, 116, 234, 0.3);
+      transition: all 0.25s;
 
-      &:hover,
-      &:focus {
-        background: linear-gradient(135deg, @primary-blue-hover 0%, #34a485 100%);
+      &:hover {
+        background: linear-gradient(135deg, #3d82f5 0%, @primary-blue-hover 100%);
+        box-shadow: 0 6px 20px rgba(47, 116, 234, 0.4);
+        transform: translateY(-1px);
       }
     }
 
-    .ant-typography {
-      margin-bottom: 0;
+    .ant-typography { margin-bottom: 0; }
+
+    .ant-checkbox-wrapper {
+      color: @text-sub;
+      font-size: 14px;
     }
   }
 }
 
-.loginLayout {
-  display: flex;
-  min-height: 620px;
-}
-
-.leftPanel {
-  width: 48%;
-  padding: 32px 28px;
-  background: linear-gradient(180deg, rgba(234, 244, 255, 0.82) 0%, rgba(240, 255, 249, 0.75) 100%);
-  border-right: 1px solid #e8eef8;
-  box-sizing: border-box;
-}
-
-.rightPanel {
-  width: 52%;
-  padding: 38px 34px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-sizing: border-box;
-}
-
-.header {
+.brand {
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 
 .logoWrap {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 12px;
-}
-
-.logoBadge {
-  width: 68px;
-  height: 68px;
-  border-radius: 18px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(140deg, rgba(47, 116, 234, 0.14) 0%, rgba(60, 191, 154, 0.14) 100%);
-  border: 1px solid rgba(47, 116, 234, 0.25);
-  box-shadow: 0 10px 18px rgba(47, 116, 234, 0.12);
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(47, 116, 234, 0.1) 0%, rgba(60, 191, 154, 0.1) 100%);
+  border: 1px solid rgba(47, 116, 234, 0.15);
+  box-shadow: 0 8px 20px rgba(47, 116, 234, 0.1);
+  margin-bottom: 16px;
 }
 
 .logoMark {
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   stroke: @primary-blue;
-  stroke-width: 2.3;
+  stroke-width: 2.2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .title {
-  margin-bottom: 6px !important;
+  margin-bottom: 4px !important;
   color: @text-main !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
   letter-spacing: 0.5px;
 }
 
@@ -172,573 +154,60 @@
   font-size: 14px;
 }
 
-// 演示账号一键登录
-.demoSection {
-  margin-top: 24px;
-}
-
-.demoSectionTitle {
-  font-size: 14px;
-  font-weight: 600;
-  color: @text-main;
-  margin-bottom: 10px;
-}
-
-.demoList {
+.formRow {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.demoCard {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid @border-color;
-  border-radius: 12px;
-  background: #fff;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: left;
-  outline: none;
-  box-sizing: border-box;
-
-  &:hover:not(:disabled) {
-    border-color: @primary-blue;
-    box-shadow: 0 4px 12px rgba(47, 116, 234, 0.1);
-    transform: translateY(-1px);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-}
-
-.demoIcon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: rgba(47, 116, 234, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  color: @primary-blue;
-  flex-shrink: 0;
-}
-
-.demoContent {
-  flex: 1;
-  min-width: 0;
-}
-
-.demoLabel {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  color: @text-main;
-  margin-bottom: 2px;
-}
-
-.demoCred {
-  display: block;
-  font-size: 11px;
-  color: @text-sub;
-  font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
-}
-
-.demoArrow {
-  font-size: 16px;
-  color: @primary-blue;
-  opacity: 0;
-  transform: translateX(-6px);
-  transition: all 0.2s ease;
-}
-
-.demoCard:hover:not(:disabled) .demoArrow {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.brandInfo {
-  margin-top: 20px;
-  padding: 14px 18px;
-  background: rgba(47, 116, 234, 0.04);
-  border-radius: 14px;
-  border: 1px solid rgba(47, 116, 234, 0.1);
-}
-
-.brandItem {
-  margin-bottom: 10px;
-}
-
-.brandLabel {
-  font-size: 14px;
-  font-weight: 600;
-  color: @text-main;
-}
-
-.brandCredential {
-  font-size: 13px;
-  color: @text-sub;
-  margin-top: 4px;
-  font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
-
-  code {
-    background: rgba(47, 116, 234, 0.08);
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-size: 12px;
-  }
-}
-
-.roleSection {
-  margin-top: 8px;
-}
-
-.roleSectionHead {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.roleSectionTitle {
-  font-size: 15px;
-  font-weight: 600;
-  color: @text-main;
-}
-
-.currentRoleText {
-  font-size: 13px;
-  color: @primary-blue;
-  background: rgba(47, 116, 234, 0.08);
-  border: 1px solid rgba(47, 116, 234, 0.12);
-  padding: 4px 10px;
-  border-radius: 999px;
-}
-
-.roleList {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.roleCard {
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  text-align: left;
-  padding: 16px 14px;
-  border: 1px solid @border-color;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.9);
-  cursor: pointer;
-  transition: all 0.25s ease;
-  outline: none;
-  box-sizing: border-box;
-
-  &:hover {
-    transform: translateY(-2px);
-    border-color: rgba(47, 116, 234, 0.45);
-    box-shadow: 0 10px 18px rgba(47, 116, 234, 0.1);
-  }
-}
-
-.roleCardActive {
-  border-color: @primary-blue;
-  background: linear-gradient(135deg, rgba(47, 116, 234, 0.08) 0%, rgba(60, 191, 154, 0.08) 100%);
-  box-shadow: 0 12px 20px rgba(47, 116, 234, 0.14);
-}
-
-.roleIcon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  flex-shrink: 0;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  color: @primary-blue;
-  background: rgba(47, 116, 234, 0.1);
-}
-
-.roleContent {
-  flex: 1;
-  min-width: 0;
-}
-
-.roleTitleRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 6px;
-}
-
-.roleTitle {
-  font-size: 16px;
-  font-weight: 700;
-  color: @text-main;
-}
-
-.roleTag {
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 12px;
-  color: @primary-blue;
-  background: rgba(47, 116, 234, 0.12);
-  white-space: nowrap;
-}
-
-.roleDesc {
-  display: block;
-  color: @text-sub;
-  font-size: 13px;
-  line-height: 1.55;
-}
-
-.formField {
-  animation: formSlideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-}
-
-@keyframes formSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.formHeader {
   margin-bottom: 24px;
 }
 
-.formTitle {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 24px;
-  font-weight: 700;
-  color: @text-main;
+.registerLink {
+  font-size: 13px;
+  color: @primary-blue;
+  text-decoration: none;
+
+  &:hover {
+    color: @primary-blue-hover;
+    text-decoration: underline;
+  }
 }
 
-.formTip {
-  color: @text-sub;
-  font-size: 14px;
-}
-
-.footer {
-  text-align: center;
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px solid #e9eef8;
-}
-
-.footerText {
-  color: #7a869d;
-  font-size: 12px;
-  line-height: 1.6;
-}
-
+// 动画
 @keyframes floatTop {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-  100% {
-    transform: translate(-14px, 10px) scale(1.08);
-  }
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-30px, 20px) scale(1.1); }
 }
 
 @keyframes floatBottom {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-  100% {
-    transform: translate(14px, -10px) scale(1.06);
-  }
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(30px, -20px) scale(1.08); }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 900px) {
+// 移动端
+@media (max-width: 480px) {
   .login {
     padding: 16px;
-    align-items: center;
+    align-items: flex-start;
+    padding-top: 80px;
   }
 
   .loginCard {
-    max-width: 680px;
-    border-radius: 20px;
-  }
-
-  .loginLayout {
-    flex-direction: column;
-    min-height: auto;
-  }
-
-  .leftPanel,
-  .rightPanel {
-    width: 100%;
-  }
-
-  .leftPanel {
-    border-right: none;
-    border-bottom: 1px solid #e8eef8;
-    padding: 24px 20px 18px;
-  }
-
-  .rightPanel {
-    padding: 24px 20px 22px;
-  }
-
-  .header {
-    margin-bottom: 16px;
-  }
-
-  .logoBadge {
-    width: 60px;
-    height: 60px;
+    padding: 32px 24px 28px;
     border-radius: 16px;
   }
 
-  .logoMark {
-    width: 36px;
-    height: 36px;
-  }
-
-  .title {
-    font-size: 24px !important;
-  }
-
-  .subtitle {
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 640px) {
-  .login {
-    padding: 12px;
-    align-items: stretch;
-  }
-
-  .loginCard {
-    border-radius: 16px;
-  }
-
-  .leftPanel {
-    padding: 18px 14px 14px;
-  }
-
-  .rightPanel {
-    padding: 20px 14px 18px;
-  }
-
-  .header {
-    margin-bottom: 12px;
-  }
-
-  .logoWrap {
-    margin-bottom: 8px;
-  }
-
-  .logoBadge {
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
-  }
-
-  .logoMark {
-    width: 30px;
-    height: 30px;
-    stroke-width: 2.1;
-  }
-
-  .title {
-    font-size: 20px !important;
-  }
-
-  .subtitle {
-    font-size: 12px;
-  }
-
-  .demoSectionTitle {
-    font-size: 13px;
-  }
-
-  .demoCard {
-    padding: 10px 12px;
-  }
-
-  .demoLabel {
-    font-size: 12px;
-  }
-
-  .roleSection {
-    margin-top: 2px;
-  }
-
-  .roleSectionHead {
-    margin-bottom: 10px;
-  }
-
-  .roleSectionTitle {
-    font-size: 14px;
-  }
-
-  .currentRoleText {
-    font-size: 12px;
-    padding: 2px 8px;
-  }
-
-  // 移动端重新设计：三列紧凑选择，不再用大卡片说明
-  .roleList {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
-
-  .roleCard {
-    min-height: 72px;
-    padding: 10px 6px;
-    border-radius: 12px;
-    gap: 6px;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-  }
-
-  .roleIcon {
-    width: 30px;
-    height: 30px;
-    border-radius: 10px;
-    font-size: 16px;
-  }
-
-  .roleContent {
-    width: 100%;
-    text-align: center;
-  }
-
-  .roleTitleRow {
-    margin-bottom: 0;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .roleTitle {
-    font-size: 13px;
-    line-height: 1.2;
-  }
-
-  .roleTag {
-    font-size: 10px;
-    padding: 1px 6px;
-  }
-
-  .roleDesc {
-    display: none;
-  }
-
-  .formHeader {
-    margin-bottom: 18px;
-  }
-
-  .formTitle {
-    font-size: 20px;
-  }
-
-  .formTip {
-    font-size: 13px;
-  }
-
-  .footer {
-    margin-top: 12px;
-    padding-top: 10px;
-  }
-
-  .footerText {
-    font-size: 11px;
-    line-height: 1.5;
-  }
+  .brand { margin-bottom: 24px; }
+  .logoWrap { width: 56px; height: 56px; border-radius: 16px; }
+  .logoMark { width: 30px; height: 30px; }
+  .title { font-size: 20px !important; }
 
   :global {
-    .ant-form-item {
-      margin-bottom: 14px;
-    }
-
-    .ant-input-affix-wrapper {
-      height: 44px;
-      font-size: 16px;
-      border-radius: 10px;
-      padding: 0 12px;
-    }
-
-    .ant-btn-primary {
-      height: 44px;
-      font-size: 15px;
-      border-radius: 10px;
-    }
-  }
-}
-
-@media (max-width: 360px) {
-  .leftPanel {
-    padding: 16px 12px 12px;
-  }
-
-  .rightPanel {
-    padding: 18px 12px 16px;
-  }
-
-  .title {
-    font-size: 18px !important;
-  }
-
-  .formTitle {
-    font-size: 18px;
-  }
-
-  .roleList {
-    gap: 6px;
-  }
-
-  .roleCard {
-    min-height: 66px;
-    padding: 8px 4px;
-  }
-
-  .roleIcon {
-    width: 28px;
-    height: 28px;
-    font-size: 15px;
-  }
-
-  .roleTitle {
-    font-size: 12px;
-  }
-
-  .roleTag {
-    font-size: 9px;
-    padding: 1px 5px;
+    .ant-input-affix-wrapper { height: 44px; border-radius: 10px; }
+    .ant-btn-primary { height: 44px; border-radius: 10px; font-size: 15px; }
   }
 }
