@@ -54,3 +54,4 @@ coverage/
 # 数据库备份
 backups/
 deploy.py
+aliyun_cmd.py
