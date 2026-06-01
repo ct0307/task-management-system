@@ -230,10 +230,16 @@ const Dashboard = () => {
 
       {/* 顶部标题区 */}
       <div className={s.header}>
-        <div>
-          <Title level={2} className={s.pageTitle}>仪表盘</Title>
-          <Text className={s.pageSubtitle}>任务管理概览与快捷操作</Text>
+        <div className={s.headerLeft}>
+          <div className={s.headerIcon}>
+            <DashboardOutlined style={{ fontSize: 20, color: '#fff' }} />
+          </div>
+          <div>
+            <Title level={2} className={s.pageTitle}>仪表盘</Title>
+            <Text className={s.pageSubtitle}>任务管理概览与快捷操作</Text>
+          </div>
         </div>
+        <div className={s.headerActions}>
         <Space>
           <Button
             type="primary"
@@ -250,6 +256,7 @@ const Dashboard = () => {
             查看全部
           </Button>
         </Space>
+      </div>
       </div>
 
       {/* 统计卡片 */}
@@ -272,27 +279,33 @@ const Dashboard = () => {
           >
             {pieData.length > 0 ? (
               <div className={s.pieChartWrap}>
-                <ResponsiveContainer width="100%" height={220}>
-                  <PieChart>
-                    <Pie
-                      data={pieData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={55}
-                      outerRadius={80}
-                      paddingAngle={3}
-                      dataKey="value"
-                    >
-                      {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
-                      ))}
-                    </Pie>
-                    <ReTooltip
-                      formatter={(value, name) => [`${value} 个`, name]}
-                      contentStyle={{ borderRadius: 8, border: "1px solid #e8eaed" }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
+                <div className={s.pieChartInner}>
+                  <ResponsiveContainer width="100%" height={220}>
+                    <PieChart>
+                      <Pie
+                        data={pieData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={55}
+                        outerRadius={80}
+                        paddingAngle={3}
+                        dataKey="value"
+                      >
+                        {pieData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+                        ))}
+                      </Pie>
+                      <ReTooltip
+                        formatter={(value, name) => [`${value} 个`, name]}
+                        contentStyle={{ borderRadius: 8, border: "1px solid #e8eaed" }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className={s.centerStat}>
+                    <div className={s.centerStatValue}>{total}</div>
+                    <div className={s.centerStatLabel}>总计</div>
+                  </div>
+                </div>
                 <div className={s.pieLegend}>
                   {pieData.map(item => (
                     <div key={item.name} className={s.legendItem}>
@@ -301,10 +314,6 @@ const Dashboard = () => {
                       <span className={s.legendValue}>{item.value}</span>
                     </div>
                   ))}
-                </div>
-                <div className={s.centerStat}>
-                  <div className={s.centerStatValue}>{total}</div>
-                  <div className={s.centerStatLabel}>总计</div>
                 </div>
               </div>
             ) : (

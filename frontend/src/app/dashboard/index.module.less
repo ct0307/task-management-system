@@ -1,401 +1,183 @@
 @import '../../styles/theme.less';
 @import '../../styles/animations.less';
 
+@c-bg: #f5f7fa;
+@c-card: #ffffff;
+@c-text: #1a1d26;
+@c-sub: #78849e;
+@c-border: #edf0f5;
+@c-blue: #2f6fef;
+@c-green: #22c55e;
+@c-orange: #f59e0b;
+@c-red: #ef4444;
+@c-purple: #8b5cf6;
+@radius: 16px;
+@shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+@shadow-hover: 0 4px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.03);
+
 .dashboard {
-  animation: fadeIn 0.4s ease-out;
+  max-width: 1440px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-out;
 
+  // Loading
   .loadingContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 400px;
+    display: flex; justify-content: center; align-items: center; min-height: 400px;
   }
-
-  .loadingSkeleton {
-    width: 100%;
-    max-width: 1200px;
-  }
-
-  .skeletonHeader {
-    height: 32px;
-    width: 200px;
-    margin-bottom: 24px;
-    border-radius: 8px;
-    .skeleton();
-  }
-
-  .skeletonRow {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-
-  .skeletonCard {
-    height: 80px;
-    border-radius: 12px;
-    .skeleton();
-  }
-
-  .skeletonChartRow {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-
-  .skeletonChart {
-    height: 280px;
-    border-radius: 12px;
-    .skeleton();
-  }
-
+  .loadingSkeleton { width: 100%; max-width: 1200px; }
+  .skeletonHeader { height: 40px; width: 220px; margin-bottom: 24px; border-radius: 10px; .skeleton(); }
+  .skeletonRow { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-bottom: 24px; }
+  .skeletonCard { height: 88px; border-radius: 14px; .skeleton(); }
+  .skeletonChartRow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .skeletonChart { height: 300px; border-radius: 14px; .skeleton(); }
   .skeleton() {
-    background: linear-gradient(
-      90deg,
-      #f0f0f0 25%,
-      #e8e8e8 50%,
-      #f0f0f0 75%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+    background-size: 200% 100%; animation: shimmer 1.5s infinite;
   }
 
-  // ============================================
-  // 页面头部
-  // ============================================
+  // ====== 头部 ======
   .header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
   }
-
-  .pageTitle {
-    margin: 0;
-    font-size: 22px;
-    font-weight: 600;
-    color: #202124;
-    animation: fadeInUp 0.3s ease-out;
-  }
-
-  .pageSubtitle {
-    font-size: 14px;
-    color: #9aa0a6;
-  }
-
-  .primaryBtn {
-    border-radius: 8px;
-    font-weight: 500;
-    box-shadow: 0 2px 6px rgba(26, 115, 232, 0.25);
-    transition: all 0.2s ease;
-
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(26, 115, 232, 0.35);
-    }
-  }
-
-  // ============================================
-  // 统计卡片
-  // ============================================
-  .statsRow {
-    margin-bottom: 20px;
-  }
-
-  .statCard {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 16px;
-    background: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #f0f0f0;
-    transition: all 0.25s ease;
-    animation: fadeInUp 0.4s ease-out backwards;
-    cursor: default;
-
-    &:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-      border-color: transparent;
-    }
-  }
-
-  .statIconWrap {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-    transition: transform 0.2s ease;
-
-    .statCard:hover & {
-      transform: scale(1.08);
-    }
-  }
-
-  .statInfo {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .statLabel {
-    font-size: 12px;
-    color: #5f6368;
-  }
-
-  .statValue {
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 1.2;
-    font-feature-settings: 'tnum';
-    font-variant-numeric: tabular-nums;
-  }
-
-  // ============================================
-  // 图表卡片
-  // ============================================
-  .chartsRow {
-    margin-bottom: 20px;
-  }
-
-  .chartCard {
-    border-radius: 12px;
-    border: 1px solid #f0f0f0;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-    transition: all 0.25s ease;
-    animation: fadeInUp 0.5s ease-out backwards;
-
-    &:hover {
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    }
-
-    :global(.ant-card-head) {
-      border-bottom: 1px solid #f0f0f0;
-      min-height: 48px;
-      padding: 0 16px;
-    }
-
-    :global(.ant-card-head-title) {
-      padding: 12px 0;
-      font-size: 14px;
-      font-weight: 600;
-    }
-  }
-
-  .chartTitle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    color: #202124;
-  }
-
-  // ============================================
-  // 饼图
-  // ============================================
-  .pieChartWrap {
-    position: relative;
+  .headerLeft {
     display: flex;
     align-items: center;
     gap: 12px;
   }
+  .headerIcon {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: linear-gradient(135deg, @c-blue, #4f8af7);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 10px rgba(47, 111, 239, 0.3);
+  }
+  .pageTitle {
+    margin: 0 !important;
+    font-size: 22px;
+    font-weight: 700;
+    color: @c-text;
+    letter-spacing: -0.3px;
+  }
+  .pageSubtitle { font-size: 13px; color: @c-sub; margin-top: 2px; display: block; }
+  .headerActions {
+    display: flex; gap: 8px;
+  }
+  .primaryBtn {
+    height: 38px; border-radius: 10px; font-weight: 600;
+    box-shadow: 0 2px 8px rgba(47, 111, 239, 0.25);
+    transition: all 0.2s;
+    &:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(47, 111, 239, 0.35); }
+  }
 
+  // ====== 分区标题 ======
+  .sectionLabel {
+    font-size: 13px; font-weight: 600; color: @c-sub; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 12px; padding-left: 4px;
+  }
+
+  // ====== 统计卡片 ======
+  .statsRow { margin-bottom: 28px; }
+  .statCard {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 16px;
+    background: @c-card;
+    border-radius: @radius;
+    box-shadow: @shadow;
+    border: 1px solid @c-border;
+    transition: all 0.25s;
+    cursor: default;
+    &:hover { transform: translateY(-3px); box-shadow: @shadow-hover; }
+  }
+  .statIconWrap {
+    width: 46px; height: 46px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0; transition: transform 0.2s;
+    .statCard:hover & { transform: scale(1.08); }
+  }
+  .statInfo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .statLabel { font-size: 12px; color: @c-sub; font-weight: 500; }
+  .statValue { font-size: 24px; font-weight: 700; line-height: 1.1; color: @c-text; font-feature-settings: 'tnum'; }
+
+  // ====== 图表卡片 ======
+  .chartsRow { margin-bottom: 24px; }
+
+  .chartCard {
+    border-radius: @radius;
+    box-shadow: @shadow;
+    border: 1px solid @c-border;
+    transition: all 0.25s;
+    & + & { margin-top: 0; }
+    &:hover { box-shadow: @shadow-hover; }
+    :global(.ant-card-head) {
+      border-bottom: 1px solid @c-border; min-height: 50px; padding: 0 20px;
+    }
+    :global(.ant-card-head-title) { padding: 14px 0; font-size: 14px; font-weight: 600; }
+  }
+  .chartTitle { display: flex; align-items: center; gap: 8px; font-size: 14px; color: @c-text; }
+
+  // 饼图
+  .pieChartWrap { display: flex; align-items: center; gap: 12px; }
+  .pieChartInner { position: relative; flex: 1; }
   .centerStat {
-    position: absolute;
-    top: 50%;
-    left: 28%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    pointer-events: none;
-
-    .centerStatValue {
-      font-size: 24px;
-      font-weight: 700;
-      color: #202124;
-      font-feature-settings: 'tnum';
-    }
-
-    .centerStatLabel {
-      font-size: 11px;
-      color: #9aa0a6;
-    }
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    text-align: center; pointer-events: none;
+    .centerStatValue { font-size: 26px; font-weight: 700; color: @c-text; }
+    .centerStatLabel { font-size: 11px; color: @c-sub; }
   }
-
-  .pieLegend {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    flex: 1;
-  }
-
+  .pieLegend { display: flex; flex-direction: column; gap: 8px; flex: 1; }
   .legendItem {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 10px;
-    border-radius: 8px;
-    transition: background 0.15s ease;
-
-    &:hover {
-      background: #f8f9fa;
-    }
+    display: flex; align-items: center; gap: 8px; padding: 6px 10px;
+    border-radius: 8px; transition: background 0.15s;
+    &:hover { background: #f8f9fb; }
   }
+  .legendDot { width: 9px; height: 9px; border-radius: 3px; flex-shrink: 0; }
+  .legendLabel { flex: 1; font-size: 13px; color: @c-sub; }
+  .legendValue { font-size: 14px; font-weight: 600; color: @c-text; }
 
-  .legendDot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .legendLabel {
-    flex: 1;
-    font-size: 13px;
-    color: #5f6368;
-  }
-
-  .legendValue {
-    font-size: 14px;
-    font-weight: 600;
-    color: #202124;
-    font-feature-settings: 'tnum';
-  }
-
-  // ============================================
   // 进度环
-  // ============================================
-  .progressWrap {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    padding: 8px 0;
-  }
-
-  .progressRing {
-    position: relative;
-    width: 160px;
-    height: 160px;
-    flex-shrink: 0;
-  }
-
+  .progressWrap { display: flex; align-items: center; gap: 28px; padding: 4px 0; }
+  .progressRing { position: relative; width: 160px; height: 160px; flex-shrink: 0; }
   .progressCenter {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    pointer-events: none;
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    text-align: center; pointer-events: none;
   }
-
-  .progressPercent {
-    display: block;
-    font-size: 28px;
-    font-weight: 700;
-    color: #34a853;
-    font-feature-settings: 'tnum';
-  }
-
-  .progressLabel {
-    display: block;
-    font-size: 12px;
-    color: #9aa0a6;
-    margin-top: 2px;
-  }
-
-  .progressStats {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
+  .progressPercent { display: block; font-size: 30px; font-weight: 700; color: @c-green; }
+  .progressLabel { display: block; font-size: 12px; color: @c-sub; margin-top: 2px; }
+  .progressStats { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .progressItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 12px;
-    border-radius: 8px;
-    background: #f8f9fa;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px; border-radius: 10px; background: #f8f9fb;
   }
+  .progressItemLabel { font-size: 13px; color: @c-sub; }
+  .progressItemValue { font-size: 18px; font-weight: 700; }
 
-  .progressItemLabel {
-    font-size: 13px;
-    color: #5f6368;
-  }
+  // 趋势图
+  .trendCard { margin-bottom: 24px; }
 
-  .progressItemValue {
-    font-size: 18px;
-    font-weight: 700;
-    font-feature-settings: 'tnum';
-  }
-
-  // ============================================
   // 近期任务
-  // ============================================
-  .recentTasksRow {
-    animation: fadeInUp 0.6s ease-out backwards;
-  }
-
   .taskItem {
-    padding: 12px 0 !important;
-    transition: background 0.15s ease;
-
-    &:hover {
-      background: #f8f9fa;
-    }
-
-    &:last-child {
-      border-bottom: none !important;
-    }
-
-    :global(.ant-list-item-meta) {
-      margin-bottom: 0;
-    }
+    padding: 12px 0 !important; transition: background 0.15s;
+    &:hover { background: #f8f9fb; }
+    &:last-child { border-bottom: none !important; }
+    :global(.ant-list-item-meta) { margin-bottom: 0; }
   }
+  .taskTitle { font-weight: 600; color: @c-text; font-size: 14px; }
+  .taskMetaTag { font-size: 12px; font-weight: 500; }
+  .taskMetaText { font-size: 12px; color: @c-sub; }
 
-  .taskTitle {
-    font-weight: 500;
-    color: #202124;
-    font-size: 14px;
+  // ====== 响应式 ======
+  @media (max-width: 1200px) {
+    .pieChartWrap { flex-direction: column; }
+    .centerStat { left: 50%; }
   }
-
-  .taskMetaTag {
-    font-size: 12px;
-    font-weight: 500;
-  }
-
-  .taskMetaText {
-    font-size: 12px;
-    color: #9aa0a6;
-  }
-
-  // ============================================
-  // 响应式
-  // ============================================
   @media (max-width: 768px) {
-    .header {
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .pieChartWrap {
-      flex-direction: column;
-    }
-
-    .centerStat {
-      left: 50%;
-    }
-
-    .progressWrap {
-      flex-direction: column;
-      align-items: center;
-    }
+    .header { flex-direction: column; align-items: stretch; }
+    .headerActions { width: 100%; .primaryBtn { flex: 1; } }
+    .progressWrap { flex-direction: column; align-items: center; }
+    .statsRow { margin-bottom: 20px; }
   }
 }
