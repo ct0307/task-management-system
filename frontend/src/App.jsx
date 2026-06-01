@@ -105,8 +105,9 @@ function App() {
   // 游客关闭页面时自动清理账号
   useEffect(() => {
     const handleBeforeUnload = () => {
-      if (sessionStorage.getItem("IS_GUEST") === "1" && token.get()) {
-        fetch("/api/auth/guest", { method: "DELETE", keepalive: true });
+      if (sessionStorage.getItem("IS_GUEST") === "1") {
+        const t = token.get();
+        if (t) fetch("/api/auth/guest", { method: "DELETE", keepalive: true, headers: { Authorization: `Bearer ${t}` } });
       }
     };
     window.addEventListener("beforeunload", handleBeforeUnload);

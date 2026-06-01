@@ -40,8 +40,7 @@ const handleRequestHeader = (config) => {
  * @returns {Object} 处理后的配置
  */
 const handleAuth = (config) => {
-  // 从 localStorage 获取 token
-  const accessToken = localStorage.getItem("AUTH_TOKEN") || "";
+  const accessToken = token.get() || "";
 
   if (accessToken) {
     config.headers["Authorization"] = `Bearer ${accessToken}`;
@@ -330,7 +329,7 @@ const upload = (url, formData, config = {}) => {
  */
 const download = async (url, params = {}, filename = "") => {
   // 获取token
-  const accessToken = localStorage.getItem("AUTH_TOKEN") || "";
+  const accessToken = token.get() || "";
 
   // 直接使用axios获取完整响应
   const response = await axios({

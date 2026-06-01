@@ -39,6 +39,7 @@ import { STATUS_CONFIG, PRIORITY_CONFIG } from '@/constants/task';
 import useTaskStore from '@/store/taskStore';
 import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
 import { post, put, del, get } from '@/util/request';
+import token from '@/util/token';
 import EmptyState from './EmptyState';
 import SuccessFeedback from './SuccessFeedback';
 import TaskDetailDrawer from './TaskDetailDrawer';
@@ -516,10 +517,10 @@ const TaskListOptimized = () => {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const token = localStorage.getItem('AUTH_TOKEN');
+      const accessToken = token.get();
       const response = await fetch('/api/tasks/import', {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${accessToken}` },
         body: formData
       });
       const result = await response.json();
@@ -541,9 +542,9 @@ const TaskListOptimized = () => {
   const handleExport = async (format) => {
     setExportLoading(true);
     try {
-      const token = localStorage.getItem('AUTH_TOKEN');
+      const accessToken = token.get();
       const response = await fetch(`/api/tasks/export?format=${format}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${accessToken}` }
       });
       if (!response.ok) throw new Error('导出失败');
       const blob = await response.blob();
