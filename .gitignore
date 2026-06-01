@@ -55,3 +55,6 @@ coverage/
 backups/
 deploy.py
 aliyun_cmd.py
+fix_swas.py
+swas_fix.py
+swas_optimize.py
