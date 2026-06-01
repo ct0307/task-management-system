@@ -14,7 +14,7 @@ const SORTABLE_FIELDS = {
   category_name: 'c.name'
 };
 
-async function findAll({ status, category, priority, search, assignee, dateRange, page, pageSize, limit, sortField, sortOrder, includeDeleted, userId, userRole } = {}) {
+async function findAll({ status, category, priority, search, assignee, dateRange, page, pageSize, limit, sortField, sortOrder, includeDeleted, includeSubtasks, userId, userRole } = {}) {
   const hasSearch = search && search.trim() !== '';
   let query = `
     SELECT t.*, c.name as category_name, u.real_name as assignee_name,
@@ -31,8 +31,8 @@ async function findAll({ status, category, priority, search, assignee, dateRange
   `;
   const params = [];
 
-  // 未搜索时只看顶层任务，搜索时全局搜索（含子任务）
-  if (!hasSearch) {
+  // 未搜索且未明确要求含子任务时，只看顶层任务
+  if (!hasSearch && !includeSubtasks) {
     query += ' AND t.parent_id IS NULL';
   }
 
@@ -122,7 +122,7 @@ async function findById(id) {
 /**
  * 创建任务
  */
-async function create({ title, description, status, priority, category_id, assignee_id, due_date, created_by }) {
+async function create({ title, description, status, priority, category_id, assignee_id, due_date, created_by, recurrence }) {
   // 获取当前状态下的最大 sort_order
   const [maxRows] = await pool.query(
     'SELECT COALESCE(MAX(sort_order), 0) + 1 AS next_order FROM tasks WHERE status = ?',
@@ -131,9 +131,9 @@ async function create({ title, description, status, priority, category_id, assig
   const sortOrder = maxRows[0].next_order;
 
   const [result] = await pool.query(`
-    INSERT INTO tasks (title, description, status, priority, category_id, assignee_id, due_date, sort_order, created_by)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `, [title, description || '', status || 'pending', priority || 'medium', category_id || null, assignee_id || null, due_date || null, sortOrder, created_by || null]);
+    INSERT INTO tasks (title, description, status, priority, category_id, assignee_id, due_date, sort_order, created_by, recurrence)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `, [title, description || '', status || 'pending', priority || 'medium', category_id || null, assignee_id || null, due_date || null, sortOrder, created_by || null, recurrence || null]);
   return result.insertId;
 }
 
@@ -141,7 +141,7 @@ async function create({ title, description, status, priority, category_id, assig
  * 更新任务
  */
 async function update(id, updates) {
-  const allowedFields = ['title', 'description', 'status', 'priority', 'category_id', 'assignee_id', 'due_date'];
+  const allowedFields = ['title', 'description', 'status', 'priority', 'category_id', 'assignee_id', 'due_date', 'recurrence'];
   const fields = [];
   const params = [];
 
@@ -211,22 +211,30 @@ async function permanentRemove(id) {
 /**
  * 获取回收站列表
  */
-async function findTrash({ page = 1, pageSize = 20 } = {}) {
+async function findTrash({ page = 1, pageSize = 20, userId, userRole } = {}) {
+  const userFilter = (userId && userRole !== 'admin')
+    ? ' AND (t.created_by = ? OR t.assignee_id = ?)' : '';
+  const userParams = (userId && userRole !== 'admin') ? [userId, userId] : [];
+
+  const countParams = userRole !== 'admin' ? userParams : [];
+  const countResult = await pool.query(
+    `SELECT COUNT(*) as total FROM tasks t WHERE t.deleted_at IS NOT NULL${userFilter}`,
+    countParams
+  );
+  const total = countResult[0][0].total;
+  const offset = (Number(page) - 1) * Number(pageSize);
+
   let query = `
     SELECT t.*, c.name as category_name, u.real_name as assignee_name
     FROM tasks t
     LEFT JOIN categories c ON t.category_id = c.id
     LEFT JOIN users u ON t.assignee_id = u.id
-    WHERE t.deleted_at IS NOT NULL
+    WHERE t.deleted_at IS NOT NULL${userFilter}
     ORDER BY t.deleted_at DESC
+    LIMIT ? OFFSET ?
   `;
-  const countResult = await pool.query(
-    'SELECT COUNT(*) as total FROM tasks WHERE deleted_at IS NOT NULL'
-  );
-  const total = countResult[0][0].total;
-  const offset = (Number(page) - 1) * Number(pageSize);
-  query += ' LIMIT ? OFFSET ?';
-  const [rows] = await pool.query(query, [Number(pageSize), offset]);
+  const params = [...(userRole !== 'admin' ? userParams : []), Number(pageSize), offset];
+  const [rows] = await pool.query(query, params);
   return { data: rows, total, page: Number(page), pageSize: Number(pageSize) };
 }
 
@@ -236,27 +244,28 @@ async function findTrash({ page = 1, pageSize = 20 } = {}) {
 async function getStats(userId, userRole) {
   const userFilter = (userId && userRole !== 'admin')
     ? ' AND (t.created_by = ? OR t.assignee_id = ?)' : '';
+  const recurrenceFilter = ' AND t.recurrence IS NULL';
   const userParams = (userId && userRole !== 'admin') ? [userId, userId] : [];
   // 排除父任务（有子任务的视为容器，不计入总数）
   const noParentFilter = ' AND NOT EXISTS (SELECT 1 FROM tasks sub WHERE sub.parent_id = t.id AND sub.deleted_at IS NULL)';
 
   const [total] = await pool.query(
-    `SELECT COUNT(*) as count FROM tasks t WHERE t.deleted_at IS NULL${userFilter}${noParentFilter}`,
+    `SELECT COUNT(*) as count FROM tasks t WHERE t.deleted_at IS NULL${userFilter}${noParentFilter}${recurrenceFilter}`,
     userParams
   );
   const [byStatus] = await pool.query(
-    `SELECT t.status, COUNT(*) as count FROM tasks t WHERE t.deleted_at IS NULL${userFilter}${noParentFilter} GROUP BY t.status`,
+    `SELECT t.status, COUNT(*) as count FROM tasks t WHERE t.deleted_at IS NULL${userFilter}${noParentFilter}${recurrenceFilter} GROUP BY t.status`,
     userParams
   );
   const [byPriority] = await pool.query(
-    `SELECT t.priority, COUNT(*) as count FROM tasks t WHERE t.deleted_at IS NULL${userFilter}${noParentFilter} GROUP BY t.priority`,
+    `SELECT t.priority, COUNT(*) as count FROM tasks t WHERE t.deleted_at IS NULL${userFilter}${noParentFilter}${recurrenceFilter} GROUP BY t.priority`,
     userParams
   );
   const [byCategory] = await pool.query(
     `SELECT c.name, c.color, COUNT(t.id) as count
      FROM categories c
      LEFT JOIN (
-       SELECT * FROM tasks WHERE deleted_at IS NULL
+       SELECT * FROM tasks WHERE deleted_at IS NULL AND recurrence IS NULL
        ${userFilter ? `AND (created_by = ? OR assignee_id = ?)` : ''}
        AND NOT EXISTS (SELECT 1 FROM tasks sub WHERE sub.parent_id = tasks.id AND sub.deleted_at IS NULL)
      ) t ON c.id = t.category_id
@@ -266,7 +275,7 @@ async function getStats(userId, userRole) {
   const [overdue] = await pool.query(
     `SELECT COUNT(*) as count
      FROM tasks t
-     WHERE t.due_date < CURDATE() AND t.status != 'completed' AND t.deleted_at IS NULL${userFilter}${noParentFilter}`,
+     WHERE t.due_date < CURDATE() AND t.status != 'completed' AND t.deleted_at IS NULL${userFilter}${noParentFilter}${recurrenceFilter}`,
     userParams
   );
 
@@ -290,7 +299,7 @@ async function getCompletionTrend(days = 14, userId, userRole) {
   const [rows] = await pool.query(`
     SELECT DATE(updated_at) as date, COUNT(*) as count
     FROM tasks
-    WHERE status = 'completed' AND deleted_at IS NULL
+    WHERE status = 'completed' AND deleted_at IS NULL AND recurrence IS NULL
       AND updated_at >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
       ${userFilter}
     GROUP BY DATE(updated_at)

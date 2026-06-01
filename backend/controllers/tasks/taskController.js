@@ -26,7 +26,8 @@ async function getTasks(req, res, next) {
       pageSize: req.query.pageSize,
       limit: req.query.limit,
       sortField: req.query.sortField,
-      sortOrder: req.query.sortOrder
+      sortOrder: req.query.sortOrder,
+      includeSubtasks: req.query.includeSubtasks === '1' || req.query.includeSubtasks === 'true'
     };
     const tasks = await taskService.getAllTasks(filters, req.user);
     success(res, tasks);
@@ -347,7 +348,11 @@ async function getCompletionTrend(req, res, next) {
 async function getTrashList(req, res, next) {
   try {
     const { page, pageSize } = req.query;
-    const data = await taskService.getTrashList({ page, pageSize });
+    const data = await taskService.getTrashList({
+      page, pageSize,
+      userId: req.user.id,
+      userRole: req.user.role
+    });
     success(res, data);
   } catch (err) {
     next(err);

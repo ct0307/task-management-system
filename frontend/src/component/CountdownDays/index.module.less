@@ -1,0 +1,126 @@
+@primary-blue: #1a73e8;
+@text-main: #1f2a44;
+@text-sub: #5e6c84;
+@border-color: #e8eaed;
+
+.card {
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+  :global {
+    .ant-card-head { border-bottom: 1px solid @border-color; min-height: 44px; }
+    .ant-card-head-title { font-size: 15px; font-weight: 600; }
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.countdownCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 12px 14px;
+  border-radius: 14px;
+  background: #fafbfc;
+  border: 1px solid #eef1f5;
+  transition: all 0.2s;
+
+  &:hover { border-color: #d6dde5; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+}
+
+.overdue {
+  background: linear-gradient(135deg, #fce8e6 0%, #fff5f5 40%, #fff 100%);
+  border-color: #f5b7b1;
+}
+
+.today {
+  background: linear-gradient(135deg, #fff3e0 0%, #fffbf0 40%, #fff 100%);
+  border-color: #ffcc80;
+}
+
+.urgent {
+  background: linear-gradient(135deg, #fce8e6 0%, #fff5f5 40%, #fff 100%);
+  border-color: #f5b7b1;
+}
+
+.warning {
+  background: linear-gradient(135deg, #fff3e0 0%, #fffbf0 40%, #fff 100%);
+  border-color: #ffcc80;
+}
+
+.normal {
+  background: linear-gradient(135deg, #e8f0fe 0%, #f5f9ff 40%, #fff 100%);
+  border-color: #a8c8fa;
+}
+
+.relaxed {
+  background: linear-gradient(135deg, #e6f4ea 0%, #f5faf6 40%, #fff 100%);
+  border-color: #a8d8b2;
+}
+
+.elapsedMid {
+  background: linear-gradient(135deg, #fff3e0 0%, #fff8f0 40%, #fff 100%);
+  border-color: #ffab76;
+}
+
+.elapsedLong {
+  background: linear-gradient(135deg, #fce8e6 0%, #fff5f5 40%, #fff 100%);
+  border-color: #ef9a9a;
+}
+
+.numberWrap {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.number {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -2px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.unit {
+  font-size: 14px;
+  color: @text-sub;
+  font-weight: 500;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.taskTitle {
+  font-size: 13px;
+  color: @text-main;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+// 无任务时隐藏卡片
+.empty { display: none; }
+
+@media (max-width: 768px) {
+  .grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .number { font-size: 36px; }
+  .countdownCard { padding: 12px 8px 10px; }
+}
+
+@media (max-width: 480px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .number { font-size: 32px; }
+}

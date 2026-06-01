@@ -123,6 +123,10 @@ async function run() {
       await conn.query('ALTER TABLE tasks ADD COLUMN parent_id INT DEFAULT NULL AFTER id');
       console.log('  ↳ 已添加 parent_id 列（父任务）');
     } catch (_) { /* 列已存在 */ }
+    try {
+      await conn.query('ALTER TABLE tasks ADD COLUMN recurrence VARCHAR(10) DEFAULT NULL AFTER priority');
+      console.log('  ↳ 已添加 recurrence 列（重复日程）');
+    } catch (_) { /* 列已存在 */ }
 
     // ====== 数据库索引优化 ======
     try { await conn.query('CREATE INDEX idx_tasks_status ON tasks(status)'); } catch (_) {}

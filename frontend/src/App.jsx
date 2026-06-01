@@ -15,6 +15,7 @@ const NotFound = lazy(() => import("./app/not-found"));
 const Forbidden = lazy(() => import("./app/forbidden"));
 const ServerError = lazy(() => import("./app/server-error"));
 const Tasks = lazy(() => import("./app/tasks"));
+const Schedules = lazy(() => import("./app/schedules"));
 const Trash = lazy(() => import("./app/trash"));
 const Profile = lazy(() => import("./app/profile"));
 const Register = lazy(() => import("./app/register"));
@@ -158,6 +159,20 @@ function App() {
               isLogin ? (
                 <Layout>
                   <Tasks />
+                </Layout>
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+
+          {/* 日程管理 */}
+          <Route
+            path="/schedules"
+            element={
+              isLogin ? (
+                <Layout>
+                  <Schedules />
                 </Layout>
               ) : (
                 <Navigate to="/login" replace />

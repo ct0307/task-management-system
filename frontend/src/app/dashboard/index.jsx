@@ -18,6 +18,8 @@ import {
 } from "@ant-design/icons";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import StatCard from "@/component/StatCard";
+import ScheduleCalendar from "@/component/ScheduleCalendar";
+import CountdownDays from "@/component/CountdownDays";
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip as ReTooltip,
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -64,21 +66,30 @@ const Dashboard = () => {
   }, []);
   const [recentTasks, setRecentTasks] = useState([]);
   const [trend, setTrend] = useState([]);
+  const [calendarTasks, setCalendarTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [statsData, tasksData, trendData] = await Promise.all([
+        const now = new Date();
+        const y = now.getFullYear(), m = now.getMonth();
+        const lastDay = new Date(y, m + 1, 0).getDate();
+        const start = `${y}-${String(m + 1).padStart(2, '0')}-01`;
+        const end = `${y}-${String(m + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+
+        const [statsData, tasksData, trendData, calData] = await Promise.all([
           get(API_TASK_STATS),
           get(`${API_TASK_LIST}?limit=5`),
-          get(`${API_TASK_TREND}?days=14`)
+          get(`${API_TASK_TREND}?days=14`),
+          get(`${API_TASK_LIST}?dateRange=${start},${end}&limit=200&includeSubtasks=1`)
         ]);
         setStats(statsData.data);
         setRecentTasks(tasksData.data || []);
         setTrend(trendData.data || []);
+        setCalendarTasks((calData.data?.data || calData.data || []).filter(t => t.due_date));
       } catch (err) {
-        // 静默降级：数据加载失败时显示空状态
+        // 静默降级
       } finally {
         setLoading(false);
       }
@@ -432,9 +443,19 @@ const Dashboard = () => {
         </Row>
       )}
 
-      {/* 近期任务 */}
-      <Row className={s.recentTasksRow}>
+      {/* 倒数日 */}
+      <Row gutter={[16, 16]} className={s.chartsRow}>
         <Col span={24}>
+          <CountdownDays tasks={calendarTasks} />
+        </Col>
+      </Row>
+
+      {/* 日程图 + 近期任务 */}
+      <Row gutter={[16, 16]} className={s.chartsRow}>
+        <Col xs={24} lg={14}>
+          <ScheduleCalendar tasks={calendarTasks} />
+        </Col>
+        <Col xs={24} lg={10}>
           <Card
             title={
               <span className={s.chartTitle}>

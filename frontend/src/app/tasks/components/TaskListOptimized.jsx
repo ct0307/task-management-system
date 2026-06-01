@@ -929,6 +929,12 @@ const TaskListOptimized = () => {
           <Form.Item name="due_date" label="截止日期">
             <Input type="date" style={{ width: '100%' }} />
           </Form.Item>
+          <Form.Item name="recurrence" label="重复">
+            <Select allowClear placeholder="不重复">
+              <Option value="weekly">🔄 每周</Option>
+              <Option value="monthly">🔄 每月</Option>
+            </Select>
+          </Form.Item>
         </Form>
       </Modal>
 

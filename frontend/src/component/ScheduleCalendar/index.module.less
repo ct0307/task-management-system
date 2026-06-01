@@ -1,0 +1,164 @@
+@primary-blue: #1a73e8;
+@text-main: #1f2a44;
+@text-sub: #5e6c84;
+@border-color: #e8eaed;
+
+.calendarCard {
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+  :global {
+    .ant-card-head { border-bottom: 1px solid @border-color; min-height: 44px; }
+    .ant-card-head-title { font-size: 15px; font-weight: 600; }
+  }
+}
+
+.loadingWrap { display: flex; justify-content: center; padding: 60px 0; }
+
+.monthNav {
+  display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 10px;
+}
+.navBtn {
+  font-size: 14px; color: @text-sub; cursor: pointer; padding: 4px; border-radius: 6px; transition: all 0.2s;
+  &:hover { color: @primary-blue; background: rgba(26, 115, 232, 0.06); }
+}
+.monthTitle {
+  font-size: 15px; font-weight: 600; color: @text-main; min-width: 100px; text-align: center;
+}
+
+.weekHeader { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 2px; }
+.weekDay { text-align: center; font-size: 12px; font-weight: 600; color: @text-sub; padding: 4px 0; }
+
+// 日期网格 — 7 列等高
+.dateGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+// 日期格子
+.dayCell {
+  padding: 4px 3px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  min-height: 80px;
+  transition: background 0.15s;
+  border: 2px solid transparent;
+  background: #fafbfc;
+  display: flex;
+  flex-direction: column;
+
+  &:hover { background: rgba(26, 115, 232, 0.04); }
+}
+
+.otherMonth {
+  opacity: 0.25; cursor: default; background: transparent;
+  &:hover { background: transparent; }
+  min-height: 80px;
+}
+
+.today {
+  background: rgba(26, 115, 232, 0.06);
+  border-color: @primary-blue;
+}
+
+.selected {
+  border-color: @primary-blue;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.15);
+}
+
+.dayNum {
+  font-size: 13px;
+  font-weight: 600;
+  color: @text-main;
+  margin-bottom: 3px;
+  padding-left: 2px;
+}
+
+.today .dayNum {
+  color: @primary-blue;
+}
+
+// 任务色块列表
+.taskBlocks {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.taskBlock {
+  font-size: 11px;
+  line-height: 18px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  border-left: 3px solid;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.overflowBadge {
+  font-size: 10px;
+  color: @text-sub;
+  padding: 1px 4px;
+  text-align: center;
+  background: #f0f0f0;
+  border-radius: 3px;
+  margin-top: 1px;
+}
+
+// 选中日期详情
+.dayTasks {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid @border-color;
+}
+
+.dayTasksHeader {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+}
+
+.miniEmpty {
+  margin: 8px 0;
+  :global {
+    .ant-empty-image { height: 24px; margin-bottom: 0; }
+    .ant-empty-description { font-size: 12px; }
+  }
+}
+
+.taskList {
+  display: flex; flex-direction: column; gap: 4px; max-height: 240px; overflow-y: auto;
+}
+
+.taskRow {
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; background: #fafbfc;
+  &:hover { background: #f0f4f8; }
+}
+
+.priorityBadge {
+  font-size: 11px; padding: 1px 6px; border-radius: 4px; font-weight: 600; flex-shrink: 0;
+}
+
+.taskName {
+  flex: 1; font-size: 13px; color: @text-main; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+// 移动端
+@media (max-width: 768px) {
+  .dayCell { min-height: 64px; padding: 2px; }
+  .dayNum { font-size: 11px; margin-bottom: 1px; }
+  .taskBlock { font-size: 9px; line-height: 15px; padding: 0 3px; border-left-width: 2px; border-radius: 2px; }
+  .taskBlocks { gap: 1px; }
+  .overflowBadge { font-size: 9px; }
+  .weekDay { font-size: 10px; padding: 2px 0; }
+  .monthTitle { font-size: 13px; }
+}
+
+@media (max-width: 480px) {
+  .dayCell { min-height: 52px; border-radius: 5px; }
+  .dayNum { font-size: 10px; }
+  .taskBlock { font-size: 8px; line-height: 13px; }
+}
