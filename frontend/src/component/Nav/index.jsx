@@ -192,7 +192,7 @@ const Nav = () => {
                       style={{
                         padding: '8px 0',
                         cursor: 'pointer',
-                        backgroundColor: item.is_read ? 'transparent' : '#e8f0fe',
+                        backgroundColor: item.is_read ? 'transparent' : '#fdf0eb',
                         borderRadius: 6,
                         paddingLeft: 8,
                         paddingRight: 4,

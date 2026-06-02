@@ -40,43 +40,43 @@ const TaskStatsOptimized = () => {
       title: '任务总数',
       value: stats.total || 0,
       icon: <FileTextOutlined />,
-      color: '#1a73e8',
-      bgColor: '#e8f0fe'
+      color: '#e85d3a',
+      bgColor: '#fdf0eb'
     },
     {
       title: '待处理',
       value: stats.byStatus?.pending || 0,
       icon: <ClockCircleOutlined />,
-      color: '#f9ab00',
-      bgColor: '#fef7e0'
+      color: '#d4972e',
+      bgColor: '#fef5e6'
     },
     {
       title: '进行中',
       value: stats.byStatus?.in_progress || 0,
       icon: <ThunderboltOutlined />,
-      color: '#1a73e8',
-      bgColor: '#e8f0fe'
+      color: '#e85d3a',
+      bgColor: '#fdf0eb'
     },
     {
       title: '已完成',
       value: stats.byStatus?.completed || 0,
       icon: <CheckCircleOutlined />,
-      color: '#34a853',
-      bgColor: '#e6f4ea'
+      color: '#3d8c5c',
+      bgColor: '#eaf5ee'
     },
     {
       title: '高优先级',
       value: stats.byPriority?.high || 0,
       icon: <WarningOutlined />,
-      color: '#ea4335',
+      color: '#d94436',
       bgColor: '#fce8e6'
     },
     {
       title: '已逾期',
       value: stats.overdue || 0,
       icon: <AlertOutlined />,
-      color: stats.overdue > 0 ? '#ea4335' : '#34a853',
-      bgColor: stats.overdue > 0 ? '#fce8e6' : '#e6f4ea'
+      color: stats.overdue > 0 ? '#d94436' : '#3d8c5c',
+      bgColor: stats.overdue > 0 ? '#fce8e6' : '#eaf5ee'
     }
   ];
 

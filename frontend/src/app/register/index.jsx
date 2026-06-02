@@ -26,10 +26,10 @@ const getPasswordStrength = (pwd) => {
   if (/\d/.test(pwd)) score++;
   if (/[^a-zA-Z0-9]/.test(pwd)) score++;
 
-  if (score <= 1) return { level: 1, label: "弱", color: "#ea4335", percent: 25 };
-  if (score === 2) return { level: 2, label: "一般", color: "#f9ab00", percent: 50 };
-  if (score === 3) return { level: 3, label: "良好", color: "#1a73e8", percent: 75 };
-  return { level: 4, label: "强", color: "#34a853", percent: 100 };
+  if (score <= 1) return { level: 1, label: "弱", color: "#d94436", percent: 25 };
+  if (score === 2) return { level: 2, label: "一般", color: "#d4972e", percent: 50 };
+  if (score === 3) return { level: 3, label: "良好", color: "#e85d3a", percent: 75 };
+  return { level: 4, label: "强", color: "#3d8c5c", percent: 100 };
 };
 
 const Register = () => {
@@ -131,9 +131,9 @@ const Register = () => {
                 allowClear
                 onChange={handleUsernameChange}
                 suffix={
-                  usernameStatus === "checking" ? <LoadingOutlined style={{ color: "#1a73e8" }} /> :
-                  usernameStatus === "available" ? <CheckCircleFilled style={{ color: "#34a853" }} /> :
-                  usernameStatus === "taken" ? <CloseCircleFilled style={{ color: "#ea4335" }} /> :
+                  usernameStatus === "checking" ? <LoadingOutlined style={{ color: "#e85d3a" }} /> :
+                  usernameStatus === "available" ? <CheckCircleFilled style={{ color: "#3d8c5c" }} /> :
+                  usernameStatus === "taken" ? <CloseCircleFilled style={{ color: "#d94436" }} /> :
                   null
                 }
               />
@@ -141,7 +141,7 @@ const Register = () => {
             {usernameMsg && (
               <div style={{
                 marginTop: -18, marginBottom: 14, fontSize: 12,
-                color: usernameStatus === "available" ? "#34a853" : "#ea4335"
+                color: usernameStatus === "available" ? "#3d8c5c" : "#d94436"
               }}>
                 {usernameMsg}
               </div>
@@ -178,14 +178,14 @@ const Register = () => {
                     showInfo={false}
                     size="small"
                     strokeColor={passwordStrength.color}
-                    trailColor="#f0f0f0"
+                    trailColor="#e8e4df"
                     style={{ flex: 1, margin: 0 }}
                   />
                   <Text style={{ fontSize: 12, color: passwordStrength.color, fontWeight: 500, whiteSpace: "nowrap" }}>
                     {passwordStrength.label}
                   </Text>
                 </div>
-                <div style={{ fontSize: 11, color: "#9aa0a6", marginTop: 4 }}>
+                <div style={{ fontSize: 11, color: "#a39e98", marginTop: 4 }}>
                   {passwordStrength.level < 2 && "建议使用大小写字母+数字组合"}
                   {passwordStrength.level === 2 && "可添加特殊字符增强安全性"}
                   {passwordStrength.level >= 3 && "密码强度良好"}

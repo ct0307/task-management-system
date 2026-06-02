@@ -46,9 +46,9 @@ const PageTransition = ({ children }) => {
 
 // 布局组件（Nav + 内容）
 const Layout = ({ children }) => (
-  <div style={{ minHeight: "100vh", background: "#f0f2f5" }}>
+  <div style={{ minHeight: "100vh", background: "#faf8f5" }}>
     <Nav />
-    <AntLayout style={{ minHeight: "calc(100vh - 52px)", background: "#f0f2f5" }}>
+    <AntLayout style={{ minHeight: "calc(100vh - 52px)", background: "#faf8f5" }}>
       <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
         <PageTransition>{children}</PageTransition>
       </Content>

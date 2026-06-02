@@ -9,9 +9,9 @@ const WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'];
 const MONTHS = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
 
 const PRIORITY_CONFIG = {
-  high: { bg: '#fce8e6', text: '#ea4335', border: '#ea4335' },
-  medium: { bg: '#fef7e0', text: '#e8a400', border: '#f9ab00' },
-  low: { bg: '#edf7ed', text: '#34a853', border: '#34a853' }
+  high: { bg: '#fce8e6', text: '#d94436', border: '#d94436' },
+  medium: { bg: '#fef5e6', text: '#d4972e', border: '#d4972e' },
+  low: { bg: '#eaf5ee', text: '#3d8c5c', border: '#3d8c5c' }
 };
 
 const STATUS_LABEL = { pending: '待处理', in_progress: '进行中', completed: '已完成' };
@@ -144,9 +144,9 @@ const ScheduleCalendar = ({ tasks = [] }) => {
                       key={j}
                       className={`${s.taskBlock} ${isSchedule ? s.scheduleBlock : ''}`}
                       style={{
-                        background: isSchedule ? '#f9f0ff' : p.bg,
-                        borderLeftColor: isSchedule ? '#722ed1' : p.border,
-                        color: isSchedule ? '#531dab' : p.text,
+                        background: isSchedule ? '#fdf0eb' : p.bg,
+                        borderLeftColor: isSchedule ? '#e85d3a' : p.border,
+                        color: isSchedule ? '#c96a45' : p.text,
                         borderLeftStyle: isSchedule ? 'dashed' : 'solid'
                       }}
                     >

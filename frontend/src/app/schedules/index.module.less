@@ -33,9 +33,9 @@
   text-align: center;
   font-size: 13px;
   font-weight: 600;
-  color: #5e6c84;
+  color: #78736d;
   padding: 6px 0;
-  background: #f8f9fb;
+  background: #faf8f5;
   border-radius: 6px 6px 0 0;
 }
 
@@ -45,7 +45,7 @@
   gap: 3px;
   padding: 4px 2px;
   min-height: 120px;
-  background: #fafbfc;
+  background: #faf8f5;
   border-radius: 0 0 6px 6px;
 }
 
@@ -53,12 +53,26 @@
   font-size: 11px;
   padding: 6px 4px;
   border-radius: 4px;
-  background: #f9f0ff;
-  border-left: 3px solid #722ed1;
-  color: #531dab;
+  background: #fdf0eb;
+  border-left: 3px solid #e85d3a;
+  color: #c96a45;
   font-weight: 500;
   line-height: 1.3;
   word-break: break-all;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  cursor: default;
+  transition: all 0.15s;
+
+  &:hover { background: #fbe8d8; }
+}
+
+.courseTime {
+  font-size: 10px;
+  color: #a39e98;
+  font-weight: 400;
+  margin-top: 1px;
 }
 
 .emptyDay {

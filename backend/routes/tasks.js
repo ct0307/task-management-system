@@ -55,50 +55,141 @@ router.post('/users', requireAuth, createUser);
 // 导出任务数据（需登录）
 router.get('/export', requireAuth, exportTasks);
 
-// CSV 导入（需登录）
+// 多格式导入（CSV / Excel / JSON，需登录）
+// 前端已做解析，后端接收映射后的数据行
 router.post('/import', requireAuth, async (req, res, next) => {
-  const multer = require('multer');
-  const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1024 * 1024 * 5 } });
-  upload.single('file')(req, res, async (err) => {
-    if (err) return res.status(400).json({ code: 400, message: '文件上传失败' });
-    if (!req.file) return res.status(400).json({ code: 400, message: '请上传CSV文件' });
+  try {
+    const { rows } = req.body;
 
-    try {
-      const csvText = req.file.buffer.toString('utf-8');
-      const lines = csvText.split('\n').filter(l => l.trim());
-      if (lines.length < 2) return res.status(400).json({ code: 400, message: 'CSV无数据行' });
+    // 如果前端通过 FormData 上传文件（兼容旧方式）
+    if (!rows) {
+      const multer = require('multer');
+      const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1024 * 1024 * 10 } });
+      return upload.single('file')(req, res, async (err) => {
+        if (err) return res.status(400).json({ code: 400, message: '文件上传失败' });
+        if (!req.file) return res.status(400).json({ code: 400, message: '请上传文件' });
 
-      const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-      const titleIdx = headers.findIndex(h => h === '标题' || h === 'title');
-      if (titleIdx < 0) return res.status(400).json({ code: 400, message: '缺少标题列' });
-
-      const statusMap = { '待处理': 'pending', '进行中': 'in_progress', '已完成': 'completed' };
-      const priorityMap = { '高': 'high', '中': 'medium', '低': 'low' };
-      const { pool } = require('../db');
-
-      let imported = 0;
-      for (let i = 1; i < lines.length; i++) {
-        const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
-        const title = cols[titleIdx];
-        if (!title) continue;
-
-        const status = cols[headers.indexOf('状态')] ? (statusMap[cols[headers.indexOf('状态')]] || 'pending') : 'pending';
-        const priority = cols[headers.indexOf('优先级')] ? (priorityMap[cols[headers.indexOf('优先级')]] || 'medium') : 'medium';
-        const description = cols[headers.findIndex(h => h === '描述' || h === 'description')] || '';
-
-        await pool.query(
-          'INSERT INTO tasks (title, description, status, priority, created_by) VALUES (?, ?, ?, ?, ?)',
-          [title, description, status, priority, req.user?.id || null]
-        );
-        imported++;
-      }
-
-      require('../utils/response').success(res, { imported }, `成功导入 ${imported} 条任务`, 201);
-    } catch (e) {
-      next(e);
+        try {
+          const result = await parseAndImport(req.file, req.user);
+          require('../utils/response').success(res, result, `成功导入 ${result.imported} 条任务`, 201);
+        } catch (e) { next(e); }
+      });
     }
-  });
+
+    // 前端已解析，直接导入映射后的数据
+    if (!Array.isArray(rows) || rows.length === 0) {
+      return res.status(400).json({ code: 400, message: '无有效数据行' });
+    }
+
+    const { pool } = require('../db');
+    const statusMap = { '待处理': 'pending', '进行中': 'in_progress', '已完成': 'completed' };
+    const priorityMap = { '高': 'high', '中': 'medium', '低': 'low' };
+
+    let imported = 0;
+    const batch = [];
+    for (const row of rows) {
+      const title = row.title;
+      if (!title) continue;
+
+      const status = statusMap[row.status] || row.status || 'pending';
+      const priority = priorityMap[row.priority] || row.priority || 'medium';
+      const description = row.description || '';
+      const categoryId = row.category_id || null;
+      const dueDate = row.due_date || null;
+      const assigneeId = row.assignee_id || null;
+
+      batch.push([title, description, status, priority, categoryId, dueDate, assigneeId, req.user?.id || null]);
+      imported++;
+    }
+
+    if (batch.length === 0) {
+      return res.status(400).json({ code: 400, message: '无有效数据：所有行缺少标题' });
+    }
+
+    // 批量插入（每次最多 100 条）
+    const BATCH_SIZE = 100;
+    for (let i = 0; i < batch.length; i += BATCH_SIZE) {
+      const chunk = batch.slice(i, i + BATCH_SIZE);
+      const placeholders = chunk.map(() => '(?, ?, ?, ?, ?, ?, ?, ?)').join(', ');
+      await pool.query(
+        `INSERT INTO tasks (title, description, status, priority, category_id, due_date, assignee_id, created_by) VALUES ${placeholders}`,
+        chunk.flat()
+      );
+    }
+
+    require('../utils/response').success(res, { imported }, `成功导入 ${imported} 条任务`, 201);
+  } catch (e) {
+    next(e);
+  }
 });
+
+// 文件解析辅助（兼容旧的 FormData 上传方式）
+async function parseAndImport(file, user) {
+  const ext = file.originalname.split('.').pop().toLowerCase();
+  const { pool } = require('../db');
+  let rows = [];
+
+  if (ext === 'csv') {
+    const Papa = require('papaparse');
+    const result = Papa.parse(file.buffer.toString('utf-8'), { header: true, skipEmptyLines: true });
+    rows = result.data.filter(r => Object.values(r).some(v => v));
+  } else if (ext === 'xlsx' || ext === 'xls') {
+    const XLSX = require('xlsx');
+    const wb = XLSX.read(file.buffer, { type: 'buffer' });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+  } else if (ext === 'json') {
+    const data = JSON.parse(file.buffer.toString('utf-8'));
+    rows = Array.isArray(data) ? data : (data.data || data.tasks || data.rows || []);
+  } else {
+    throw new Error(`不支持的文件格式: .${ext}`);
+  }
+
+  if (rows.length === 0) throw new Error('文件中无可用数据');
+
+  // 智能列映射
+  const fieldMap = {
+    title: ['标题','title','任务名','名称','name','task'],
+    description: ['描述','description','详情','备注','desc','note'],
+    status: ['状态','status'],
+    priority: ['优先级','priority'],
+    due_date: ['截止','due','deadline','日期','date','到期','截止日期'],
+    category_id: ['分类','category','类别'],
+    assignee_id: ['负责人','assignee','责任人','owner'],
+  };
+
+  const headers = Object.keys(rows[0]);
+  const colMap = {};
+  for (const [field, patterns] of Object.entries(fieldMap)) {
+    const h = headers.find(h => patterns.some(p => h.toLowerCase().includes(p.toLowerCase())));
+    if (h) colMap[h] = field;
+  }
+
+  const statusMap = { '待处理':'pending','进行中':'in_progress','已完成':'completed' };
+  const priorityMap = { '高':'high','中':'medium','低':'low' };
+
+  let imported = 0;
+  const batch = [];
+  for (const row of rows) {
+    const title = row[Object.keys(colMap).find(k => colMap[k] === 'title')];
+    if (!title) continue;
+    const status = statusMap[row[Object.keys(colMap).find(k => colMap[k] === 'status')]] || 'pending';
+    const priority = priorityMap[row[Object.keys(colMap).find(k => colMap[k] === 'priority')]] || 'medium';
+    batch.push([title, row[Object.keys(colMap).find(k => colMap[k] === 'description')] || '', status, priority, user?.id || null]);
+    imported++;
+  }
+
+  if (batch.length === 0) throw new Error('所有行缺少标题列');
+
+  const BATCH_SIZE = 100;
+  for (let i = 0; i < batch.length; i += BATCH_SIZE) {
+    const chunk = batch.slice(i, i + BATCH_SIZE);
+    const placeholders = chunk.map(() => '(?, ?, ?, ?, ?)').join(', ');
+    await pool.query(`INSERT INTO tasks (title, description, status, priority, created_by) VALUES ${placeholders}`, chunk.flat());
+  }
+
+  return { imported };
+}
 
 // 批量操作（需登录）
 router.delete('/batch', requireAuth, batchDelete);
@@ -136,5 +227,24 @@ router.put('/:id/subtasks/reorder', requireAuth, reorderSubtasks);
 router.put('/:id/subtasks/:subtaskId', requireAuth, updateSubtask);
 router.put('/:id/subtasks/:subtaskId/promote', requireAuth, promoteSubtask);
 router.put('/:id/demote', requireAuth, demoteToSubtask);
+
+// 文件解析（PDF/图片/Word，调用本地 Python 引擎）
+router.post('/parse', requireAuth, async (req, res) => {
+  const { execFile } = require('child_process');
+  const { filepath } = req.body;
+  if (!filepath) return res.status(400).json({ code: 400, message: '缺少 filepath' });
+  execFile('python3', [
+    'C:/Users/chentao/Desktop/轻量化任务管理系统/parse_engine.py',
+    filepath
+  ], { timeout: 60000, maxBuffer: 10*1024*1024 }, (err, stdout, stderr) => {
+    if (err) return res.status(500).json({ code: 500, message: '解析失败: ' + (stderr || err.message) });
+    try {
+      const result = JSON.parse(stdout);
+      res.json({ code: 200, data: result });
+    } catch {
+      res.json({ code: 200, data: { full_text: stdout } });
+    }
+  });
+});
 
 module.exports = router;

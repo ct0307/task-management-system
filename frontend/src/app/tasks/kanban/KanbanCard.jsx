@@ -35,7 +35,7 @@ const KanbanCard = ({ task, onEdit, onDelete, onDragStart, onDragOver, onDrop, o
           <Text
             ellipsis={{ tooltip: task.title }}
             delete={task.status === 'completed'}
-            style={{ fontWeight: 500, fontSize: 14, color: task.status === 'completed' ? '#9aa0a6' : '#202124' }}
+            style={{ fontWeight: 500, fontSize: 14, color: task.status === 'completed' ? '#a39e98' : '#1e1b18' }}
           >
             {task.title}
           </Text>
@@ -90,8 +90,8 @@ const KanbanCard = ({ task, onEdit, onDelete, onDragStart, onDragOver, onDrop, o
                 lineHeight: '20px',
                 borderRadius: 4,
                 border: 'none',
-                background: '#f0f0f0',
-                color: '#5f6368'
+                background: '#e8e4df',
+                color: '#78736d'
               }}
             >
               {task.category_name}
@@ -119,7 +119,7 @@ const KanbanCard = ({ task, onEdit, onDelete, onDragStart, onDragOver, onDrop, o
       {/* 底部信息 */}
       <div className={s.cardFooter}>
         {task.due_date && (
-          <span className={s.dueDate} style={isOverdue ? { color: '#ea4335' } : {}}>
+          <span className={s.dueDate} style={isOverdue ? { color: '#d94436' } : {}}>
             <ClockCircleOutlined /> {task.due_date.split('T')[0]}
           </span>
         )}

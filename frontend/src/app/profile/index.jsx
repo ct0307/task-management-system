@@ -86,8 +86,8 @@ const Profile = () => {
   const initials = (user?.real_name || user?.username || '?').slice(0, 2).toUpperCase();
   const roleName = user?.role === 'admin' ? '管理员' : '普通用户';
   const statusColor = {
-    total: '#1a73e8', completed: '#34a853',
-    in_progress: '#1a73e8', pending: '#f9ab00', overdue: '#ea4335'
+    total: '#e85d3a', completed: '#3d8c5c',
+    in_progress: '#e85d3a', pending: '#d4972e', overdue: '#d94436'
   };
 
   return (

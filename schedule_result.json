@@ -1,0 +1,145 @@
+[
+  {
+    "day": "周三",
+    "period": 1,
+    "name": "Web程序设计",
+    "start_period": 1,
+    "end_period": 2,
+    "start_time": "08:05",
+    "end_time": "09:40",
+    "location": "勤园13号楼201",
+    "teacher": "李阳"
+  },
+  {
+    "day": "周四",
+    "period": 1,
+    "name": "操作系统",
+    "start_period": 1,
+    "end_period": 2,
+    "start_time": "08:05",
+    "end_time": "09:40",
+    "location": "勤园6号楼104",
+    "teacher": "丁丹"
+  },
+  {
+    "day": "周三",
+    "period": 2,
+    "name": "计算机246Web程序设计",
+    "start_period": 3,
+    "end_period": 4,
+    "start_time": "10:00",
+    "end_time": "11:40",
+    "location": "勤园13号楼201",
+    "teacher": "李阳"
+  },
+  {
+    "day": "周四",
+    "period": 2,
+    "name": "计算机245操作系统",
+    "start_period": 1,
+    "end_period": 3,
+    "start_time": "08:05",
+    "end_time": "10:50",
+    "location": "勤园6号楼104",
+    "teacher": "丁丹丹"
+  },
+  {
+    "day": "周四",
+    "period": 3,
+    "name": "计算机245操作系统",
+    "start_period": 3,
+    "end_period": 3,
+    "start_time": "10:00",
+    "end_time": "10:50",
+    "location": "勤园13号楼208",
+    "teacher": "丁丹丹"
+  },
+  {
+    "day": "周四",
+    "period": 3,
+    "name": "计算机245操作系统",
+    "start_period": 4,
+    "end_period": 4,
+    "start_time": "10:50",
+    "end_time": "11:40",
+    "location": "勤园6号楼104",
+    "teacher": "丁丹丹"
+  },
+  {
+    "day": "周四",
+    "period": 4,
+    "name": "操作系统",
+    "start_period": 4,
+    "end_period": 4,
+    "start_time": "10:50",
+    "end_time": "11:40",
+    "location": "勤园13号楼208",
+    "teacher": "丁丹丹"
+  },
+  {
+    "day": "周三",
+    "period": 5,
+    "name": "计算机网络",
+    "start_period": 6,
+    "end_period": 7,
+    "start_time": "14:25",
+    "end_time": "16:10",
+    "location": "",
+    "teacher": ""
+  },
+  {
+    "day": "周四",
+    "period": 5,
+    "name": "篮球",
+    "start_period": 6,
+    "end_period": 7,
+    "start_time": "14:25",
+    "end_time": "16:10",
+    "location": "",
+    "teacher": ""
+  },
+  {
+    "day": "周一",
+    "period": 6,
+    "name": "毛泽东思想和中国特色社会主义理论体系概论",
+    "start_period": 6,
+    "end_period": 8,
+    "start_time": "14:25",
+    "end_time": "17:00",
+    "location": "",
+    "teacher": ""
+  },
+  {
+    "day": "周三",
+    "period": 6,
+    "name": "计算机网络",
+    "start_period": 6,
+    "end_period": 7,
+    "start_time": "14:25",
+    "end_time": "16:10",
+    "location": "勤园7号楼208",
+    "teacher": "许翔"
+  },
+  {
+    "day": "周四",
+    "period": 6,
+    "name": "篮球",
+    "start_period": 6,
+    "end_period": 7,
+    "start_time": "14:25",
+    "end_time": "16:10",
+    "location": "A风雨篮球场1",
+    "teacher": "刘庆山"
+  },
+  {
+    "day": "周三",
+    "period": 7,
+    "name": "计算机245计算机网络",
+    "start_period": 8,
+    "end_period": 9,
+    "start_time": "16:10",
+    "end_time": "18:50",
+    "location": "",
+    "teacher": ""
+  }
+]

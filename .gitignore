@@ -51,6 +51,10 @@ coverage/
 *.temp
 .atomcode/
 
+# Python 缓存
+__pycache__/
+*.pyc
+
 # 数据库备份
 backups/
 deploy.py
@@ -58,3 +62,7 @@ aliyun_cmd.py
 fix_swas.py
 swas_fix.py
 swas_optimize.py
+
+# 截图/临时图片
+*.png
+*.jpg

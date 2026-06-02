@@ -1,0 +1,215 @@
+// ====== 回收站 — Archive Vault ======
+
+@c-accent: #e85d3a;
+@c-text: #1e1b18;
+@c-sub: #78736d;
+@c-muted: #a39e98;
+@c-border: #e8e4df;
+@c-bg: #faf8f5;
+@c-surface: #ffffff;
+
+.root {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+// ====== 头部 ======
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.headerIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #b0b0b0 0%, #8a8a8a 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: @c-text;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 13px;
+}
+
+// ====== 加载 & 空 ======
+
+.loadingWrap {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.emptyWrap {
+  text-align: center;
+  padding: 60px 0;
+  color: @c-muted;
+}
+
+.emptyIcon {
+  font-size: 48px;
+  color: #d0d0d0;
+  margin-bottom: 12px;
+  display: block;
+}
+
+// ====== 分组列表 ======
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.groupLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: @c-sub;
+  padding: 0 2px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.groupDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: @c-muted;
+}
+
+.groupCount {
+  font-size: 11px;
+  color: @c-muted;
+  background: #f0edeb;
+  padding: 0 6px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+// ====== 任务卡片 ======
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: @c-surface;
+  border: 1px solid @c-border;
+  border-radius: 10px;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: #d0cbc5;
+    box-shadow: 0 2px 8px rgba(30, 27, 24, 0.04);
+  }
+}
+
+.cardLeft {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cardTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: @c-text;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: line-through;
+  text-decoration-color: #c3bdb7;
+  text-decoration-thickness: 1px;
+}
+
+.cardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.metaTag {
+  font-size: 10px !important;
+  line-height: 16px !important;
+  padding: 0 5px !important;
+  margin: 0 !important;
+  border-radius: 3px !important;
+  opacity: 0.7;
+}
+
+.cardRight {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+// 过期倒计时
+.expireBadge {
+  font-size: 11px;
+  color: @c-muted;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+
+  &.expireSoon {
+    color: @c-accent;
+    font-weight: 500;
+  }
+}
+
+.actionBtn {
+  font-size: 12px !important;
+  padding: 2px 4px !important;
+  height: auto !important;
+  color: @c-sub !important;
+
+  &:hover {
+    color: @c-accent !important;
+    background: rgba(232, 93, 58, 0.06) !important;
+  }
+}
+
+// ====== 响应式 ======
+
+@media (max-width: 640px) {
+  .root { max-width: 100%; }
+  .header { flex-direction: column; }
+  .card { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .cardRight { width: 100%; justify-content: flex-end; }
+}

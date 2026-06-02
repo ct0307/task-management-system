@@ -45,6 +45,7 @@ import EmptyState from './EmptyState';
 import SuccessFeedback from './SuccessFeedback';
 import TaskDetailDrawer from './TaskDetailDrawer';
 import FilterSection from './FilterSection';
+import ImportModal from '@/component/ImportModal';
 import { buildColumns } from './TaskColumns';
 import s from './index.module.less';
 
@@ -54,7 +55,7 @@ const { Text } = Typography;
 
 // 分类颜色预设
 const CATEGORY_COLORS = [
-  '#ea4335', '#f9ab00', '#34a853', '#1a73e8',
+  '#ea4335', '#f9ab00', '#34a853', '#e85d3a',
   '#7c3aed', '#ec4899', '#14b8a6', '#f97316'
 ];
 
@@ -125,20 +126,20 @@ const NestedChildRow = memo(({ child, parentId, depth, onToggle, onDelete, onAdd
         )}
 
         <span onClick={handleLocalToggle} className={s.inlineCheckbox} style={{
-          borderColor: child.status === 'completed' ? '#34a853' : '#d9d9d9',
-          background: child.status === 'completed' ? '#34a853' : 'transparent'
+          borderColor: child.status === 'completed' ? '#3d8c5c' : '#d9d9d9',
+          background: child.status === 'completed' ? '#3d8c5c' : 'transparent'
         }}>
           {child.status === 'completed' && <CheckOutlined style={{ fontSize: 9, color: '#fff' }} />}
         </span>
 
         <Text className={s.inlineSubtaskTitle} delete={child.status === 'completed'}
-          style={{ flex: 1, fontSize: 13, color: child.status === 'completed' ? '#bfbfbf' : '#303030', cursor: 'pointer' }}
+          style={{ flex: 1, fontSize: 13, color: child.status === 'completed' ? '#c3bdb7' : '#1e1b18', cursor: 'pointer' }}
           onClick={() => onOpenDrawer(child)}>
           {child.title}
         </Text>
 
         {child.assignee_name && <Tag style={{ fontSize: 11, margin: 0 }}>{child.assignee_name}</Tag>}
-        <Badge color={PRIORITY_CONFIG[child.priority]?.color || '#f9ab00'} style={{ flexShrink: 0 }} />
+        <Badge color={PRIORITY_CONFIG[child.priority]?.color || '#d4972e'} style={{ flexShrink: 0 }} />
         {child.due_date && (
           <Text type="secondary" style={{ fontSize: 11, whiteSpace: 'nowrap', flexShrink: 0 }}>
             <ClockCircleOutlined style={{ marginRight: 2 }} />
@@ -158,7 +159,7 @@ const NestedChildRow = memo(({ child, parentId, depth, onToggle, onDelete, onAdd
           <div style={{ marginTop: 2 }}>
             <div style={{ paddingLeft: 24 + depth * 20, marginBottom: 4 }}>
               <Progress percent={Math.round(done / children.length * 100)} size="small"
-                strokeColor="#34a853" format={() => `${done}/${children.length}`}
+                strokeColor="#3d8c5c" format={() => `${done}/${children.length}`}
                 style={{ margin: 0, maxWidth: 160 }} />
             </div>
             {children.map(gc => (
@@ -202,7 +203,7 @@ const TaskListOptimized = () => {
   const [searchValue, setSearchValue] = useState('');
   const [batchLoading, setBatchLoading] = useState(false);
   const [exportLoading, setExportLoading] = useState(false);
-  const [importLoading, setImportLoading] = useState(false);
+  const [importModalVisible, setImportModalVisible] = useState(false);
   const [shortcutHelpOpen, setShortcutHelpOpen] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newCategoryColor, setNewCategoryColor] = useState(CATEGORY_COLORS[3]); // 默认蓝色
@@ -216,7 +217,6 @@ const TaskListOptimized = () => {
   const [childrenMap, setChildrenMap] = useState({});
   const [childrenLoading, setChildrenLoading] = useState({});
   const [newChildInput, setNewChildInput] = useState({});
-  const fileInputRef = useRef(null);
   const debounceTimer = useRef(null);
 
   const {
@@ -562,34 +562,11 @@ const TaskListOptimized = () => {
   };
 
   // 导出
-  // CSV 导入
-  const handleImport = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setImportLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const accessToken = token.get();
-      const response = await fetch('/api/tasks/import', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${accessToken}` },
-        body: formData
-      });
-      const result = await response.json();
-      if (response.ok) {
-        messageApi.success(result.message || `已导入 ${result.data?.imported || 0} 条任务`);
-        fetchTasks();
-        fetchStats();
-      } else {
-        messageApi.error(result.message || '导入失败');
-      }
-    } catch {
-      messageApi.error('导入失败');
-    } finally {
-      setImportLoading(false);
-      e.target.value = '';
-    }
+  // 导入 — 使用通用 ImportModal，支持 CSV/Excel/JSON
+  const handleImportData = async (mappedRows) => {
+    const res = await post('/api/tasks/import', { rows: mappedRows });
+    if (res.code !== 0 && res.code !== 201) throw new Error(res.message || '导入失败');
+    fetchTasks({}, null, true);
   };
 
   const handleExport = async (format) => {
@@ -698,7 +675,7 @@ const TaskListOptimized = () => {
       <div className={s.expandedRow}>
         <div className={s.expandedRowHeader}>
           <Progress percent={Math.round(done / subs.length * 100)} size="small"
-            strokeColor="#34a853" format={() => `${done}/${subs.length} 已完成`}
+            strokeColor="#3d8c5c" format={() => `${done}/${subs.length} 已完成`}
             style={{ margin: 0, flex: 1, maxWidth: 200 }} />
           <Button size="small" type="link" onClick={() => openDrawer(record)}>在详情页管理</Button>
         </div>
@@ -774,9 +751,8 @@ const TaskListOptimized = () => {
           <Option value="csv">导出 CSV</Option>
         </Select>
 
-        <input ref={fileInputRef} type="file" accept=".csv" onChange={handleImport} style={{ display: 'none' }} />
-        <Button icon={<UploadOutlined />} loading={importLoading} onClick={() => fileInputRef.current?.click()}>
-          导入 CSV
+        <Button icon={<UploadOutlined />} onClick={() => setImportModalVisible(true)}>
+          导入数据
         </Button>
 
         {selectedRowKeys.length > 0 && (
@@ -926,7 +902,7 @@ const TaskListOptimized = () => {
                             style={{
                               width: 22, height: 22, borderRadius: 6, cursor: 'pointer',
                               background: color,
-                              border: newCategoryColor === color ? '3px solid #303030' : '3px solid transparent',
+                              border: newCategoryColor === color ? '3px solid #1e1b18' : '3px solid transparent',
                               transition: 'border 0.15s'
                             }}
                           />
@@ -999,6 +975,14 @@ const TaskListOptimized = () => {
       {/* 任务详情侧滑面板 */}
       <TaskDetailDrawer />
 
+      {/* 数据导入弹窗 */}
+      <ImportModal
+        open={importModalVisible}
+        onClose={() => setImportModalVisible(false)}
+        onImport={handleImportData}
+        title="导入任务数据"
+      />
+
       {/* 管理分类弹窗 */}
       <Modal
         title={<span><TagsOutlined style={{ marginRight: 8 }} />管理分类</span>}
@@ -1015,7 +999,7 @@ const TaskListOptimized = () => {
               <div key={cat.id} style={{
                 display: 'flex', alignItems: 'center', gap: 10,
                 padding: '10px 12px', borderRadius: 8,
-                background: '#fafbfc', border: '1px solid #eef1f5'
+                background: '#faf8f5', border: '1px solid #eef1f5'
               }}>
                 {editingCategory?.id === cat.id ? (
                   <>
@@ -1027,7 +1011,7 @@ const TaskListOptimized = () => {
                           style={{
                             width: 20, height: 20, borderRadius: 5, cursor: 'pointer',
                             background: color,
-                            border: editCatColor === color ? '3px solid #303030' : '3px solid transparent',
+                            border: editCatColor === color ? '3px solid #1e1b18' : '3px solid transparent',
                             transition: 'border 0.15s'
                           }}
                         />
@@ -1084,17 +1068,17 @@ const TaskListOptimized = () => {
             { key: 'Ctrl+A', desc: '全选任务' },
           ].map(item => (
             <div key={item.key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: '#5f6368' }}>{item.desc}</span>
+              <span style={{ color: '#78736d' }}>{item.desc}</span>
               <kbd style={{
                 display: 'inline-block',
                 padding: '2px 10px',
-                background: '#f1f3f4',
-                border: '1px solid #dadce0',
+                background: '#f5f0ec',
+                border: '1px solid #e8e4df',
                 borderRadius: 4,
                 fontSize: 12,
                 fontFamily: 'monospace',
                 fontWeight: 600,
-                color: '#202124'
+                color: '#1e1b18'
               }}>{item.key}</kbd>
             </div>
           ))}

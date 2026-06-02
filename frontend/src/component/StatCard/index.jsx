@@ -18,12 +18,12 @@ const StatCard = ({ icon, label, title, value, color, bgColor, loading, trend })
 
   return (
     <div className={s.statCard}>
-      <div className={s.statIconWrap} style={{ backgroundColor: bgColor || '#e8f0fe', color: color || '#1a73e8' }}>
+      <div className={s.statIconWrap} style={{ backgroundColor: bgColor || '#fdf0eb', color: color || '#e85d3a' }}>
         {icon}
       </div>
       <div className={s.statInfo}>
         <span className={s.statLabel}>{displayLabel}</span>
-        <span className={s.statValue} style={{ color: color || '#1a73e8' }}>
+        <span className={s.statValue} style={{ color: color || '#e85d3a' }}>
           {value ?? 0}
         </span>
         {trend !== undefined && (

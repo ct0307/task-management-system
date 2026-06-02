@@ -14,7 +14,7 @@
 // 看板列
 // ============================================
 .kanbanColumn {
-  background: #f5f5f5;
+  background: #faf8f5;
   border-radius: 12px;
   min-height: 400px;
   display: flex;
@@ -23,8 +23,8 @@
   border: 2px solid transparent;
 
   &:global(.drag-over) {
-    background: #e8f0fe;
-    border-color: #1a73e8;
+    background: #fdf0eb;
+    border-color: #e85d3a;
   }
 }
 
@@ -35,7 +35,7 @@
   padding: 14px 16px 10px;
   border-top: 3px solid;
   border-radius: 12px 12px 0 0;
-  background: #fafafa;
+  background: #faf8f5;
 }
 
 .columnTitle {
@@ -51,7 +51,7 @@
 .columnName {
   font-size: 14px;
   font-weight: 600;
-  color: #202124;
+  color: #1e1b18;
   flex: 1;
 }
 
@@ -64,8 +64,8 @@
   padding: 0 6px;
   font-size: 12px;
   font-weight: 600;
-  color: #5f6368;
-  background: #e8eaed;
+  color: #78736d;
+  background: #f0ece7;
   border-radius: 11px;
 }
 
@@ -100,7 +100,7 @@
   border-radius: 10px;
   padding: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e8eaed;
+  border: 1px solid #f0ece7;
   cursor: grab;
   transition: all 0.2s ease;
   display: flex;
@@ -124,19 +124,19 @@
 // 拖拽经过的目标卡片
 .kanbanCardDragOver {
   opacity: 0.7;
-  border-color: #1a73e8 !important;
-  background: #e8f0fe !important;
-  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+  border-color: #e85d3a !important;
+  background: #fdf0eb !important;
+  box-shadow: 0 0 0 2px rgba(232, 93, 58, 0.2);
 }
 
 // 插入位置指示线
 .dropIndicator {
   height: 3px;
-  background: #1a73e8;
+  background: #e85d3a;
   border-radius: 2px;
   margin: 2px 0;
   flex-shrink: 0;
-  box-shadow: 0 0 6px rgba(26, 115, 232, 0.4);
+  box-shadow: 0 0 6px rgba(232, 93, 58, 0.4);
   animation: indicatorPulse 1s ease-in-out infinite;
 }
 
@@ -171,21 +171,21 @@
 
 .cardAction {
   font-size: 13px;
-  color: #9aa0a6;
+  color: #a39e98;
   cursor: pointer;
   padding: 3px;
   border-radius: 4px;
   transition: all 0.15s ease;
 
   &:hover {
-    color: #1a73e8;
-    background: #e8f0fe;
+    color: #e85d3a;
+    background: #fdf0eb;
   }
 }
 
 .cardDescription {
   font-size: 12px;
-  color: #5f6368;
+  color: #78736d;
   line-height: 1.4;
 }
 
@@ -200,9 +200,9 @@
   justify-content: space-between;
   align-items: center;
   font-size: 11px;
-  color: #9aa0a6;
+  color: #a39e98;
   padding-top: 4px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid #e8e4df;
 }
 
 .dueDate {
@@ -214,7 +214,7 @@
 
 .assignee {
   font-size: 11px;
-  color: #5f6368;
+  color: #78736d;
 }
 
 // ============================================

@@ -33,18 +33,18 @@ const { Title, Text } = Typography;
 
 // 状态颜色映射
 const STATUS_COLORS = {
-  pending: { color: "#f9ab00", bg: "#fef7e0", label: "待处理" },
-  in_progress: { color: "#1a73e8", bg: "#e8f0fe", label: "进行中" },
-  completed: { color: "#34a853", bg: "#e6f4ea", label: "已完成" }
+  pending: { color: "#d4972e", bg: "#fef5e6", label: "待处理" },
+  in_progress: { color: "#e85d3a", bg: "#fdf0eb", label: "进行中" },
+  completed: { color: "#3d8c5c", bg: "#eaf5ee", label: "已完成" }
 };
 
 const PRIORITY_COLORS = {
-  high: { color: "#ea4335", label: "高" },
-  medium: { color: "#f9ab00", label: "中" },
-  low: { color: "#34a853", label: "低" }
+  high: { color: "#d94436", label: "高" },
+  medium: { color: "#d4972e", label: "中" },
+  low: { color: "#3d8c5c", label: "低" }
 };
 
-const PIE_COLORS = ["#f9ab00", "#1a73e8", "#34a853"];
+const PIE_COLORS = ["#d4972e", "#e85d3a", "#3d8c5c"];
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -106,9 +106,9 @@ const Dashboard = () => {
 
   // 构建优先级数据
   const priorityData = stats ? [
-    { name: "高优先级", value: stats.byPriority?.high || 0, fill: "#ea4335" },
-    { name: "中优先级", value: stats.byPriority?.medium || 0, fill: "#f9ab00" },
-    { name: "低优先级", value: stats.byPriority?.low || 0, fill: "#34a853" }
+    { name: "高优先级", value: stats.byPriority?.high || 0, fill: "#d94436" },
+    { name: "中优先级", value: stats.byPriority?.medium || 0, fill: "#d4972e" },
+    { name: "低优先级", value: stats.byPriority?.low || 0, fill: "#3d8c5c" }
   ] : [];
 
   // 完成率
@@ -122,43 +122,43 @@ const Dashboard = () => {
       title: "任务总数",
       value: stats?.total || 0,
       icon: <FileTextOutlined />,
-      color: "#1a73e8",
-      bgColor: "#e8f0fe"
+      color: "#e85d3a",
+      bgColor: "#fdf0eb"
     },
     {
       title: "待处理",
       value: stats?.byStatus?.pending || 0,
       icon: <ClockCircleOutlined />,
-      color: "#f9ab00",
-      bgColor: "#fef7e0"
+      color: "#d4972e",
+      bgColor: "#fef5e6"
     },
     {
       title: "进行中",
       value: stats?.byStatus?.in_progress || 0,
       icon: <ThunderboltOutlined />,
-      color: "#1a73e8",
-      bgColor: "#e8f0fe"
+      color: "#e85d3a",
+      bgColor: "#fdf0eb"
     },
     {
       title: "已完成",
       value: stats?.byStatus?.completed || 0,
       icon: <CheckCircleOutlined />,
-      color: "#34a853",
-      bgColor: "#e6f4ea"
+      color: "#3d8c5c",
+      bgColor: "#eaf5ee"
     },
     {
       title: "高优先级",
       value: stats?.byPriority?.high || 0,
       icon: <WarningOutlined />,
-      color: "#ea4335",
+      color: "#d94436",
       bgColor: "#fce8e6"
     },
     {
       title: "已逾期",
       value: stats?.overdue || 0,
       icon: <AlertOutlined />,
-      color: stats?.overdue > 0 ? "#ea4335" : "#34a853",
-      bgColor: stats?.overdue > 0 ? "#fce8e6" : "#e6f4ea"
+      color: stats?.overdue > 0 ? "#d94436" : "#3d8c5c",
+      bgColor: stats?.overdue > 0 ? "#fce8e6" : "#eaf5ee"
     }
   ];
 
@@ -168,7 +168,7 @@ const Dashboard = () => {
       <div style={{ textAlign: "center", padding: "20px 12px" }}>
         <div style={{
           width: 64, height: 64, borderRadius: 20, margin: "0 auto 16px",
-          background: "linear-gradient(135deg, #1a73e8 0%, #34a853 100%)",
+          background: "linear-gradient(135deg, #e85d3a 0%, #d4972e 100%)",
           display: "flex", alignItems: "center", justifyContent: "center"
         }}>
           <SmileOutlined style={{ fontSize: 32, color: "#fff" }} />
@@ -179,9 +179,9 @@ const Dashboard = () => {
         </Text>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 28 }}>
           {[
-            { icon: PlusOutlined, label: "创建任务", color: "#1a73e8", bg: "#e8f0fe" },
-            { icon: AppstoreOutlined, label: "看板视图", color: "#f9ab00", bg: "#fef7e0" },
-            { icon: DashboardOutlined, label: "统计概览", color: "#34a853", bg: "#e6f4ea" }
+            { icon: PlusOutlined, label: "创建任务", color: "#e85d3a", bg: "#fdf0eb" },
+            { icon: AppstoreOutlined, label: "看板视图", color: "#d4972e", bg: "#fef5e6" },
+            { icon: DashboardOutlined, label: "统计概览", color: "#3d8c5c", bg: "#eaf5ee" }
           ].map((item) => (
             <div key={item.label} style={{
               flex: "1 1 130px", maxWidth: 160, padding: 16, borderRadius: 12,
@@ -374,8 +374,8 @@ const Dashboard = () => {
                       dataKey="value"
                       stroke="none"
                     >
-                      <Cell fill="#34a853" />
-                      <Cell fill="#f0f0f0" />
+                      <Cell fill="#3d8c5c" />
+                      <Cell fill="#ece6e0" />
                     </Pie>
                   </PieChart>
                 </ResponsiveContainer>
@@ -387,15 +387,15 @@ const Dashboard = () => {
               <div className={s.progressStats}>
                 <div className={s.progressItem}>
                   <span className={s.progressItemLabel}>已完成</span>
-                  <span className={s.progressItemValue} style={{ color: "#34a853" }}>{completed}</span>
+                  <span className={s.progressItemValue} style={{ color: "#3d8c5c" }}>{completed}</span>
                 </div>
                 <div className={s.progressItem}>
                   <span className={s.progressItemLabel}>未完成</span>
-                  <span className={s.progressItemValue} style={{ color: "#f9ab00" }}>{total - completed}</span>
+                  <span className={s.progressItemValue} style={{ color: "#d4972e" }}>{total - completed}</span>
                 </div>
                 <div className={s.progressItem}>
                   <span className={s.progressItemLabel}>逾期</span>
-                  <span className={s.progressItemValue} style={{ color: stats?.overdue > 0 ? "#ea4335" : "#34a853" }}>
+                  <span className={s.progressItemValue} style={{ color: stats?.overdue > 0 ? "#d94436" : "#3d8c5c" }}>
                     {stats?.overdue || 0}
                   </span>
                 </div>
@@ -418,8 +418,8 @@ const Dashboard = () => {
                 <AreaChart data={trend} margin={{ top: 8, right: 16, left: -16, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorCompleted" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#34a853" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#34a853" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#3d8c5c" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#3d8c5c" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
@@ -439,10 +439,10 @@ const Dashboard = () => {
                   <Area
                     type="monotone"
                     dataKey="count"
-                    stroke="#34a853"
+                    stroke="#3d8c5c"
                     strokeWidth={2}
                     fill="url(#colorCompleted)"
-                    dot={{ r: 3, fill: "#34a853", strokeWidth: 0 }}
+                    dot={{ r: 3, fill: "#3d8c5c", strokeWidth: 0 }}
                     activeDot={{ r: 5 }}
                   />
                 </AreaChart>
@@ -468,7 +468,7 @@ const Dashboard = () => {
           <Card
             title={
               <span className={s.chartTitle}>
-                <FireOutlined style={{ color: "#ea4335" }} /> 近期任务
+                <FireOutlined style={{ color: "#d94436" }} /> 近期任务
               </span>
             }
             className={s.chartCard}
@@ -506,7 +506,7 @@ const Dashboard = () => {
                               <span className={s.taskMetaText}>{task.category_name}</span>
                             )}
                             {task.due_date && (
-                              <span className={s.taskMetaText} style={isOverdue ? { color: "#ea4335" } : {}}>
+                              <span className={s.taskMetaText} style={isOverdue ? { color: "#d94436" } : {}}>
                                 截止: {task.due_date.split("T")[0]}
                               </span>
                             )}

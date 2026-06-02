@@ -14,7 +14,7 @@ const SORTABLE_FIELDS = {
   category_name: 'c.name'
 };
 
-async function findAll({ status, category, priority, search, assignee, dateRange, page, pageSize, limit, sortField, sortOrder, includeDeleted, includeSubtasks, userId, userRole } = {}) {
+async function findAll({ status, category, priority, search, assignee, dateRange, page, pageSize, limit, sortField, sortOrder, includeDeleted, includeSubtasks, includeSchedules, userId, userRole } = {}) {
   const hasSearch = search && search.trim() !== '';
   let query = `
     SELECT t.*, c.name as category_name, u.real_name as assignee_name,
@@ -43,6 +43,8 @@ async function findAll({ status, category, priority, search, assignee, dateRange
   }
 
   if (!includeDeleted) { query += ' AND t.deleted_at IS NULL'; }
+  // 默认排除日程（recurrence 不为空），includeSchedules=true 时不过滤
+  if (!includeSchedules) { query += ' AND t.recurrence IS NULL'; }
   if (status) { query += ' AND t.status = ?'; params.push(status); }
   if (category) { query += ' AND t.category_id = ?'; params.push(category); }
   if (priority) { query += ' AND t.priority = ?'; params.push(priority); }
@@ -122,7 +124,7 @@ async function findById(id) {
 /**
  * 创建任务
  */
-async function create({ title, description, status, priority, category_id, assignee_id, due_date, created_by, recurrence }) {
+async function create({ title, description, status, priority, category_id, assignee_id, due_date, start_time, end_time, created_by, recurrence }) {
   // 获取当前状态下的最大 sort_order
   const [maxRows] = await pool.query(
     'SELECT COALESCE(MAX(sort_order), 0) + 1 AS next_order FROM tasks WHERE status = ?',
@@ -131,9 +133,9 @@ async function create({ title, description, status, priority, category_id, assig
   const sortOrder = maxRows[0].next_order;
 
   const [result] = await pool.query(`
-    INSERT INTO tasks (title, description, status, priority, category_id, assignee_id, due_date, sort_order, created_by, recurrence)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `, [title, description || '', status || 'pending', priority || 'medium', category_id || null, assignee_id || null, due_date || null, sortOrder, created_by || null, recurrence || null]);
+    INSERT INTO tasks (title, description, status, priority, category_id, assignee_id, due_date, start_time, end_time, sort_order, created_by, recurrence)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `, [title, description || '', status || 'pending', priority || 'medium', category_id || null, assignee_id || null, due_date || null, start_time || null, end_time || null, sortOrder, created_by || null, recurrence || null]);
   return result.insertId;
 }
 
@@ -141,7 +143,7 @@ async function create({ title, description, status, priority, category_id, assig
  * 更新任务
  */
 async function update(id, updates) {
-  const allowedFields = ['title', 'description', 'status', 'priority', 'category_id', 'assignee_id', 'due_date', 'recurrence'];
+  const allowedFields = ['title', 'description', 'status', 'priority', 'category_id', 'assignee_id', 'due_date', 'start_time', 'end_time', 'recurrence'];
   const fields = [];
   const params = [];
 

@@ -27,7 +27,8 @@ async function getTasks(req, res, next) {
       limit: req.query.limit,
       sortField: req.query.sortField,
       sortOrder: req.query.sortOrder,
-      includeSubtasks: req.query.includeSubtasks === '1' || req.query.includeSubtasks === 'true'
+      includeSubtasks: req.query.includeSubtasks === '1' || req.query.includeSubtasks === 'true',
+      includeSchedules: req.query.includeSchedules === '1' || req.query.includeSchedules === 'true'
     };
     const tasks = await taskService.getAllTasks(filters, req.user);
     success(res, tasks);
@@ -55,14 +56,14 @@ async function getTask(req, res, next) {
  */
 async function createTask(req, res, next) {
   try {
-    const { title, description, status, priority, category_id, assignee_id, due_date } = req.body;
-    
+    const { title, description, status, priority, category_id, assignee_id, due_date, start_time, end_time, recurrence } = req.body;
+
     if (!title || title.trim() === '') {
       return fail(res, ErrorCodes.VALIDATION_ERROR, '任务标题不能为空');
     }
 
     const task = await taskService.createTask({
-      title, description, status, priority, category_id, assignee_id, due_date,
+      title, description, status, priority, category_id, assignee_id, due_date, start_time, end_time, recurrence,
       created_by: req.user?.id
     });
     auditLog(task.id, req.user?.id, 'create', null, null, title);

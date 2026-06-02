@@ -31,13 +31,13 @@ const renderDueDate = (date) => {
 
   let color, bg, icon, label;
   if (isOverdue) {
-    color = '#ea4335'; bg = '#fce8e6'; icon = <ExclamationCircleOutlined />; label = `逾期${Math.abs(diffDays)}天`;
+    color = '#d94436'; bg = '#fce8e6'; icon = <ExclamationCircleOutlined />; label = `逾期${Math.abs(diffDays)}天`;
   } else if (isToday) {
-    color = '#f9ab00'; bg = '#fef7e0'; icon = <ClockCircleOutlined />; label = '今天到期';
+    color = '#d4972e'; bg = '#fef5e6'; icon = <ClockCircleOutlined />; label = '今天到期';
   } else if (isTomorrow) {
-    color = '#f9ab00'; bg = '#fef7e0'; icon = <ClockCircleOutlined />; label = '明天到期';
+    color = '#d4972e'; bg = '#fef5e6'; icon = <ClockCircleOutlined />; label = '明天到期';
   } else if (isDueSoon) {
-    color = '#1a73e8'; bg = '#e8f0fe'; icon = <ClockCircleOutlined />; label = `${diffDays}天内`;
+    color = '#e85d3a'; bg = '#fdf0eb'; icon = <ClockCircleOutlined />; label = `${diffDays}天内`;
   } else {
     return <Text type="secondary">{dateStr}</Text>;
   }
@@ -97,7 +97,7 @@ export const buildColumns = ({
         {/* 子任务标签（搜索时出现） */}
         {record.parent_title && (
           <Tooltip title={`属于：${record.parent_title}`}>
-            <Tag className={s.priorityTag} style={{ background: '#f0f5ff', border: '1px solid #adc6ff', color: '#1a73e8' }}>
+            <Tag className={s.priorityTag} style={{ background: '#fdf0eb', border: '1px solid #f5c8b8', color: '#e85d3a' }}>
               <ApartmentOutlined /> {record.parent_title}
             </Tag>
           </Tooltip>
@@ -176,7 +176,7 @@ export const buildColumns = ({
             <Progress
               percent={percent}
               size="small"
-              strokeColor={percent === 100 ? '#34a853' : '#1a73e8'}
+              strokeColor={percent === 100 ? '#3d8c5c' : '#e85d3a'}
               style={{ margin: 0, width: '100%' }}
             />
           </div>

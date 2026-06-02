@@ -20,7 +20,7 @@ const ThemedApp = () => {
   const themeConfig = {
     token: isDark ? darkThemeToken : {
       ...lightThemeToken,
-      fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+      fontFamily: "\"PingFang SC\", \"Microsoft YaHei\", \"Inter\", system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
     },
     components: {
       Button: {

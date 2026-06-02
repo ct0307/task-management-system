@@ -21,7 +21,7 @@
   .title {
     font-size: 22px;
     font-weight: 600;
-    color: #202124;
+    color: #1e1b18;
     margin: 0;
     animation: fadeInUp 0.3s ease-out;
   }
@@ -37,7 +37,7 @@
     align-items: center;
     gap: 12px;
     font-size: 13px;
-    color: #9aa0a6;
+    color: #a39e98;
 
     .kbd {
       margin-right: 4px;
@@ -59,9 +59,9 @@
 
       .quickAddInput {
         border-radius: 10px;
-        border: 2px solid #e8eaed;
+        border: 2px solid #f0ece7;
         transition: all 0.2s ease;
-        background: #fafbfc;
+        background: #faf8f5;
 
         :global(.ant-input) {
           background: transparent;
@@ -69,14 +69,14 @@
         }
 
         &:hover {
-          border-color: #1a73e8;
+          border-color: #e85d3a;
           background: #fff;
         }
 
         &:focus-within,
         &:focus {
-          border-color: #1a73e8;
-          box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1);
+          border-color: #e85d3a;
+          box-shadow: 0 0 0 4px rgba(232, 93, 58, 0.1);
           background: #fff;
         }
       }
@@ -87,7 +87,7 @@
         gap: 12px;
         margin-top: 8px;
         font-size: 12px;
-        color: #9aa0a6;
+        color: #a39e98;
       }
 
       .kbd {
@@ -95,10 +95,10 @@
         padding: 1px 6px;
         font-size: 11px;
         font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
-        background: #f1f3f4;
+        background: #f5f0ec;
         border: 1px solid #e0e0e0;
         border-radius: 4px;
-        color: #5f6368;
+        color: #78736d;
         margin-right: 2px;
         line-height: 1.6;
       }
@@ -122,7 +122,7 @@
       background: #ffffff;
       border-radius: 12px;
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-      border: 1px solid #f0f0f0;
+      border: 1px solid #e8e4df;
     }
 
     .searchInput {
@@ -133,8 +133,8 @@
         transition: all 0.2s ease;
 
         &:focus {
-          border-color: #1a73e8;
-          box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.12);
+          border-color: #e85d3a;
+          box-shadow: 0 0 0 3px rgba(232, 93, 58, 0.12);
         }
       }
     }
@@ -145,7 +145,7 @@
         transition: all 0.2s ease;
 
         &:hover {
-          border-color: #1a73e8;
+          border-color: #e85d3a;
         }
       }
     }
@@ -160,13 +160,13 @@
     .newTaskBtn {
       border-radius: 8px;
       font-weight: 500;
-      box-shadow: 0 2px 6px rgba(26, 115, 232, 0.25);
+      box-shadow: 0 2px 6px rgba(232, 93, 58, 0.25);
       transition: all 0.2s ease;
 
       &:hover {
-        background: #1557b0;
-        border-color: #1557b0;
-        box-shadow: 0 4px 10px rgba(26, 115, 232, 0.35);
+        background: #d04d2a;
+        border-color: #d04d2a;
+        box-shadow: 0 4px 10px rgba(232, 93, 58, 0.35);
         transform: translateY(-1px);
       }
 
@@ -187,11 +187,11 @@
 
   .taskTitle {
     font-weight: 500;
-    color: #202124;
+    color: #1e1b18;
     transition: color 0.2s ease;
 
     &:hover {
-      color: #1a73e8;
+      color: #e85d3a;
     }
   }
 
@@ -200,7 +200,7 @@
     padding: 1px 6px;
     border-radius: 4px;
     background: #fce8e6;
-    color: #ea4335;
+    color: #d94436;
     border: none;
     line-height: 1.4;
   }
@@ -263,7 +263,7 @@
   }
 
   .tableRowHover {
-    background-color: #f8f9fa !important;
+    background-color: #faf8f5 !important;
   }
 
   .tableRowCompleted {
@@ -271,7 +271,7 @@
 
     .taskTitle {
       text-decoration: line-through;
-      color: #9aa0a6;
+      color: #a39e98;
     }
   }
 
@@ -285,7 +285,7 @@
       top: 4px;
       bottom: 4px;
       width: 3px;
-      background: #ea4335;
+      background: #d94436;
       border-radius: 0 3px 3px 0;
       opacity: 0.7;
     }
@@ -302,8 +302,8 @@
     padding: 0;
 
     &:hover {
-      background: #e8f0fe;
-      color: #1a73e8;
+      background: #fdf0eb;
+      color: #e85d3a;
       transform: scale(1.1);
     }
 
@@ -322,7 +322,7 @@
     font-weight: 600;
 
     :global(.anticon) {
-      color: #1a73e8;
+      color: #e85d3a;
     }
   }
 
@@ -334,7 +334,7 @@
 
     :global(.ant-modal-header) {
       padding: 18px 24px;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid #e8e4df;
     }
 
     :global(.ant-modal-body) {
@@ -343,12 +343,12 @@
 
     :global(.ant-modal-footer) {
       padding: 14px 24px;
-      border-top: 1px solid #f0f0f0;
+      border-top: 1px solid #e8e4df;
     }
 
     :global(.ant-form-item-label > label) {
       font-weight: 500;
-      color: #202124;
+      color: #1e1b18;
       font-size: 13px;
     }
 
@@ -358,13 +358,13 @@
       transition: all 0.2s ease;
 
       &:hover {
-        border-color: #1a73e8;
+        border-color: #e85d3a;
       }
 
       &:focus,
       &:focus-within {
-        border-color: #1a73e8;
-        box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.12);
+        border-color: #e85d3a;
+        box-shadow: 0 0 0 3px rgba(232, 93, 58, 0.12);
       }
     }
   }
@@ -377,25 +377,25 @@
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-    border: 1px solid #f0f0f0;
+    border: 1px solid #e8e4df;
 
     :global(.ant-table-thead > tr > th) {
-      background: #f8f9fa;
+      background: #faf8f5;
       font-weight: 600;
-      color: #5f6368;
-      border-bottom: 1px solid #f0f0f0;
+      color: #78736d;
+      border-bottom: 1px solid #e8e4df;
       padding: 12px 16px;
       font-size: 13px;
     }
 
     :global(.ant-table-tbody > tr > td) {
       padding: 12px 16px;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid #e8e4df;
       transition: background-color 0.15s ease;
     }
 
     :global(.ant-table-tbody > tr:hover > td) {
-      background: #f8f9fa;
+      background: #faf8f5;
     }
 
     :global(.ant-table-pagination) {
@@ -437,7 +437,7 @@
     background: #ffffff;
     border-radius: 12px;
     transition: all 0.2s ease;
-    border: 1px solid #f0f0f0;
+    border: 1px solid #e8e4df;
 
     &:hover {
       transform: translateY(-2px);
@@ -482,7 +482,7 @@
 
   .statLabel {
     font-size: 12px;
-    color: #5f6368;
+    color: #78736d;
     margin-bottom: 2px;
   }
 
@@ -496,7 +496,7 @@
 
   .statTrend {
     font-size: 11px;
-    color: #9aa0a6;
+    color: #a39e98;
     margin-top: 2px;
   }
 

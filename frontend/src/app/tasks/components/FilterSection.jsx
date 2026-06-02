@@ -26,7 +26,7 @@ const FilterSection = ({ categories, searchValue, onSearchChange, onSearch, onFi
         onChange={(e) => onSearchChange(e.target.value)}
         onSearch={(value) => onSearch(value)}
         className={`${s.searchInput} task-search-input`}
-        prefix={<SearchOutlined style={{ color: '#9aa0a6' }} />}
+        prefix={<SearchOutlined style={{ color: '#a39e98' }} />}
       />
 
       <Space wrap className={s.filterControls}>

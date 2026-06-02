@@ -6,11 +6,11 @@
 @c-text: #1a1d26;
 @c-sub: #78849e;
 @c-border: #edf0f5;
-@c-blue: #2f6fef;
-@c-green: #22c55e;
-@c-orange: #f59e0b;
-@c-red: #ef4444;
-@c-purple: #8b5cf6;
+@c-blue: #e85d3a;
+@c-green: #3d8c5c;
+@c-orange: #d4972e;
+@c-red: #d94436;
+@c-purple: #c0778a;
 @radius: 16px;
 @shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
 @shadow-hover: 0 4px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.03);
@@ -31,7 +31,7 @@
   .skeletonChartRow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
   .skeletonChart { height: 300px; border-radius: 14px; .skeleton(); }
   .skeleton() {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+    background: linear-gradient(90deg, #e8e4df 25%, #f0ece7 50%, #e8e4df 75%);
     background-size: 200% 100%; animation: shimmer 1.5s infinite;
   }
 
@@ -51,9 +51,9 @@
   }
   .headerIcon {
     width: 40px; height: 40px; border-radius: 12px;
-    background: linear-gradient(135deg, @c-blue, #4f8af7);
+    background: linear-gradient(135deg, @c-blue, #f07a55);
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 10px rgba(47, 111, 239, 0.3);
+    box-shadow: 0 4px 10px rgba(232, 93, 58, 0.3);
   }
   .pageTitle {
     margin: 0 !important;
@@ -68,9 +68,9 @@
   }
   .primaryBtn {
     height: 38px; border-radius: 10px; font-weight: 600;
-    box-shadow: 0 2px 8px rgba(47, 111, 239, 0.25);
+    box-shadow: 0 2px 8px rgba(232, 93, 58, 0.25);
     transition: all 0.2s;
-    &:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(47, 111, 239, 0.35); }
+    &:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(232, 93, 58, 0.35); }
   }
 
   // ====== 分区标题 ======

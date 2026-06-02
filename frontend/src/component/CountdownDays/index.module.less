@@ -1,128 +1,467 @@
-@primary-blue: #1a73e8;
-@text-main: #1f2a44;
-@text-sub: #5e6c84;
-@border-color: #e8eaed;
+// ====== CountdownDays — Timepiece Editorial ======
 
-.card {
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+@c-accent: #e85d3a;
+@c-overdue: #d94436;
+@c-green: #3d8c5c;
+@c-amber: #d4972e;
+@c-text: #1e1b18;
+@c-sub: #78736d;
+@c-muted: #a39e98;
+@c-border: #e8e4df;
+@c-bg: #faf8f5;
+@c-surface: #ffffff;
+@ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+@ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
 
-  :global {
-    .ant-card-head { border-bottom: 1px solid @border-color; min-height: 44px; }
-    .ant-card-head-title { font-size: 15px; font-weight: 600; }
+// ====== ROOT ======
+
+.root {
+  position: relative;
+  background: @c-surface;
+  border-radius: 16px;
+  border: 1px solid @c-border;
+  overflow: visible;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s @ease-out, transform 0.5s @ease-out;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 12px;
-}
+// ====== HEADER ======
 
-.countdownCard {
+.header {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 16px 12px 14px;
-  border-radius: 14px;
-  background: #fafbfc;
-  border: 1px solid #eef1f5;
-  transition: all 0.2s;
-  cursor: pointer;
-
-  &:hover { border-color: #a8c8fa; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-  &:active { transform: translateY(0); }
+  justify-content: space-between;
+  padding: 16px 20px 0;
+}
+.headerLeft { display: flex; align-items: center; gap: 10px; }
+.headerIcon {
+  width: 32px; height: 32px; border-radius: 10px;
+  background: linear-gradient(135deg, @c-accent 0%, #f07a55 100%);
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 15px; box-shadow: 0 2px 8px rgba(232, 93, 58, 0.25);
+}
+.headerTitle { font-size: 16px; font-weight: 700; color: @c-text; letter-spacing: -0.3px; }
+.headerCount {
+  font-size: 11px; font-weight: 600; color: @c-accent;
+  background: #fdf0eb; padding: 1px 7px; border-radius: 10px; line-height: 18px;
+}
+.modeSwitch :global {
+  .ant-segmented-item { border-radius: 6px; }
+  .ant-segmented-item-selected { box-shadow: 0 1px 3px rgba(232, 93, 58, 0.2); }
 }
 
-// 剩余<7天 / 逾期 — 红色
-.urgent {
-  background: linear-gradient(135deg, #fce8e6 0%, #fff5f5 40%, #fff 100%);
-  border-color: #f5b7b1;
+// ====== TIMELINE ======
 
-  &:hover { border-color: #ea4335; box-shadow: 0 4px 12px rgba(234,67,53,0.1); }
+.timeline {
+  padding: 12px 20px 20px;
+  display: flex; flex-direction: column; gap: 8px;
 }
 
-// 剩余≥7天 — 蓝色
-.normal {
-  background: linear-gradient(135deg, #e8f0fe 0%, #f5f9ff 40%, #fff 100%);
-  border-color: #a8c8fa;
-}
-
-// 已进行 — 绿色
-.elapsed {
-  background: linear-gradient(135deg, #e6f4ea 0%, #f5faf6 40%, #fff 100%);
-  border-color: #a8d8b2;
-
-  &:hover { border-color: #34a853; }
-}
-
-.numberWrap {
-  display: flex;
-  align-items: baseline;
-  gap: 2px;
-}
-
-.number {
-  font-size: 48px;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -2px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-.unit {
-  font-size: 14px;
-  color: @text-sub;
-  font-weight: 500;
-}
-
-.info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  text-align: center;
-  width: 100%;
-}
-
-.taskTitle {
-  font-size: 13px;
-  color: @text-main;
-  font-weight: 500;
+.timelineItem {
+  display: flex; align-items: stretch; gap: 0;
+  border-radius: 14px; background: @c-bg;
+  border: 1px solid transparent;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  animation: itemEnter 0.5s @ease-spring backwards;
+  transition: all 0.25s @ease-out;
+  position: relative;
+
+  &:hover {
+    border-color: @c-border;
+    box-shadow: 0 4px 20px rgba(30, 27, 24, 0.06);
+  }
+
+  // 展开态
+  &.expandedItem {
+    border-color: @c-border;
+    box-shadow: 0 2px 12px rgba(30, 27, 24, 0.04);
+    background: @c-surface;
+  }
+
+  // 左侧色带
+  &::before {
+    content: ''; position: absolute; left: 0; top: 12px; bottom: 12px;
+    width: 3px; border-radius: 0 2px 2px 0;
+    transition: all 0.3s @ease-out; opacity: 0;
+  }
+  &:hover::before, &.expandedItem::before { opacity: 1; }
+
+  &.tierOverdue {
+    background: linear-gradient(135deg, #fff5f5 0%, @c-bg 60%);
+    &::before { background: @c-overdue; opacity: 1; }
+    &:hover, &.expandedItem { border-color: #f5b7b1; }
+  }
+  &.tierToday {
+    background: linear-gradient(135deg, #fff8f5 0%, @c-bg 60%);
+    &::before { background: @c-accent; opacity: 1; }
+    &:hover, &.expandedItem { border-color: #f5c8b8; }
+  }
+  &.tierUrgent {
+    background: linear-gradient(135deg, #fffaf5 0%, @c-bg 60%);
+    &::before { background: @c-amber; opacity: 0.6; }
+  }
+  &.tierElapsed {
+    background: linear-gradient(135deg, #f5faf6 0%, @c-bg 60%);
+    &::before { background: @c-green; opacity: 0.5; }
+    &:hover, &.expandedItem { border-color: #b8d8c2; }
+  }
 }
 
-.catDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
+@keyframes itemEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.tags {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  justify-content: center;
+// ====== NUMBER BLOCK ======
+
+.numberBlock {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; min-width: 88px; padding: 14px 10px;
+  cursor: pointer; user-select: none; position: relative;
+}
+.numberRow { display: flex; align-items: baseline; gap: 2px; }
+.numberSign { font-size: 18px; font-weight: 400; color: @c-overdue; margin-right: -2px; }
+.numberValue {
+  font-size: 52px; font-weight: 800; line-height: 1; letter-spacing: -3px;
+  font-family: "SF Mono", "Cascadia Code", "JetBrains Mono", "Fira Code", monospace;
+  font-variant-numeric: tabular-nums; transition: color 0.3s @ease-out;
+  &.numOverdue { color: @c-overdue; }
+  &.numToday { color: @c-accent; font-size: 42px; font-weight: 900; }
+  &.numUrgent { color: @c-amber; }
+  &.numNormal { color: @c-accent; }
+  &.numElapsed { color: @c-green; }
+}
+.numberUnit { font-size: 13px; font-weight: 500; color: @c-sub; margin-left: 2px; }
+
+.overdueIcon {
+  font-size: 12px; color: @c-overdue; margin-top: 4px;
+  animation: flicker 1.5s ease-in-out infinite;
+}
+@keyframes flicker {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
 }
 
-// 无任务时隐藏卡片
-.empty { display: none; }
+.todayBadge {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.8px; color: #fff;
+  background: @c-accent; padding: 1px 6px; border-radius: 3px; margin-top: 4px;
+  animation: badgePulse 2s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(232, 93, 58, 0.4); }
+  50% { box-shadow: 0 0 0 4px rgba(232, 93, 58, 0); }
+}
+
+// 展开提示
+.expandHint {
+  font-size: 10px; color: @c-muted; margin-top: 3px;
+  transition: color 0.2s;
+  .numberBlock:hover & { color: @c-accent; }
+}
+
+// ====== TASK BLOCK ======
+
+.taskBlock {
+  flex: 1; padding: 12px 14px 12px 0; cursor: pointer;
+  display: flex; flex-direction: column; gap: 5px; min-width: 0;
+}
+
+// 进度条
+.progressTrack { height: 2px; background: #ece6e0; border-radius: 1px; overflow: hidden; }
+.progressBar {
+  height: 100%; border-radius: 1px; transition: width 0.6s @ease-out; min-width: 4px;
+}
+.progressPulse { animation: progressGlow 2s ease-in-out infinite; }
+@keyframes progressGlow {
+  0%, 100% { opacity: 1; } 50% { opacity: 0.7; }
+}
+
+// 标题行
+.taskRow {
+  display: flex; align-items: center; gap: 6px; min-width: 0;
+}
+.catDot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.taskTitle {
+  font-size: 13.5px; font-weight: 550; color: @c-text;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  flex: 1; letter-spacing: -0.15px;
+}
+.statusTag {
+  font-size: 10px !important; line-height: 16px !important;
+  padding: 0 5px !important; margin: 0 !important;
+  border-radius: 3px !important; flex-shrink: 0;
+}
+.highPriority {
+  font-size: 11px; font-weight: 800; color: @c-overdue;
+  letter-spacing: -0.5px; flex-shrink: 0;
+}
+.childDueTag {
+  font-size: 9px !important; line-height: 15px !important;
+  padding: 0 4px !important; margin: 0 !important; flex-shrink: 0;
+}
+
+// 详情小按钮 (↗)
+.detailBtn {
+  font-size: 11px; color: @c-muted; cursor: pointer;
+  padding: 2px 4px; border-radius: 4px; flex-shrink: 0;
+  transition: all 0.15s; opacity: 0;
+  .timelineItem:hover & { opacity: 1; }
+  &:hover { color: @c-accent; background: rgba(232, 93, 58, 0.08); }
+}
+
+// 截止日期行
+.dueDateRow {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 11.5px; color: @c-muted;
+  span { line-height: 1; }
+}
+.overdueSince { color: @c-overdue; font-weight: 500; }
+
+// ====== EXPAND BUTTON ======
+
+.expandBtn {
+  display: flex; align-items: center; gap: 6px; margin-top: 2px;
+  cursor: pointer; user-select: none; color: @c-muted;
+  font-size: 11px; transition: color 0.2s;
+  &:hover { color: @c-accent; }
+  &.expanded { color: @c-accent; }
+}
+.expandLine {
+  flex: 1; height: 1px; background: #ece6e0; transition: background 0.2s;
+  .expandBtn:hover &, .expandBtn.expanded & { background: #f5c8b8; }
+}
+.expandIcon { font-size: 9px; flex-shrink: 0; }
+
+// ====== SUBTASK PANEL ======
+
+.subtaskPanel {
+  padding: 0 14px 12px 102px;
+}
+.subtaskLoading { display: flex; justify-content: center; padding: 8px 0; }
+.subtaskGrid { display: flex; flex-wrap: wrap; gap: 6px; }
+
+// 子任务色块
+.sbBlock {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 8px 12px 7px; border-radius: 10px;
+  border: 1px solid #e8e4df; background: #fff;
+  cursor: pointer; transition: all 0.15s @ease-out;
+  min-width: 62px; max-width: 120px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 12px rgba(30, 27, 24, 0.1);
+  }
+}
+
+// 子任务倒数数字行
+.sbCountRow { display: flex; align-items: baseline; gap: 2px; }
+.sbCountNum {
+  font-size: 28px; font-weight: 800; line-height: 1; letter-spacing: -1.5px;
+  font-family: "SF Mono", "Cascadia Code", "JetBrains Mono", "Fira Code", monospace;
+  font-variant-numeric: tabular-nums;
+}
+.sbCountNormal { color: @c-accent; }
+.sbCountToday { color: @c-accent; font-size: 24px; font-weight: 900; }
+.sbCountOverdue { color: @c-overdue; }
+.sbCountUnit { font-size: 11px; font-weight: 500; color: @c-muted; }
+.sbDoneCheck { font-size: 22px; color: @c-green; font-weight: 700; }
+
+.sbTitle {
+  font-size: 11.5px; color: @c-text; font-weight: 500;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  max-width: 100%; text-align: center;
+}
+.sbDue { font-size: 10px; color: @c-muted; text-align: center; }
+
+.sbDone {
+  background: #eaf5ee; border-color: #b8d8c2;
+  .sbTitle { color: #5b8c5a; text-decoration: line-through; }
+  .sbDue { color: #81b581; }
+  &:hover { border-color: @c-green; }
+}
+.sbUrgent {
+  background: #fce8e6; border-color: #f5b7b1;
+  .sbTitle { color: #c5221f; }
+  .sbDue { color: @c-overdue; }
+  &:hover { border-color: @c-overdue; }
+}
+.sbActive {
+  background: #fdf0eb; border-color: #f5c8b8;
+  .sbTitle { color: #c44d2a; }
+  .sbDue { color: #c96a45; }
+  &:hover { border-color: @c-accent; }
+}
+
+.subtaskEmpty {
+  font-size: 11px; color: #c3bdb7;
+  display: block; text-align: center; padding: 6px 0;
+}
+
+// ====== FOOTER ======
+
+.footerOrnament {
+  height: 2px; margin: 0 20px 0;
+  background: linear-gradient(90deg, @c-accent 0%, @c-amber 33%, @c-green 66%, @c-border 100%);
+  border-radius: 1px; opacity: 0.4;
+}
+
+// ====== RESPONSIVE ======
 
 @media (max-width: 768px) {
-  .grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .number { font-size: 36px; }
-  .countdownCard { padding: 12px 8px 10px; }
+  .header { padding: 12px 14px 0; }
+  .timeline { padding: 10px 14px 16px; gap: 7px; }
+  .numberBlock { min-width: 68px; padding: 10px 8px; }
+  .numberValue { font-size: 38px; letter-spacing: -2px; &.numToday { font-size: 32px; } }
+  .numberUnit { font-size: 11px; }
+  .taskBlock { padding: 10px 10px 10px 0; gap: 4px; }
+  .taskTitle { font-size: 12px; }
+  .dueDateRow { font-size: 10px; }
+  .subtaskPanel { padding-left: 80px; }
+  .sbCountNum { font-size: 22px; letter-spacing: -1px; }
 }
 
 @media (max-width: 480px) {
-  .grid { grid-template-columns: repeat(2, 1fr); }
-  .number { font-size: 32px; }
+  .numberBlock { min-width: 56px; padding: 8px 6px; }
+  .numberValue { font-size: 30px; letter-spacing: -1.5px; }
+  .timelineItem { flex-direction: column; }
+  .numberBlock { flex-direction: row; gap: 6px; min-width: auto; padding: 10px 12px 6px; }
+  .numberRow { align-items: center; }
+  .taskBlock { padding: 0 12px 10px; }
+  .subtaskPanel { padding: 0 12px 10px; }
+  .timelineItem:hover { transform: none; }
+  .detailBtn { opacity: 1; }
+}
+
+// ======================================================
+//  DARK MODE — 深夜书房 · 温暖低饱和
+//  克制、柔和、不刺眼。像台灯下的笔记本。
+// ======================================================
+
+body.theme-dark .root {
+  background: #1a1817;
+  border-color: #2e2a26;
+
+  .headerTitle { color: #c9c3bc; }
+  .headerCount {
+    color: #d48563;
+    background: rgba(212, 133, 99, 0.12);
+  }
+
+  .modeSwitch :global {
+    .ant-segmented { background: #252220; }
+    .ant-segmented-item { color: #8a837b; }
+    .ant-segmented-item-selected {
+      background: #3a3631; color: #d48563;
+      box-shadow: none;
+    }
+    .ant-segmented-thumb { background: #3a3631; }
+  }
+
+  .timelineItem {
+    background: #1f1c1a;
+    &.expandedItem {
+      background: #252220; border-color: #332f2b;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    }
+    &:hover {
+      border-color: #332f2b;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    &.tierOverdue {
+      background: linear-gradient(135deg, #241a19 0%, #1f1c1a 60%);
+      &:hover, &.expandedItem { border-color: #3d2826; }
+    }
+    &.tierToday {
+      background: linear-gradient(135deg, #241d19 0%, #1f1c1a 60%);
+      &:hover, &.expandedItem { border-color: #332721; }
+    }
+    &.tierUrgent {
+      background: linear-gradient(135deg, #221e19 0%, #1f1c1a 60%);
+    }
+    &.tierElapsed {
+      background: linear-gradient(135deg, #1a1f1b 0%, #1f1c1a 60%);
+      &:hover, &.expandedItem { border-color: #242e25; }
+    }
+  }
+
+  // 数字 — 克制暖色
+  .numberValue {
+    &.numNormal { color: #d48563; }
+    &.numToday { color: #d48563; }
+    &.numUrgent { color: #c99a4a; }
+    &.numOverdue { color: #c97667; }
+    &.numElapsed { color: #7a9e85; }
+  }
+  .numberUnit { color: #7a7269; }
+  .expandHint {
+    color: #5c5650;
+    .numberBlock:hover & { color: #d48563; }
+  }
+
+  // 任务信息
+  .taskTitle { color: #c9c3bc; }
+  .progressTrack { background: #2a2723; }
+  .dueDateRow { color: #6b645c; }
+  .overdueSince { color: #c97667; }
+
+  // 展开按钮
+  .expandBtn { color: #6b645c; &:hover, &.expanded { color: #d48563; } }
+  .expandLine {
+    background: #2a2723;
+    .expandBtn:hover &, .expandBtn.expanded & { background: #332721; }
+  }
+
+  // 详情按钮
+  .detailBtn {
+    color: #6b645c;
+    &:hover { color: #d48563; background: rgba(212, 133, 99, 0.08); }
+  }
+
+  // 子任务色块
+  .sbBlock {
+    background: #211e1b; border-color: #302b27;
+    &:hover { box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35); border-color: #3d3430; }
+  }
+  .sbTitle { color: #b8b0a7; }
+  .sbDue { color: #6b645c; }
+  .sbCountNormal { color: #d48563; }
+  .sbCountToday { color: #d48563; }
+  .sbCountOverdue { color: #c97667; }
+  .sbCountUnit { color: #6b645c; }
+  .sbDoneCheck { color: #7a9e85; }
+
+  .sbDone {
+    background: #1a1f1b; border-color: #242e25;
+    .sbTitle { color: #7a9e85; }
+    .sbDue { color: #6a8a74; }
+    &:hover { border-color: #7a9e85; }
+  }
+  .sbUrgent {
+    background: #241a19; border-color: #3d2826;
+    .sbTitle { color: #c97667; }
+    .sbDue { color: #a8665a; }
+    &:hover { border-color: #c97667; }
+  }
+  .sbActive {
+    background: #241d19; border-color: #332721;
+    .sbTitle { color: #d48563; }
+    .sbDue { color: #b07a60; }
+    &:hover { border-color: #d48563; }
+  }
+
+  .subtaskEmpty { color: #3d3430; }
+  .subtaskLoading :global(.ant-spin-dot-item) { background: #a07055; }
+
+  .footerOrnament {
+    background: linear-gradient(90deg, #a07055 0%, #9b7a46 33%, #6a8a74 66%, #332f2b 100%);
+    opacity: 0.25;
+  }
 }

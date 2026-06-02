@@ -271,6 +271,36 @@
 .stagger-4 { animation-delay: 200ms; }
 .stagger-5 { animation-delay: 250ms; }
 .stagger-6 { animation-delay: 300ms; }
+.stagger-7 { animation-delay: 350ms; }
+.stagger-8 { animation-delay: 400ms; }
+
+// 交错子元素动画（每个子元素依次延迟）
+.stagger-children {
+  > * {
+    animation: fadeInUp 0.4s @ease-out-quint backwards;
+    &:nth-child(1) { animation-delay: 50ms; }
+    &:nth-child(2) { animation-delay: 100ms; }
+    &:nth-child(3) { animation-delay: 150ms; }
+    &:nth-child(4) { animation-delay: 200ms; }
+    &:nth-child(5) { animation-delay: 250ms; }
+    &:nth-child(6) { animation-delay: 300ms; }
+    &:nth-child(7) { animation-delay: 350ms; }
+    &:nth-child(8) { animation-delay: 400ms; }
+  }
+}
+
+// 悬停放大
+.hover-scale {
+  transition: transform @duration-fast @ease-out-quart;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
 
 // ============================================
 // 骨架屏动画

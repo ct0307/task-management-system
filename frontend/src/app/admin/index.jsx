@@ -394,8 +394,8 @@ const Admin = () => {
             <Statistic
               title="任务总数"
               value={systemStats?.total || 0}
-              prefix={<FileTextOutlined style={{ color: '#1a73e8' }} />}
-              valueStyle={{ color: '#1a73e8' }}
+              prefix={<FileTextOutlined style={{ color: '#e85d3a' }} />}
+              valueStyle={{ color: '#e85d3a' }}
             />
           </Card>
         </Col>
@@ -404,8 +404,8 @@ const Admin = () => {
             <Statistic
               title="已完成"
               value={systemStats?.byStatus?.completed || 0}
-              prefix={<FileTextOutlined style={{ color: '#34a853' }} />}
-              valueStyle={{ color: '#34a853' }}
+              prefix={<FileTextOutlined style={{ color: '#3d8c5c' }} />}
+              valueStyle={{ color: '#3d8c5c' }}
             />
           </Card>
         </Col>
@@ -414,8 +414,8 @@ const Admin = () => {
             <Statistic
               title="逾期任务"
               value={systemStats?.overdue || 0}
-              prefix={<FileTextOutlined style={{ color: '#ea4335' }} />}
-              valueStyle={{ color: systemStats?.overdue > 0 ? '#ea4335' : '#34a853' }}
+              prefix={<FileTextOutlined style={{ color: '#d94436' }} />}
+              valueStyle={{ color: systemStats?.overdue > 0 ? '#d94436' : '#3d8c5c' }}
             />
           </Card>
         </Col>
@@ -424,8 +424,8 @@ const Admin = () => {
             <Statistic
               title="高优先级"
               value={systemStats?.byPriority?.high || 0}
-              prefix={<FileTextOutlined style={{ color: '#ea4335' }} />}
-              valueStyle={{ color: '#ea4335' }}
+              prefix={<FileTextOutlined style={{ color: '#d94436' }} />}
+              valueStyle={{ color: '#d94436' }}
             />
           </Card>
         </Col>

@@ -35,10 +35,10 @@ export default defineConfig({
       less: {
         javascriptEnabled: true,
         modifyVars: {
-          "primary-color": "#1a73e8",
-          "success-color": "#34a853",
-          "warning-color": "#f9ab00",
-          "error-color": "#ea4335",
+          "primary-color": "#e85d3a",
+          "success-color": "#3d8c5c",
+          "warning-color": "#d4972e",
+          "error-color": "#d94436",
           "border-radius-base": "8px"
         }
       }

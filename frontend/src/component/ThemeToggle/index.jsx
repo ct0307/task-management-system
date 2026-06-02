@@ -10,31 +10,31 @@ const THEME_KEY = 'APP_THEME';
 
 // 暗色主题 Ant Design token 覆盖
 export const darkThemeToken = {
-  colorPrimary: '#4dabf7',
-  colorSuccess: '#69db7c',
-  colorWarning: '#ffd43b',
-  colorError: '#ff6b6b',
-  colorInfo: '#4dabf7',
-  colorBgBase: '#1a1b1e',
-  colorBgContainer: '#25262b',
-  colorBgElevated: '#2c2e33',
-  colorBgLayout: '#141517',
-  colorBorder: '#373a40',
-  colorBorderSecondary: '#2c2e33',
-  colorText: '#c1c2c5',
-  colorTextSecondary: '#909296',
-  colorTextTertiary: '#5c5f66',
-  colorBgSpotlight: '#373a40',
+  colorPrimary: '#ff7a52',
+  colorSuccess: '#5da87c',
+  colorWarning: '#e8b34a',
+  colorError: '#e8685a',
+  colorInfo: '#ff7a52',
+  colorBgBase: '#1a1817',
+  colorBgContainer: '#252220',
+  colorBgElevated: '#2e2a26',
+  colorBgLayout: '#141211',
+  colorBorder: '#3a3631',
+  colorBorderSecondary: '#2e2a26',
+  colorText: '#c9c3bc',
+  colorTextSecondary: '#9a948d',
+  colorTextTertiary: '#65605a',
+  colorBgSpotlight: '#3a3631',
   borderRadius: 8
 };
 
 // 亮色主题 Ant Design token 覆盖
 export const lightThemeToken = {
-  colorPrimary: '#1a73e8',
+  colorPrimary: '#e85d3a',
   colorBgBase: '#ffffff',
   colorBgContainer: '#ffffff',
   colorBgElevated: '#ffffff',
-  colorBgLayout: '#f8f9fa',
+  colorBgLayout: '#faf8f5',
   borderRadius: 8
 };
 
@@ -87,7 +87,7 @@ const ThemeToggle = () => {
     <Tooltip title={isDark ? '切换到亮色模式' : '切换到暗色模式'}>
       <Button
         type="text"
-        icon={isDark ? <SunOutlined style={{ color: '#ffd43b' }} /> : <MoonOutlined style={{ color: '#5f6368' }} />}
+        icon={isDark ? <SunOutlined style={{ color: '#e8b34a' }} /> : <MoonOutlined style={{ color: '#78736d' }} />}
         onClick={toggleTheme}
         style={{
           width: 36,
