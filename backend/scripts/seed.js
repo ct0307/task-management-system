@@ -77,6 +77,12 @@ async function run() {
     `);
     console.log('✅ 表 "categories" 已就绪');
 
+    // 兼容已有数据库：添加 name 唯一约束（防重复分类）
+    try {
+      await conn.query('ALTER TABLE categories ADD UNIQUE KEY uk_name (name)');
+      console.log('  ↳ 已添加 categories.name 唯一约束');
+    } catch (_) { /* 约束已存在 */ }
+
     // ====== 任务表（新增）======
     await conn.query(`
       CREATE TABLE IF NOT EXISTS tasks (
@@ -126,6 +132,14 @@ async function run() {
     try {
       await conn.query('ALTER TABLE tasks ADD COLUMN recurrence VARCHAR(10) DEFAULT NULL AFTER priority');
       console.log('  ↳ 已添加 recurrence 列（重复日程）');
+    } catch (_) { /* 列已存在 */ }
+    try {
+      await conn.query('ALTER TABLE tasks ADD COLUMN start_time TIME DEFAULT NULL AFTER due_date');
+      console.log('  ↳ 已添加 start_time 列（开始时间）');
+    } catch (_) { /* 列已存在 */ }
+    try {
+      await conn.query('ALTER TABLE tasks ADD COLUMN end_time TIME DEFAULT NULL AFTER start_time');
+      console.log('  ↳ 已添加 end_time 列（结束时间）');
     } catch (_) { /* 列已存在 */ }
 
     // ====== 数据库索引优化 ======
