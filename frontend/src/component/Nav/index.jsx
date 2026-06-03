@@ -229,7 +229,7 @@ const Nav = () => {
             </div>
             <div className={s.userMeta}>
               <div className={s.userName}>{displayName}</div>
-              <div className={s.role}>{user.role === "admin" ? "管理员" : "普通用户"}</div>
+              <div className={s.role}>{user.role === "admin" ? "管理员" : user.role === "guest" ? "游客" : "普通用户"}</div>
             </div>
             <Tooltip title="退出登录">
               <Button
