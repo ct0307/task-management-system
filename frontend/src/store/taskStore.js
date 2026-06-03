@@ -83,6 +83,14 @@ const useTaskStore = create((set, getState) => ({
   // 视图模式: 'table' | 'kanban'
   viewMode: 'table',
 
+  // 管理员查看全部开关
+  viewAll: false,
+  setViewAll: (val) => {
+    set({ viewAll: val });
+    // 切换后强制刷新任务列表
+    getState().fetchTasks({}, null, true);
+  },
+
   // 展开的子任务数据 (taskId -> { subtasks: [], loading: bool })
   expandedSubtasks: {},
 
@@ -133,6 +141,9 @@ const useTaskStore = create((set, getState) => ({
     if (extraParams.limit) params.append('limit', extraParams.limit);
     if (extraParams.sortField) params.append('sortField', extraParams.sortField);
     if (extraParams.sortOrder) params.append('sortOrder', extraParams.sortOrder);
+
+    // 管理员查看全部
+    if (state.viewAll) params.append('viewAll', 'true');
 
     const queryString = params.toString();
     const cacheKey = `tasks:${queryString}`;

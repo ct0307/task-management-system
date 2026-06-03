@@ -14,7 +14,7 @@ const SORTABLE_FIELDS = {
   category_name: 'c.name'
 };
 
-async function findAll({ status, category, priority, search, assignee, dateRange, page, pageSize, limit, sortField, sortOrder, includeDeleted, includeSubtasks, includeSchedules, userId, userRole } = {}) {
+async function findAll({ status, category, priority, search, assignee, dateRange, page, pageSize, limit, sortField, sortOrder, includeDeleted, includeSubtasks, includeSchedules, userId, userRole, viewAll } = {}) {
   const hasSearch = search && search.trim() !== '';
   let query = `
     SELECT t.*, c.name as category_name, u.real_name as assignee_name,
@@ -36,8 +36,8 @@ async function findAll({ status, category, priority, search, assignee, dateRange
     query += ' AND t.parent_id IS NULL';
   }
 
-  // 用户数据隔离
-  if (userId && userRole !== 'admin') {
+  // 用户数据隔离：admin 默认只看自己的，viewAll=true 时看全部
+  if (userId && !(userRole === 'admin' && viewAll)) {
     query += ' AND (t.created_by = ? OR t.assignee_id = ?)';
     params.push(userId, userId);
   }
@@ -75,7 +75,7 @@ async function findAll({ status, category, priority, search, assignee, dateRange
        LEFT JOIN users u ON t.assignee_id = u.id
        WHERE 1=1`;
     // 用户数据隔离（count 查询也需同步）
-    if (userId && userRole !== 'admin') {
+    if (userId && !(userRole === 'admin' && viewAll)) {
       countQuery += ' AND (t.created_by = ? OR t.assignee_id = ?)';
     }
     if (!includeDeleted) countQuery += ' AND t.deleted_at IS NULL';
@@ -213,12 +213,13 @@ async function permanentRemove(id) {
 /**
  * 获取回收站列表
  */
-async function findTrash({ page = 1, pageSize = 20, userId, userRole } = {}) {
-  const userFilter = (userId && userRole !== 'admin')
+async function findTrash({ page = 1, pageSize = 20, userId, userRole, viewAll } = {}) {
+  const isMine = !(userRole === 'admin' && viewAll);
+  const userFilter = (userId && isMine)
     ? ' AND (t.created_by = ? OR t.assignee_id = ?)' : '';
-  const userParams = (userId && userRole !== 'admin') ? [userId, userId] : [];
+  const userParams = (userId && isMine) ? [userId, userId] : [];
 
-  const countParams = userRole !== 'admin' ? userParams : [];
+  const countParams = isMine ? userParams : [];
   const countResult = await pool.query(
     `SELECT COUNT(*) as total FROM tasks t WHERE t.deleted_at IS NOT NULL${userFilter}`,
     countParams
@@ -235,7 +236,7 @@ async function findTrash({ page = 1, pageSize = 20, userId, userRole } = {}) {
     ORDER BY t.deleted_at DESC
     LIMIT ? OFFSET ?
   `;
-  const params = [...(userRole !== 'admin' ? userParams : []), Number(pageSize), offset];
+  const params = [...(isMine ? userParams : []), Number(pageSize), offset];
   const [rows] = await pool.query(query, params);
   return { data: rows, total, page: Number(page), pageSize: Number(pageSize) };
 }

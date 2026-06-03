@@ -28,7 +28,8 @@ async function getTasks(req, res, next) {
       sortField: req.query.sortField,
       sortOrder: req.query.sortOrder,
       includeSubtasks: req.query.includeSubtasks === '1' || req.query.includeSubtasks === 'true',
-      includeSchedules: req.query.includeSchedules === '1' || req.query.includeSchedules === 'true'
+      includeSchedules: req.query.includeSchedules === '1' || req.query.includeSchedules === 'true',
+      viewAll: req.query.viewAll
     };
     const tasks = await taskService.getAllTasks(filters, req.user);
     success(res, tasks);
@@ -352,7 +353,8 @@ async function getTrashList(req, res, next) {
     const data = await taskService.getTrashList({
       page, pageSize,
       userId: req.user.id,
-      userRole: req.user.role
+      userRole: req.user.role,
+      viewAll: req.query.viewAll === 'true'
     });
     success(res, data);
   } catch (err) {

@@ -3,17 +3,19 @@
  * 包含任务统计、视图切换和任务列表
  */
 import React from 'react';
-import { Segmented, Breadcrumb } from 'antd';
-import { TableOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { Segmented, Breadcrumb, Switch } from 'antd';
+import { TableOutlined, AppstoreOutlined, TeamOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import TaskStats from './components/TaskStatsOptimized';
 import TaskList from './components/TaskListOptimized';
 import TasksKanban from './kanban/TasksKanban';
 import useTaskStore from '@/store/taskStore';
+import { useAuth } from '@/hooks/useAuth';
 import s from './index.module.less';
 
 const Tasks = () => {
-  const { viewMode, setViewMode } = useTaskStore();
+  const { viewMode, setViewMode, viewAll, setViewAll } = useTaskStore();
+  const { isAdmin } = useAuth();
 
   return (
     <div className={s.tasks}>
@@ -33,6 +35,17 @@ const Tasks = () => {
             value={viewMode}
             onChange={setViewMode}
           />
+          {isAdmin && (
+            <span style={{ marginLeft: 12, fontSize: 13, color: '#666' }}>
+              <Switch
+                size="small"
+                checked={viewAll}
+                onChange={setViewAll}
+                checkedChildren="全部"
+                unCheckedChildren="我的"
+              />
+            </span>
+          )}
         </div>
       </div>
       <TaskStats />

@@ -26,7 +26,8 @@ async function getAllTasks(filters = {}, user = null) {
   return await Task.findAll({
     ...filters,
     userId: user?.id,
-    userRole: user?.role
+    userRole: user?.role,
+    viewAll: filters.viewAll === 'true' || filters.viewAll === true
   });
 }
 
