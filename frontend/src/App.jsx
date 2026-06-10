@@ -7,6 +7,7 @@ import { API_AUTH_ME } from "@/constants/urls";
 import token from "@/util/token";
 import Nav from "@/component/Nav";
 import ErrorBoundary from "@/component/ErrorBoundary";
+import "./styles/responsive-layout.less";
 
 const Dashboard = lazy(() => import("./app/dashboard"));
 const Login = lazy(() => import("./app/login"));
@@ -49,7 +50,7 @@ const Layout = ({ children }) => (
   <div style={{ minHeight: "100vh", background: "#faf8f5" }}>
     <Nav />
     <AntLayout style={{ minHeight: "calc(100vh - 52px)", background: "#faf8f5" }}>
-      <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
+      <Content className="app-content">
         <PageTransition>{children}</PageTransition>
       </Content>
     </AntLayout>

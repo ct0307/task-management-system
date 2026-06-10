@@ -7,7 +7,7 @@ import token from "@/util/token";
 import { get, post, put, del } from "@/util/request";
 import * as urls from "@/constants/urls";
 import { getMenusByRole } from "@/constants/menu";
-import { Button, Modal, Space, Tooltip, Badge, Popover, List, Typography } from "antd";
+import { Button, Modal, Space, Tooltip, Badge, Popover, List, Typography, Drawer } from "antd";
 import {
   LogoutOutlined,
   LoginOutlined,
@@ -149,20 +149,29 @@ const Nav = () => {
         ))}
       </div>
 
-      {/* 移动端下拉菜单 */}
-      {mobileMenuOpen && (
-        <div className={s.mobileMenu}>
+      {/* 移动端抽屉菜单 */}
+      <Drawer
+        title="轻量化任务管理"
+        placement="left"
+        open={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        width={280}
+        className={s.mobileDrawer}
+      >
+        <div className={s.mobileMenuList}>
           {navItems.map((item) => (
-            <div
+            <button
+              type="button"
               key={item.path}
               className={cls(s.mobileMenuItem, { [s.mobileMenuItemActive]: location.pathname === item.path })}
               onClick={() => { nav(item.path); setMobileMenuOpen(false); }}
             >
-              {item.antdIcon} {item.label}
-            </div>
+              <span className={s.mobileMenuIcon}>{item.antdIcon}</span>
+              <span>{item.label}</span>
+            </button>
           ))}
         </div>
-      )}
+      </Drawer>
 
       {/* 右侧：主题切换 + 用户信息和退出 */}
       <div className={s.right}>
@@ -181,7 +190,7 @@ const Nav = () => {
             </div>
           }
           content={
-            <div style={{ width: 320, maxHeight: 400, overflow: 'auto' }}>
+            <div className={s.notificationPanel}>
               {notifications.length === 0 ? (
                 <Text type="secondary" style={{ display: 'block', textAlign: 'center', padding: 20 }}>暂无通知</Text>
               ) : (
