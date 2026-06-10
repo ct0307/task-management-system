@@ -224,7 +224,6 @@ const TaskListOptimized = () => {
     tasksLoading,
     tasksError,
     categories,
-    filters,
     pagination,
     modalVisible,
     currentTask,
@@ -420,7 +419,7 @@ const TaskListOptimized = () => {
       const values = Object.fromEntries(
         Object.entries(rawValues)
           .map(([k, v]) => [k, v === '' || v === undefined ? null : v])
-          .filter(([_, v]) => v !== null)
+          .filter(([, v]) => v !== null)
       );
       if (currentTask?.id) {
         await updateTask(currentTask.id, values);
@@ -526,7 +525,7 @@ const TaskListOptimized = () => {
       await batchDelete(selectedRowKeys);
       setSelectedRowKeys([]);
       showSuccessFeedback(`已删除 ${selectedRowKeys.length} 个任务`);
-    } catch (err) {
+    } catch {
       messageApi.error('批量删除失败');
     } finally {
       setBatchLoading(false);
@@ -540,7 +539,7 @@ const TaskListOptimized = () => {
       setSelectedRowKeys([]);
       const label = STATUS_CONFIG[newStatus]?.label || newStatus;
       showSuccessFeedback(`已将 ${selectedRowKeys.length} 个任务设为「${label}」`);
-    } catch (err) {
+    } catch {
       messageApi.error('批量更新状态失败');
     } finally {
       setBatchLoading(false);
@@ -554,7 +553,7 @@ const TaskListOptimized = () => {
       setSelectedRowKeys([]);
       const label = PRIORITY_CONFIG[newPriority]?.label || newPriority;
       showSuccessFeedback(`已将 ${selectedRowKeys.length} 个任务设为「${label}优先级」`);
-    } catch (err) {
+    } catch {
       messageApi.error('批量更新优先级失败');
     } finally {
       setBatchLoading(false);
@@ -731,32 +730,34 @@ const TaskListOptimized = () => {
 
       {/* 操作栏 */}
       <div className={s.actions}>
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => openModal()} className={s.newTaskBtn}>
-          新建任务
-        </Button>
+        <Space wrap className={s.primaryActions}>
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => openModal()} className={s.newTaskBtn}>
+            新建任务
+          </Button>
 
-        <Button icon={<TagsOutlined />} onClick={handleOpenCategoryManage}>
-          管理分类
-        </Button>
+          <Button icon={<TagsOutlined />} onClick={handleOpenCategoryManage}>
+            管理分类
+          </Button>
 
-        <Select
-          placeholder="导出数据"
-          style={{ width: 110 }}
-          onChange={handleExport}
-          value={undefined}
-          loading={exportLoading}
-          suffixIcon={<DownloadOutlined />}
-        >
-          <Option value="json">导出 JSON</Option>
-          <Option value="csv">导出 CSV</Option>
-        </Select>
+          <Select
+            placeholder="导出数据"
+            style={{ width: 110 }}
+            onChange={handleExport}
+            value={undefined}
+            loading={exportLoading}
+            suffixIcon={<DownloadOutlined />}
+          >
+            <Option value="json">导出 JSON</Option>
+            <Option value="csv">导出 CSV</Option>
+          </Select>
 
-        <Button icon={<UploadOutlined />} onClick={() => setImportModalVisible(true)}>
-          导入数据
-        </Button>
+          <Button icon={<UploadOutlined />} onClick={() => setImportModalVisible(true)}>
+            导入数据
+          </Button>
+        </Space>
 
         {selectedRowKeys.length > 0 && (
-          <Space wrap>
+          <Space wrap className={s.batchActions}>
             <Text type="secondary">已选择 {selectedRowKeys.length} 项</Text>
             <Select
               placeholder="更改状态"
@@ -864,7 +865,7 @@ const TaskListOptimized = () => {
           <Form.Item name="description" label="任务描述">
             <TextArea rows={3} placeholder="详细描述任务内容（可选）" showCount maxLength={500} />
           </Form.Item>
-          <Space size="middle" style={{ width: '100%' }}>
+          <Space size="middle" className={s.formTwoCols}>
             <Form.Item name="status" label="状态" style={{ flex: 1 }}>
               <Select>
                 {Object.entries(STATUS_CONFIG).map(([key, config]) => (
@@ -884,7 +885,7 @@ const TaskListOptimized = () => {
               </Select>
             </Form.Item>
           </Space>
-          <Space size="middle" style={{ width: '100%' }}>
+          <Space size="middle" className={s.formTwoCols}>
             <Form.Item name="category_id" label="分类" style={{ flex: 1 }}>
               <Select
                 placeholder="选择分类"

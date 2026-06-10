@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import { Segmented, Breadcrumb, Switch } from 'antd';
-import { TableOutlined, AppstoreOutlined, TeamOutlined } from '@ant-design/icons';
+import { TableOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import TaskStats from './components/TaskStatsOptimized';
 import TaskList from './components/TaskListOptimized';
@@ -36,7 +36,7 @@ const Tasks = () => {
             onChange={setViewMode}
           />
           {isAdmin && (
-            <span style={{ marginLeft: 12, fontSize: 13, color: '#666' }}>
+            <span className={s.viewAllSwitch}>
               <Switch
                 size="small"
                 checked={viewAll}

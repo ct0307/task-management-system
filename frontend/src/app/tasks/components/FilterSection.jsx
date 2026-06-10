@@ -43,9 +43,9 @@ const FilterSection = ({ categories, searchValue, onSearchChange, onSearch, onFi
         </Tooltip>
 
         <Select
+          className={s.filterSelect}
           placeholder="状态"
           allowClear
-          style={{ width: 110 }}
           onChange={(value) => onFilterChange('status', value)}
         >
           {Object.entries(STATUS_CONFIG).map(([key, config]) => (
@@ -54,9 +54,9 @@ const FilterSection = ({ categories, searchValue, onSearchChange, onSearch, onFi
         </Select>
 
         <Select
+          className={s.filterSelect}
           placeholder="优先级"
           allowClear
-          style={{ width: 95 }}
           onChange={(value) => onFilterChange('priority', value)}
         >
           {Object.entries(PRIORITY_CONFIG).map(([key, config]) => (
@@ -65,9 +65,9 @@ const FilterSection = ({ categories, searchValue, onSearchChange, onSearch, onFi
         </Select>
 
         <Select
+          className={s.filterSelect}
           placeholder="分类"
           allowClear
-          style={{ width: 110 }}
           onChange={(value) => onFilterChange('category', value)}
         >
           {categories.map(cat => (
@@ -76,9 +76,9 @@ const FilterSection = ({ categories, searchValue, onSearchChange, onSearch, onFi
         </Select>
 
         <Select
+          className={s.filterSelect}
           placeholder="到期时间"
           allowClear
-          style={{ width: 120 }}
           onChange={(value) => onFilterChange('dateRange', value)}
           suffixIcon={<CalendarOutlined />}
         >

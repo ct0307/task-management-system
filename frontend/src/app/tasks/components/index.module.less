@@ -1,10 +1,79 @@
 /**
  * 优化后组件的样式
  */
+.filterSelect {
+  min-width: 110px;
+}
+
+.primaryActions,
+.batchActions,
+.formTwoCols {
+  display: flex;
+}
 
 // ============================================
-// 空状态样式
+// 响应式布局
 // ============================================
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+
+  .filterControls {
+    width: 100%;
+
+    :global(.ant-space-item) {
+      flex: 1 1 140px;
+    }
+  }
+
+  .filterSelect {
+    width: 100%;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .primaryActions,
+  .batchActions {
+    width: 100%;
+
+    :global(.ant-space-item) {
+      flex: 1 1 140px;
+    }
+
+    :global(.ant-btn),
+    :global(.ant-select) {
+      width: 100%;
+    }
+  }
+
+  .formTwoCols {
+    width: 100%;
+    flex-direction: column;
+
+    :global(.ant-space-item) {
+      width: 100%;
+    }
+  }
+
+  :global(.ant-table-wrapper) {
+    overflow-x: auto;
+  }
+
+  :global(.ant-pagination) {
+    justify-content: center;
+  }
+}
+
 .emptyState {
   padding: 48px 24px;
   text-align: center;
