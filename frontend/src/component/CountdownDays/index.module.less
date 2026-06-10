@@ -58,6 +58,10 @@
 
 // ====== TIMELINE ======
 
+.emptyWrap {
+  padding: 20px;
+}
+
 .timeline {
   padding: 12px 20px 20px;
   display: flex; flex-direction: column; gap: 8px;
@@ -328,6 +332,16 @@
 }
 
 @media (max-width: 480px) {
+  .header {
+    align-items: flex-start;
+    gap: 10px;
+    flex-direction: column;
+  }
+
+  .modeSwitch {
+    width: 100%;
+  }
+
   .numberBlock { min-width: 56px; padding: 8px 6px; }
   .numberValue { font-size: 30px; letter-spacing: -1.5px; }
   .timelineItem { flex-direction: column; }

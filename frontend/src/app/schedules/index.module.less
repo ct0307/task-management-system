@@ -1,6 +1,7 @@
 .page { max-width: 1400px; margin: 0 auto; }
 
 .header { margin-bottom: 20px; }
+.errorAlert { margin-bottom: 16px; }
 .title { margin-bottom: 4px !important; }
 
 // 双栏布局
@@ -17,6 +18,10 @@
   flex: 0 0 380px;
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.weekScroll {
+  overflow-x: auto;
 }
 
 .weekGrid {
@@ -130,7 +135,49 @@
 }
 
 @media (max-width: 640px) {
+  .header { margin-bottom: 16px; }
   .weekCard { flex: 1 1 auto; width: 100%; }
+  .weekScroll { padding-bottom: 4px; }
+  .weekGrid { min-width: 560px; }
   .courseItem { font-size: 10px; padding: 4px 2px; }
   .dayHead { font-size: 10px; padding: 4px 0; }
+
+  .quickRow,
+  .batchActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .quickRow {
+    :global(.ant-select),
+    :global(.ant-input),
+    :global(.ant-btn) {
+      width: 100% !important;
+    }
+  }
+
+  .batchActions {
+    gap: 8px;
+
+    :global(.ant-btn) {
+      width: 100%;
+    }
+  }
+
+  .listCard {
+    :global(.ant-card-extra) {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    :global(.ant-card-head-wrapper) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    :global(.ant-table-wrapper) {
+      overflow-x: auto;
+    }
+  }
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Table, Button, Modal, Form, Input, Select, Space, Popconfirm, message, Card, Tag, Typography, Upload, Divider, Tabs, TimePicker } from 'antd';
+import { Table, Button, Modal, Form, Input, Select, Space, Popconfirm, message, Card, Tag, Typography, Divider, Tabs, TimePicker, Alert, Empty } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined, CalendarOutlined, UploadOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { get, post, put, del } from '@/util/request';
 import { API_TASK_LIST } from '@/constants/urls';
@@ -81,6 +81,7 @@ const nextWeekdayDate = (weekday) => {
 const Schedules = () => {
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -99,11 +100,14 @@ const Schedules = () => {
 
   const fetchSchedules = useCallback(async () => {
     setLoading(true);
+    setError('');
     try {
       const res = await get(`${API_TASK_LIST}?limit=200&includeSchedules=1`);
       const all = res.data?.data || res.data || [];
       setSchedules(mergeSameNameSchedules(all.filter(t => t.recurrence)));
-    } catch { }
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || '日程加载失败');
+    }
     finally { setLoading(false); }
   }, []);
 
@@ -402,10 +406,23 @@ const Schedules = () => {
         </div>
       </div>
 
+      {error && (
+        <Alert
+          type="error"
+          showIcon
+          closable
+          className={s.errorAlert}
+          message="日程加载失败"
+          description={error}
+          action={<Button size="small" onClick={fetchSchedules}>重试</Button>}
+        />
+      )}
+
       <div className={s.layout}>
         {/* 左侧：周视图 */}
         <Card title="📋 本周课程表" className={s.weekCard} styles={{ body: { padding: 8 } }}>
-          <div className={s.weekGrid}>
+          <div className={s.weekScroll}>
+            <div className={s.weekGrid}>
             {WEEKDAYS.map(day => (
               <div key={day} className={s.dayCol}>
                 <div className={s.dayHead}>{day}</div>
@@ -427,6 +444,7 @@ const Schedules = () => {
                 </div>
               </div>
             ))}
+            </div>
           </div>
         </Card>
 
@@ -520,7 +538,7 @@ const Schedules = () => {
                 onChange: setSelectedRowKeys,
               }}
               pagination={{ pageSize: 15, showTotal: t => `${t} 条` }}
-              locale={{ emptyText: '暂无日程' }}
+              locale={{ emptyText: <Empty description="暂无日程，先添加一门课程吧" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
             />
           </Card>
         </div>

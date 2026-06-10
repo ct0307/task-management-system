@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { Tag, Segmented, Tooltip, Spin } from 'antd';
+import { Tag, Segmented, Tooltip, Spin, Empty } from 'antd';
 import { ClockCircleOutlined, RightOutlined, DownOutlined, FireOutlined, ExportOutlined } from '@ant-design/icons';
 import { get } from '@/util/request';
 import useTaskStore from '@/store/taskStore';
@@ -109,7 +109,21 @@ const CountdownDays = ({ tasks = [] }) => {
       .slice(0, 6);
   }, [tasks, mode]);
 
-  if (items.length === 0) return null;
+  if (items.length === 0) {
+    return (
+      <div className={`${s.root} ${visible ? s.visible : ''}`} ref={containerRef}>
+        <div className={s.header}>
+          <div className={s.headerLeft}>
+            <div className={s.headerIcon}><ClockCircleOutlined /></div>
+            <span className={s.headerTitle}>倒数日</span>
+          </div>
+        </div>
+        <div className={s.emptyWrap}>
+          <Empty description="暂无即将到期的任务" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`${s.root} ${visible ? s.visible : ''}`} ref={containerRef}>
