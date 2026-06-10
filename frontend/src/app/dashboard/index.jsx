@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Typography, Button, List, Tag, Space, Empty, Modal } from "antd";
+import { Card, Row, Col, Typography, Button, List, Tag, Space, Empty, Modal, Alert } from "antd";
 import {
   PlusOutlined,
   UnorderedListOutlined,
@@ -23,7 +23,7 @@ import CountdownDays from "@/component/CountdownDays";
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip as ReTooltip,
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  LineChart, Line, Area, AreaChart
+  Area, AreaChart
 } from "recharts";
 import { get } from "@/util/request";
 import { API_TASK_STATS, API_TASK_LIST, API_TASK_TREND } from "@/constants/urls";
@@ -68,10 +68,12 @@ const Dashboard = () => {
   const [trend, setTrend] = useState([]);
   const [calendarTasks, setCalendarTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setError('');
         const now = new Date();
         const y = now.getFullYear(), m = now.getMonth();
         const lastDay = new Date(y, m + 1, 0).getDate();
@@ -89,7 +91,7 @@ const Dashboard = () => {
         setTrend(trendData.data || []);
         setCalendarTasks((calData.data?.data || calData.data || []).filter(t => t.due_date));
       } catch (err) {
-        // 静默降级
+        setError(err.response?.data?.message || err.message || '仪表盘数据加载失败');
       } finally {
         setLoading(false);
       }
@@ -259,6 +261,18 @@ const Dashboard = () => {
       </div>
       </div>
 
+      {error && (
+        <Alert
+          type="error"
+          showIcon
+          closable
+          className={s.errorAlert}
+          message="仪表盘数据加载失败"
+          description={error}
+          action={<Button size="small" onClick={() => window.location.reload()}>刷新</Button>}
+        />
+      )}
+
       {/* 统计卡片 */}
       <Row gutter={[16, 16]} className={s.statsRow}>
         {statCards.map((card) => (
@@ -406,14 +420,14 @@ const Dashboard = () => {
       </Row>
 
       {/* 趋势图 — 近14天完成任务趋势 */}
-      {trend.length > 0 && (
-        <Row gutter={[16, 16]} className={s.chartsRow}>
-          <Col span={24}>
-            <Card
-              title={<span className={s.chartTitle}><CheckCircleOutlined /> 近14天完成任务趋势</span>}
-              className={s.chartCard}
-              styles={{ body: { padding: "16px 8px" } }}
-            >
+      <Row gutter={[16, 16]} className={s.chartsRow}>
+        <Col span={24}>
+          <Card
+            title={<span className={s.chartTitle}><CheckCircleOutlined /> 近14天完成任务趋势</span>}
+            className={s.chartCard}
+            styles={{ body: { padding: "16px 8px" } }}
+          >
+            {trend.length > 0 ? (
               <ResponsiveContainer width="100%" height={260}>
                 <AreaChart data={trend} margin={{ top: 8, right: 16, left: -16, bottom: 0 }}>
                   <defs>
@@ -447,10 +461,12 @@ const Dashboard = () => {
                   />
                 </AreaChart>
               </ResponsiveContainer>
-            </Card>
-          </Col>
-        </Row>
-      )}
+            ) : (
+              <Empty description="暂无完成趋势数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            )}
+          </Card>
+        </Col>
+      </Row>
 
       {/* 倒数日 */}
       <Row gutter={[16, 16]} className={s.chartsRow}>
@@ -483,7 +499,6 @@ const Dashboard = () => {
                 dataSource={recentTasks}
                 renderItem={(task) => {
                   const statusConfig = STATUS_COLORS[task.status] || {};
-                  const priorityConfig = PRIORITY_COLORS[task.priority] || {};
                   const isOverdue = task.due_date && new Date(task.due_date) < new Date() && task.status !== "completed";
                   return (
                     <List.Item className={s.taskItem}>
