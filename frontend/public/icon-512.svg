@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 192 192" role="img" aria-label="轻量化任务管理系统图标">
+  <rect width="192" height="192" rx="44" fill="#e85d3a"/>
+  <rect x="44" y="48" width="104" height="96" rx="18" fill="#fff7ed" opacity="0.96"/>
+  <path d="M68 78h56" stroke="#e85d3a" stroke-width="10" stroke-linecap="round"/>
+  <path d="M68 104h38" stroke="#d4972e" stroke-width="10" stroke-linecap="round"/>
+  <path d="M68 130h48" stroke="#3d8c5c" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="132" cy="130" r="12" fill="#3d8c5c"/>
+  <path d="M126 130l4 4 8-9" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
