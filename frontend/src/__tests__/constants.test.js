@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { STATUS_CONFIG, PRIORITY_CONFIG, STATUS_OPTIONS, PRIORITY_OPTIONS } from '../constant/task';
+import { STATUS_CONFIG, PRIORITY_CONFIG, STATUS_OPTIONS, PRIORITY_OPTIONS } from '../constants/task';
 
 describe('任务常量', () => {
   it('STATUS_CONFIG 应有三种状态', () => {
