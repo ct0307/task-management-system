@@ -105,7 +105,7 @@ const Login = () => {
       <div className={s.bgGlowTop} />
       <div className={s.bgGlowBottom} />
 
-      <Card className={s.loginCard} bordered={false}>
+      <Card className={s.loginCard} variant="borderless">
         {/* Logo + 标题 */}
         <div className={s.brand}>
           <div className={s.logoWrap}>

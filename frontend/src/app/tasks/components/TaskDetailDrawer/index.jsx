@@ -443,7 +443,7 @@ const TaskDetailDrawer = () => {
           </Button>
         </Space>
       }
-      destroyOnClose
+      destroyOnHidden
     >
       {/* 状态标签行 */}
       <div style={{ marginBottom: 16 }}>

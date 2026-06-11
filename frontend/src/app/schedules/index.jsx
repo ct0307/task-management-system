@@ -318,8 +318,8 @@ const Schedules = () => {
         fail++;
       }
     }
-    message.success(`导入完成：成功 ${ok} 条${merged > 0 ? `，合并 ${merged} 条` : ''}${fail > 0 ? `，失败 ${fail} 条` : ''}${skipped > 0 ? `，跳过 ${skipped} 条` : ''}`);
     fetchSchedules();
+    return { ok, fail, merged, skipped };
   };
 
   // 编辑/删除

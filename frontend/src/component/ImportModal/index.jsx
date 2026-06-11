@@ -2,7 +2,7 @@
  * 通用导入弹窗 — 支持 CSV / Excel / JSON / PDF / 图片(OCR)
  * 智能格式识别、列映射、解析/导入双阶段进度反馈
  */
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Modal, Button, Table, Tag, Select, message, Upload, Space, Alert, Typography, Progress, Steps } from 'antd';
 import { InboxOutlined, FileExcelOutlined, FileTextOutlined, FilePdfOutlined, FileImageOutlined, FileOutlined, LoadingOutlined } from '@ant-design/icons';
 import Papa from 'papaparse';
@@ -40,6 +40,15 @@ const matchField = (colName) => {
     }
   }
   return best.field;
+};
+
+const buildAutoMap = (nextHeaders = []) => {
+  const map = {};
+  nextHeaders.forEach(h => {
+    const field = matchField(h);
+    if (field) map[h] = field;
+  });
+  return map;
 };
 
 // ====== 文件类型嗅探（内容检测，不依赖扩展名） ======
@@ -549,6 +558,16 @@ const inferTableFromText = (lines) => {
 
 // ====== 组件 ======
 
+const formatImportResult = (result, fallbackCount) => {
+  if (!result || typeof result !== 'object') return `成功导入 ${fallbackCount} 条记录`;
+  const parts = [];
+  if (typeof result.ok === 'number') parts.push(`成功 ${result.ok} 条`);
+  if (result.merged > 0) parts.push(`合并 ${result.merged} 条`);
+  if (result.fail > 0) parts.push(`失败 ${result.fail} 条`);
+  if (result.skipped > 0) parts.push(`跳过 ${result.skipped} 条`);
+  return parts.length ? `导入完成：${parts.join('，')}` : `成功导入 ${fallbackCount} 条记录`;
+};
+
 const ImportModal = ({ open, onClose, onImport, title = '导入数据', extraFields = [], mode = 'task' }) => {
   const [step, setStep] = useState('upload');
   const [file, setFile] = useState(null);
@@ -561,16 +580,6 @@ const ImportModal = ({ open, onClose, onImport, title = '导入数据', extraFie
   const [parseStatus, setParseStatus] = useState('');        // 解析状态文字
   const [importProgress, setImportProgress] = useState(0);   // 导入进度
   const [importing, setImporting] = useState(false);
-
-  // 自动推断列映射
-  const autoMap = useMemo(() => {
-    const map = {};
-    headers.forEach(h => {
-      const field = matchField(h);
-      if (field) map[h] = field;
-    });
-    return map;
-  }, [headers]);
 
   // 文件选择 + 解析
   const handleFile = useCallback(async (file) => {
@@ -596,7 +605,7 @@ const ImportModal = ({ open, onClose, onImport, title = '导入数据', extraFie
       });
       setHeaders(result.headers);
       setRows(result.rows);
-      setColumnMap(autoMap);
+      setColumnMap(buildAutoMap(result.headers));
       setStep('preview');
     } catch (err) {
       setError(err.message);
@@ -605,7 +614,7 @@ const ImportModal = ({ open, onClose, onImport, title = '导入数据', extraFie
       setParseProgress(100);
     }
     return false;
-  }, [autoMap]);
+  }, []);
 
   const handleReset = () => {
     setStep('upload'); setFile(null);
@@ -643,11 +652,11 @@ const ImportModal = ({ open, onClose, onImport, title = '导入数据', extraFie
     }, 300);
 
     try {
-      await onImport(mapped, rows, headers);
+      const result = await onImport(mapped, rows, headers);
       clearInterval(progressTimer);
       setImportProgress(100);
-      message.success(`成功导入 ${mapped.length} 条记录`);
-      setTimeout(() => handleClose(), 400);
+      message.success(formatImportResult(result, mapped.length));
+      setTimeout(() => handleClose(), 600);
     } catch (err) {
       clearInterval(progressTimer);
       message.error(err.message || '导入失败');
@@ -655,6 +664,30 @@ const ImportModal = ({ open, onClose, onImport, title = '导入数据', extraFie
       setImporting(false);
     }
   };
+
+  const mappedCount = Object.values(columnMap).filter(Boolean).length;
+  const hasTitle = Object.values(columnMap).includes('title');
+  const defaultFieldOptions = [
+    { value: 'title', label: '📝 标题' },
+    { value: 'description', label: '📄 描述' },
+    { value: 'status', label: '📊 状态' },
+    { value: 'priority', label: '🚩 优先级' },
+    { value: 'category', label: '📁 分类' },
+    { value: 'due_date', label: '📅 截止日期' },
+    { value: 'assignee', label: '👤 负责人' },
+  ];
+  const scheduleFieldOptions = [
+    { value: 'title', label: '📝 课程名' },
+    { value: 'weekday', label: '📅 星期' },
+    { value: 'start_time', label: '🕘 开始时间' },
+    { value: 'end_time', label: '🕙 结束时间' },
+    { value: 'location', label: '📍 地点' },
+    { value: 'teacher', label: '👨‍🏫 教师' },
+    { value: 'description', label: '📄 备注' },
+  ];
+  const fieldOptions = mode === 'schedule'
+    ? scheduleFieldOptions
+    : [...defaultFieldOptions, ...extraFields];
 
   const previewColumns = [
     { title: '#', dataIndex: '_idx', width: 40, render: (_, __, idx) => idx + 1 },
@@ -666,14 +699,7 @@ const ImportModal = ({ open, onClose, onImport, title = '导入数据', extraFie
             onChange={(val) => setColumnMap(prev => ({ ...prev, [h]: val || undefined }))}
             placeholder="忽略" allowClear style={{ width: 90 }} className={s.colSelect}
           >
-            <Select.Option value="title">📝 标题</Select.Option>
-            <Select.Option value="description">📄 描述</Select.Option>
-            <Select.Option value="status">📊 状态</Select.Option>
-            <Select.Option value="priority">🚩 优先级</Select.Option>
-            <Select.Option value="category">📁 分类</Select.Option>
-            <Select.Option value="due_date">📅 截止日期</Select.Option>
-            <Select.Option value="assignee">👤 负责人</Select.Option>
-            {extraFields.map(f => <Select.Option key={f.value} value={f.value}>{f.label}</Select.Option>)}
+            {fieldOptions.map(f => <Select.Option key={f.value} value={f.value}>{f.label}</Select.Option>)}
           </Select>
         </div>
       ),
@@ -681,9 +707,6 @@ const ImportModal = ({ open, onClose, onImport, title = '导入数据', extraFie
       render: (val) => <Text style={{ fontSize: 12 }}>{String(val ?? '')}</Text>,
     })),
   ];
-
-  const mappedCount = Object.values(columnMap).filter(Boolean).length;
-  const hasTitle = Object.values(columnMap).includes('title');
 
   return (
     <Modal title={title} open={open} onCancel={handleClose} width={760}
@@ -697,7 +720,7 @@ const ImportModal = ({ open, onClose, onImport, title = '导入数据', extraFie
           </Button>,
         ] : null
       }
-      destroyOnClose
+      destroyOnHidden
     >
       {/* Step 1: 上传 */}
       {step === 'upload' && !parseActive && (
@@ -762,7 +785,7 @@ const ImportModal = ({ open, onClose, onImport, title = '导入数据', extraFie
           </div>
           <Table columns={previewColumns}
             dataSource={rows.slice(0, 10).map((r, i) => ({ ...r, _idx: i }))}
-            rowKey={(_, i) => i} size="small" scroll={{ x: 'max-content' }}
+            rowKey="_idx" size="small" scroll={{ x: 'max-content' }}
             pagination={false} className={s.previewTable} />
           {rows.length > 10 && (
             <Text type="secondary" style={{ display: 'block', textAlign: 'center', marginTop: 8 }}>

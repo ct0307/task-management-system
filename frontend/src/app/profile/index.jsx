@@ -223,7 +223,7 @@ const Profile = () => {
         confirmLoading={loading}
         okText="保存"
         cancelText="取消"
-        destroyOnClose
+        destroyOnHidden
       >
         <Form form={editForm} layout="vertical" onFinish={handleSaveProfile} style={{ marginTop: 16 }}>
           <Form.Item label="用户名">

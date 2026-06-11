@@ -855,7 +855,7 @@ const TaskListOptimized = () => {
         okText={currentTask?.id ? '保存修改' : '创建任务'}
         cancelText="取消"
         width={560}
-        destroyOnClose
+        destroyOnHidden
         className={s.taskModal}
       >
         <Form form={form} layout="vertical" initialValues={{ status: 'pending', priority: 'medium' }}>
