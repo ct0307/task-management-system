@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "node --test __tests__/*.test.js"
+    "test": "node --require ./__tests__/setup-env.js --test __tests__/*.test.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

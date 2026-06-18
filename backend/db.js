@@ -14,15 +14,17 @@ const pool = mysql.createPool({
 });
 
 // 测试连接
-pool
-  .getConnection()
-  .then((conn) => {
-    console.log("✅ MySQL 数据库连接池创建成功");
-    conn.release();
-  })
-  .catch((err) => {
-    console.error("❌ MySQL 连接错误:", err.message);
-  });
+if (process.env.NODE_ENV !== "test") {
+  pool
+    .getConnection()
+    .then((conn) => {
+      console.log("✅ MySQL 数据库连接池创建成功");
+      conn.release();
+    })
+    .catch((err) => {
+      console.error("❌ MySQL 连接错误:", err.message);
+    });
+}
 
 /**
  * 执行 SQL 查询的便捷方法
