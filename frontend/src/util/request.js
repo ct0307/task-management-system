@@ -2,7 +2,7 @@
 import axios from "axios";
 import { message } from "antd";
 import token from "@/util/token";
-import { ErrorCodes, getErrorMessage } from "@/constants/errorCodes";
+import { ErrorCodes } from "@/constants/errorCodes";
 
 /**
  * 创建 Axios 实例

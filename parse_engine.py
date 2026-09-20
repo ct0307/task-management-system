@@ -76,6 +76,31 @@ def parse_pdf(filepath):
         return parse_pdf_ocr(filepath)
     return result
 
+
+def ocr_image(filepath):
+    """识别图片中的中英文文本。"""
+    err = _check_deps(['PIL', 'pytesseract'], '图片 OCR')
+    if err:
+        return {'error': err}
+
+    from PIL import Image
+    import pytesseract
+
+    try:
+        with Image.open(filepath) as image:
+            text = pytesseract.image_to_string(image, lang='chi_sim+eng').strip()
+    except Exception as exc:
+        return {'error': f'图片 OCR 失败: {exc}'}
+
+    if not text:
+        return {
+            'error': 'OCR 未识别到文字',
+            'text': '',
+            'full_text': '',
+        }
+    return {'text': text, 'full_text': text}
+
+
 def parse_docx(filepath):
     """Word 文档解析"""
     err = _check_deps(['docx'], 'pip install python-docx')

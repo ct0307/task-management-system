@@ -41,7 +41,7 @@ const CountdownDays = ({ tasks = [] }) => {
 
   useEffect(() => {
     if (!categories || categories.length === 0) fetchCategories();
-  }, []);
+  }, [categories, fetchCategories]);
 
   const categoryColorMap = useMemo(() => {
     const map = {};

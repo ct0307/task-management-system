@@ -74,8 +74,6 @@ const KanbanColumn = ({
 
     const sourceData = JSON.parse(e.dataTransfer.getData('text/plain'));
     const sourceId = Number(sourceData.id);
-    const sourceStatus = sourceData.status;
-
     if (sourceId === targetTask.id) {
       resetDragState();
       return;
@@ -171,7 +169,6 @@ const KanbanColumn = ({
                 onDrop={handleCardDrop}
                 onDragLeave={handleCardDragLeave}
                 isDragOver={dragOverCardId === task.id}
-                dropPosition={dropPosition}
               />
               {/* 底部插入指示器 */}
               {dragOverCardId === task.id && dropPosition === 'bottom' && (

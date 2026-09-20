@@ -11,7 +11,7 @@ import s from './index.module.less';
 
 const { Text } = Typography;
 
-const KanbanCard = ({ task, onEdit, onDelete, onDragStart, onDragOver, onDrop, onDragLeave, isDragOver, dropPosition }) => {
+const KanbanCard = ({ task, onEdit, onDelete, onDragStart, onDragOver, onDrop, onDragLeave, isDragOver }) => {
   const priorityConfig = PRIORITY_CONFIG[task.priority] || {};
   const isOverdue = task.due_date && new Date(task.due_date) < new Date() && task.status !== 'completed';
 

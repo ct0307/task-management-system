@@ -51,9 +51,8 @@ const normalizeHandlers = (handlers) => {
 /**
  * 全局快捷键 Hook
  * @param {Object|Array} handlers - 快捷键处理器，对象 { key: handler } 或数组 [{ key, handler, description }]
- * @param {Array} deps - 依赖数组
  */
-export const useKeyboardShortcuts = (handlers, deps = []) => {
+export const useKeyboardShortcuts = (handlers) => {
   const normalized = normalizeHandlers(handlers);
   const handlersRef = useRef(normalized);
   handlersRef.current = normalized;

@@ -57,7 +57,7 @@ const UserManagement = () => {
     try {
       const res = await get(API_ADMIN_USERS);
       setUsers(res.data || []);
-    } catch (err) {
+    } catch {
       message.error('获取用户列表失败');
     } finally {
       setLoading(false);
@@ -203,7 +203,7 @@ const CategoryManagement = () => {
     try {
       const res = await get(API_ADMIN_CATEGORIES);
       setCategories(res.data || []);
-    } catch (err) {
+    } catch {
       message.error('获取分类列表失败');
     } finally {
       setLoading(false);

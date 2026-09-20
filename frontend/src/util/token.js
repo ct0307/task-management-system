@@ -13,7 +13,9 @@ const token = {
       const s = this._storage(remember);
       s.setItem(USER_KEY, JSON.stringify(user));
       if (user.token) s.setItem(TOKEN_KEY, user.token);
-    } catch (_) {}
+    } catch {
+      // 存储不可用时保留当前内存状态，由调用方继续处理。
+    }
   },
 
   loadUser() {
@@ -21,7 +23,7 @@ const token = {
     try {
       const u = sessionStorage.getItem(USER_KEY) || localStorage.getItem(USER_KEY);
       return u ? JSON.parse(u) : null;
-    } catch (_) {
+    } catch {
       return null;
     }
   },

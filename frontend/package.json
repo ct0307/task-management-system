@@ -5,6 +5,7 @@
     "author": "Task Manager Team",
     "license": "MIT",
     "private": true,
+    "type": "module",
     "dependencies": {
         "@ant-design/icons": "^5.6.1",
         "antd": "^5.27.4",

@@ -192,7 +192,7 @@ const useTaskStore = create((set, getState) => ({
     try {
       const data = await get(API_TASK_STATS);
       set({ stats: data.data, statsLoading: false });
-    } catch (err) {
+    } catch {
       set({
         stats: {
           total: 0,
@@ -218,33 +218,25 @@ const useTaskStore = create((set, getState) => ({
       const list = data.data || [];
       setCache('categories', list, CACHE_CATEGORIES);
       set({ categories: list, categoriesLoading: false });
-    } catch (err) {
+    } catch {
       set({ categoriesLoading: false });
     }
   },
 
   // 更新分类
   updateCategory: async (id, data) => {
-    try {
-      await put(`${API_TASK_CATEGORIES}/${id}`, data);
-      invalidateCache('categories');
-      await getState().fetchCategories(true);
-      return true;
-    } catch (err) {
-      throw err;
-    }
+    await put(`${API_TASK_CATEGORIES}/${id}`, data);
+    invalidateCache('categories');
+    await getState().fetchCategories(true);
+    return true;
   },
 
   // 删除分类
   deleteCategory: async (id) => {
-    try {
-      await del(`${API_TASK_CATEGORIES}/${id}`);
-      invalidateCache('categories');
-      await getState().fetchCategories(true);
-      return true;
-    } catch (err) {
-      throw err;
-    }
+    await del(`${API_TASK_CATEGORIES}/${id}`);
+    invalidateCache('categories');
+    await getState().fetchCategories(true);
+    return true;
   },
 
   // 获取可分配用户列表（带 5 分钟缓存）
@@ -259,39 +251,27 @@ const useTaskStore = create((set, getState) => ({
       const list = data.data || [];
       setCache('users', list, CACHE_USERS);
       set({ users: list, usersLoading: false });
-    } catch (err) {
+    } catch {
       set({ usersLoading: false });
     }
   },
 
   // 创建任务
   createTask: async (taskData) => {
-    try {
-      await post(API_TASK_LIST, taskData);
-      return await getState().refreshTasksAndStats();
-    } catch (err) {
-      throw err;
-    }
+    await post(API_TASK_LIST, taskData);
+    return getState().refreshTasksAndStats();
   },
 
   // 更新任务
   updateTask: async (id, taskData) => {
-    try {
-      await put(`${API_TASK_LIST}/${id}`, taskData);
-      return await getState().refreshTasksAndStats();
-    } catch (err) {
-      throw err;
-    }
+    await put(`${API_TASK_LIST}/${id}`, taskData);
+    return getState().refreshTasksAndStats();
   },
 
   // 删除任务
   deleteTask: async (id) => {
-    try {
-      await del(`${API_TASK_LIST}/${id}`);
-      return await getState().refreshTasksAndStats();
-    } catch (err) {
-      throw err;
-    }
+    await del(`${API_TASK_LIST}/${id}`);
+    return getState().refreshTasksAndStats();
   },
 
   // 强制刷新任务和统计（绕过缓存）
@@ -332,35 +312,23 @@ const useTaskStore = create((set, getState) => ({
 
   // 批量删除任务
   batchDelete: async (ids) => {
-    try {
-      const response = await batchDeleteApi(ids);
-      await getState().refreshTasksAndStats();
-      return response;
-    } catch (err) {
-      throw err;
-    }
+    const response = await batchDeleteApi(ids);
+    await getState().refreshTasksAndStats();
+    return response;
   },
 
   // 批量更新任务
   batchUpdate: async (ids, updates) => {
-    try {
-      const response = await batchUpdateApi(ids, updates);
-      await getState().refreshTasksAndStats();
-      return response;
-    } catch (err) {
-      throw err;
-    }
+    const response = await batchUpdateApi(ids, updates);
+    await getState().refreshTasksAndStats();
+    return response;
   },
 
   // 看板拖拽排序
   reorderTasks: async (status, taskIds) => {
-    try {
-      await put(`${API_TASK_LIST}/reorder`, { status, taskIds });
-      await getState().refreshTasksAndStats();
-      return true;
-    } catch (err) {
-      throw err;
-    }
+    await put(`${API_TASK_LIST}/reorder`, { status, taskIds });
+    await getState().refreshTasksAndStats();
+    return true;
   },
 
   // 更新筛选条件

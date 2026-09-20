@@ -60,10 +60,11 @@ const Dashboard = () => {
       setWelcomeVisible(true);
       localStorage.setItem("WELCOME_SHOWN", "1");
       // 清除 URL 上的 welcome 参数
-      searchParams.delete("welcome");
-      setSearchParams(searchParams, { replace: true });
+      const nextSearchParams = new URLSearchParams(searchParams);
+      nextSearchParams.delete("welcome");
+      setSearchParams(nextSearchParams, { replace: true });
     }
-  }, []);
+  }, [searchParams, setSearchParams]);
   const [recentTasks, setRecentTasks] = useState([]);
   const [trend, setTrend] = useState([]);
   const [calendarTasks, setCalendarTasks] = useState([]);

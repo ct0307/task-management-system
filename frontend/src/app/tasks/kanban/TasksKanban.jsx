@@ -12,7 +12,6 @@ const TasksKanban = () => {
     tasksLoading,
     openModal,
     deleteTask,
-    updateTask,
     reorderTasks,
     fetchTasks,
     fetchStats
@@ -41,7 +40,7 @@ const TasksKanban = () => {
         fetchTasks();
         fetchStats();
       }
-    } catch (err) {
+    } catch {
       message.error('更新状态失败');
     }
   }, [tasks, reorderTasks, fetchTasks, fetchStats]);
@@ -50,7 +49,7 @@ const TasksKanban = () => {
   const handleColumnReorder = useCallback(async (status, taskIds) => {
     try {
       await reorderTasks(status, taskIds);
-    } catch (err) {
+    } catch {
       message.error('排序更新失败');
     }
   }, [reorderTasks]);
@@ -60,7 +59,7 @@ const TasksKanban = () => {
     try {
       await deleteTask(id);
       message.success('任务已删除');
-    } catch (err) {
+    } catch {
       message.error('删除失败');
     }
   }, [deleteTask]);

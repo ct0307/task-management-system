@@ -28,7 +28,6 @@ const Profile = () => {
   const [editForm] = Form.useForm();
   const [pwdForm] = Form.useForm();
 
-  const currentUser = useAuthStore(s => s.currentUser);
   const setCurrentUser = useAuthStore(s => s.setCurrentUser);
   const user = token.loadUser();
 

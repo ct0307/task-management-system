@@ -595,7 +595,7 @@ const ImportModal = ({ open, onClose, onImport, title = '导入数据', extraFie
     try {
       const result = await parseFile(file, {
         onProgress: (p) => {
-          const val = typeof p === 'number' ? p : (parseProgress + 1); // fallback for object calls
+          const val = p;
           setParseProgress(val);
           if (val < 20) setParseStatus('正在读取文件...');
           else if (val < 25) setParseStatus('检测到扫描件，正在渲染页面...');
@@ -629,7 +629,7 @@ const ImportModal = ({ open, onClose, onImport, title = '导入数据', extraFie
   const handleConfirmImport = async () => {
     if (!rows.length) { message.warning('无数据可导入'); return; }
 
-    const mapped = rows.map((row, idx) => {
+    const mapped = rows.map((row) => {
       const item = {};
       headers.forEach(h => {
         const field = columnMap[h];

@@ -287,7 +287,7 @@ const TaskListOptimized = () => {
     if (modalVisible) {
       currentTask ? form.setFieldsValue(currentTask) : form.resetFields();
     }
-  }, [modalVisible, currentTask]);
+  }, [modalVisible, currentTask, form]);
 
   // 操作函数（传给 TaskColumns）
   const handleQuickToggle = useCallback(async (task) => {
@@ -310,7 +310,7 @@ const TaskListOptimized = () => {
     } catch (err) {
       messageApi.error(err.message || '操作失败');
     }
-  }, [updateTask, fetchTasks]);
+  }, [updateTask, fetchTasks, messageApi]);
 
   const handleQuickStatus = useCallback((task) => {
     handleQuickToggle(task);
@@ -335,7 +335,7 @@ const TaskListOptimized = () => {
     } catch (err) {
       messageApi.error(err.message || '删除失败');
     }
-  }, [deleteTask, fetchTasks, tasks]);
+  }, [deleteTask, fetchTasks, messageApi, tasks]);
 
   // 加载任意任务的子任务（通用，支持多层级）
   const fetchChildren = useCallback(async (taskId) => {
@@ -384,7 +384,7 @@ const TaskListOptimized = () => {
         }
       }
     } catch { messageApi.error('操作失败'); }
-  }, [updateTask, fetchTasks, tasks]);
+  }, [updateTask, fetchTasks, messageApi, tasks]);
 
   // 行内：添加子任务
   const handleInlineAdd = useCallback(async (parentId) => {
@@ -397,7 +397,7 @@ const TaskListOptimized = () => {
       setChildrenMap(prev => ({ ...prev, [parentId]: res.data || [] }));
       fetchTasks({}, null, true);
     } catch { messageApi.error('添加失败'); }
-  }, [newChildInput, fetchTasks]);
+  }, [newChildInput, fetchTasks, messageApi]);
 
   // 行内：刷新某父级的子任务列表
   const handleInlineDelete = useCallback(async (parentId) => {

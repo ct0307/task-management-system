@@ -76,6 +76,61 @@ docker compose up -d
 
 详见 [DEPLOY.md](DEPLOY.md)
 
+### 文件解析与 MCP
+
+项目根目录的 `parse_engine.py` 提供统一文件解析入口，支持 PDF、图片和 DOCX。`parse_mcp_server.py` 将解析能力封装为基于标准输入输出的 MCP Server，可供 Claude Code 等支持 MCP 的客户端调用。
+
+| MCP 工具 | 用途 |
+|------|------|
+| `parse_file` | 自动识别 PDF、图片或 DOCX 并解析 |
+| `parse_pdf` | 优先提取 PDF 文字层，必要时降级到 OCR |
+| `ocr_image` | 对 PNG、JPG、WEBP、BMP 等图片进行中英文 OCR |
+| `parse_docx` | 提取 Word 文档中的段落和表格 |
+
+直接启动 MCP Server：
+
+```bash
+python parse_mcp_server.py
+```
+
+客户端配置示例（将路径替换为本机项目的绝对路径）：
+
+```json
+{
+  "mcpServers": {
+    "task-file-parser": {
+      "command": "python",
+      "args": ["C:/path/to/task-management-system/parse_mcp_server.py"]
+    }
+  }
+}
+```
+
+解析功能按需加载依赖，未使用的解析类型不会在启动阶段加载对应库：
+
+```bash
+pip install pdfplumber python-docx Pillow pytesseract pdf2image
+```
+
+图片 OCR 还需要本机安装 Tesseract OCR；扫描 PDF OCR 需要安装 Tesseract OCR 和 Poppler。依赖缺失或文件无法识别时，工具会返回明确错误，不会阻止 MCP Server 启动。
+
+### 验证命令
+
+```bash
+# Python 解析与 MCP 协议测试
+python -m unittest discover -s tests -v
+
+# 后端测试
+cd backend
+npm test
+
+# 前端测试、代码检查与生产构建
+cd ../frontend
+npm test
+npm run lint
+npm run build
+```
+
 ---
 
 ## 项目结构

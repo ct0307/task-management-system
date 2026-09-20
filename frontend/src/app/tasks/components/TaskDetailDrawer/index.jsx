@@ -74,7 +74,7 @@ const TaskDetailDrawer = () => {
         });
       }
     }
-  }, [drawerVisible, currentDrawerTask, form]);
+  }, [drawerVisible, currentDrawerTask, fetchUsers, form]);
 
   // 评论状态
   const [comments, setComments] = useState([]);
@@ -104,7 +104,6 @@ const TaskDetailDrawer = () => {
   const [drawerNewUser, setDrawerNewUser] = useState('');
   // 子任务
   const [subtasks, setSubtasks] = useState([]);
-  const [subtaskLoading, setSubtaskLoading] = useState(false);
   const [newSubtaskTitle, setNewSubtaskTitle] = useState('');
   const [batchMode, setBatchMode] = useState(false);
   const [batchText, setBatchText] = useState('');
@@ -116,12 +115,10 @@ const TaskDetailDrawer = () => {
 
   const fetchSubtasks = useCallback(async () => {
     if (!currentDrawerTask?.id) return;
-    setSubtaskLoading(true);
     try {
       const res = await get(`/api/tasks/${currentDrawerTask.id}/subtasks`);
       setSubtasks(res.data || []);
     } catch { /* ignore */ }
-    finally { setSubtaskLoading(false); }
   }, [currentDrawerTask?.id]);
 
   useEffect(() => {
@@ -326,7 +323,7 @@ const TaskDetailDrawer = () => {
       setCommentText('');
       setReplyTo(null);
       fetchComments();
-    } catch (err) {
+    } catch {
       message.error('评论失败');
     }
   };

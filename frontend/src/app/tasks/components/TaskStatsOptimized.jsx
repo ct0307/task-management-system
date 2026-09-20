@@ -21,7 +21,7 @@ const TaskStatsOptimized = () => {
 
   useEffect(() => {
     fetchStats();
-  }, []);
+  }, [fetchStats]);
 
   if (statsLoading || !stats) {
     return (

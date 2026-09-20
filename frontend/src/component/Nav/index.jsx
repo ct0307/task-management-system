@@ -82,7 +82,7 @@ const Nav = () => {
         notifyBrowser('任务管理系统', latest.message);
       }
     }
-  }, [notifications.length, notifOpen]);
+  }, [notifications, notifOpen, notifyBrowser]);
 
   const handleMarkRead = async (id, taskId) => {
     try { await put(`/api/notifications/${id}/read`); } catch { /* ignore */ }
